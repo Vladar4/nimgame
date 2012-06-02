@@ -1,0 +1,143 @@
+import
+  entity, collider, sdl
+
+type
+
+  PState* = ref TState
+  TState* = object of TObject
+    fEntityList, fAddList: seq[PEntity]
+
+# TState methods
+
+method free*(obj: PState) =
+  for entity in obj.fEntityList:
+    entity.free()
+
+
+proc init*(obj: PState) =
+  obj.fEntityList = @[]
+  obj.fAddList = @[]
+
+
+proc newState*(): PState =
+  new(result, free)
+  init(result)
+
+# Manage entities
+
+# add entity to state
+method add*(obj: PState, entity: PEntity) {.inline.} =
+  obj.fAddList.add(entity)
+
+
+# delete entity from state
+method del*(obj: PState, entity: PEntity) =
+  let index = obj.fEntityList.find(entity)
+  if index <= 0:
+    return
+  obj.fEntityList.delete(index)
+
+
+method addToEntityList(obj: PState, entity: PEntity) =
+  if obj.fEntityList.len > 0:
+    for i in 0..obj.fEntityList.high:
+      if entity.layer >= obj.fEntityList[i].layer:
+        obj.fEntityList.insert(entity, i)
+        return
+  obj.fEntityList.add(entity)
+
+
+method updateLayer(obj: PState, index: int): int =
+  if index < 0:
+    return
+  let entity = obj.fEntityList[index]
+  entity.updateLayer = false
+  obj.fEntityList.delete(index)
+  for i in 0..obj.fEntityList.high:
+    if entity.layer >= obj.fEntityList[i].layer:
+      obj.fEntityList.insert(entity, i)
+      return i
+  obj.fEntityList.add(entity)
+  return obj.fEntityList.high
+
+
+method updateEntityList(obj: PState) =
+  # add
+  while obj.fAddList.len > 0:
+    obj.addToEntityList(obj.fAddList.pop())
+  # delete
+  var max = obj.fEntityList.high
+  for i in 0..max:
+    if obj.fEntityList[i].deleteEntity:
+      obj.fEntityList.delete(i)
+      i -= 1
+      max -= 1
+      continue
+  # layers
+  var i: int = 0
+  while i <= max:
+    if obj.fEntityList[i].updateLayer:
+      let new_i = obj.updateLayer(i)
+      if new_i < i: i = new_i
+    i += 1
+
+# Collisions
+
+# entity collide with kind
+method collideWith*(obj: PState, entity: PEntity, kind: string): PEntity =
+  let index = obj.fEntityList.find(entity)
+  if index < 0 or entity.collider == nil:
+    return nil
+  for i in 0..obj.fEntityList.high:
+    if i == index: continue
+    if obj.fEntityList[i].kind == kind and obj.fEntityList[i].collider != nil:
+      if entity.collider.collide(obj.fEntityList[i].collider):
+        return obj.fEntityList[i]
+  return nil
+
+
+# entity collide with kinds
+method collideWith*(obj: PState, entity: PEntity, kinds: openarray[string]): PEntity =
+  for kind in kinds.items():
+    result = obj.collideWith(entity, kind)
+    if result != nil:
+      return result
+
+
+# one kind collide with other
+# return sequence of pairs (tuple[a, b: PEntity]) of collided entities
+method collideList*(obj: PState, kind1, kind2: string): seq[tuple[a, b: PEntity]] =
+  result = @[]
+  for i in 0..obj.fEntityList.high:
+    if obj.fEntityList[i].kind == kind1 and obj.fEntityList[i].collider != nil:
+      for j in 0..obj.fEntityList.high:
+        if j == i: continue
+        if obj.fEntityList[j].kind == kind2 and obj.fEntityList[j].collider != nil:
+          if obj.fEntityList[i].collider.collide(obj.fEntityList[j].collider):
+            result.add((obj.fEntityList[i], obj.fEntityList[j]))
+
+# render
+
+proc renderState*(obj: PState) =
+  for entity in obj.fEntityList.items():
+    entity.render()
+
+
+method render*(obj: PState) {.inline.} =
+  obj.renderState()
+
+# update
+
+proc updateState*(obj: Pstate) =
+  obj.updateEntityList()
+  for entity in obj.fEntityList.items():
+    entity.update()
+
+
+method update*(obj: PState) {.inline.} =
+  obj.updateState()
+
+
+# return count of entities in state
+method count*(obj: PState): int {.inline.} =
+  return obj.fEntityList.len
