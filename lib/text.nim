@@ -98,7 +98,8 @@ method text*(obj: PText): string {.inline.} =
   return obj.fText
 
 method `text=`*(obj: PText, value: string) {.inline.} =
-  obj.fText = value
+  if value == "": obj.fText = " "
+  else: obj.fText = value
   obj.redraw()
 
 

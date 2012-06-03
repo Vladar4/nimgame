@@ -1,3 +1,7 @@
+v0.2
+====
+* Collisions:
+    + point
 
 v0.1
 ====
