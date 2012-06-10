@@ -2,6 +2,7 @@ v0.2
 ====
 * Collisions:
     + point
+    + mask
 
 v0.1
 ====

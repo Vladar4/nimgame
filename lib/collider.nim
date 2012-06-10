@@ -1,6 +1,6 @@
 import
   sdl,
-  common
+  common, mask
 
 type
 
@@ -23,6 +23,13 @@ type
   TCircleCollider* = object of TCollider
     centerX, centerY: int16
     radius: UInt16
+  
+  # Mask
+  PMaskCollider* = ref TMaskCollider
+  TMaskCollider* = object of TCollider
+    x, y: int16
+    mask*: PMask
+
 
 # PointCollider
 
@@ -69,6 +76,18 @@ proc newCircleCollider*(x, y, r: int): PCircleCollider =
   new(result)
   init(result, int16(x), int16(y), UInt16(r))
 
+# MaskCollider
+
+proc init*(obj: PMaskCollider, mask: PMask, x, y: int16) =
+  obj.mask = mask
+  obj.x = x
+  obj.y = y
+
+proc newMaskCollider*(mask: PMask, x, y: int): PMaskCollider =
+  new(result)
+  init(result, mask, int16(x), int16(y))
+
+
 # methods
 
 # virtual methods
@@ -106,11 +125,19 @@ method `y=`*(obj: PBoxCollider, value: int16) {.inline.} =
 
 method x*(obj: PCircleCollider): int16 {.inline.} = return obj.centerX
 method `x=`*(obj: PCircleCollider, value: int16) {.inline.} =
-  obj.centerX = value
+  obj.centerX = value + obj.radius
 method y*(obj: PCircleCollider): int16 {.inline.} = return obj.centerY
 method `y=`*(obj: PCircleCollider, value: int16) {.inline.} =
-  obj.centerY = value
+  obj.centerY = value + obj.radius
 
+# Mask
+
+method x*(obj: PMaskCollider): int16 {.inline.} = return obj.x
+method `x=`*(obj: PMaskCollider, value: int16) {.inline.} =
+  obj.x = value
+method y*(obj: PMaskCollider): int16 {.inline.} = return obj.y
+method `y=`*(obj: PMaskCollider, value: int16) {.inline.} =
+  obj.y = value
 
 
 # COLLIDE
@@ -118,14 +145,14 @@ method `y=`*(obj: PCircleCollider, value: int16) {.inline.} =
 
 # Point - Point
 
-method collide(a: PPointCollider, b: PPointCollider): bool =
+method collide*(a: PPointCollider, b: PPointCollider): bool =
   if (a.x == b.x) and (a.y == b.y):
     return true
   return false
 
 
 # Box - Box
-method collide(a: PBoxCollider, b: PBoxCollider): bool =
+method collide*(a: PBoxCollider, b: PBoxCollider): bool =
   if a.bottom <= b.top: return false
   if a.top >= b.bottom: return false
   if a.right <= b.left: return false
@@ -134,37 +161,99 @@ method collide(a: PBoxCollider, b: PBoxCollider): bool =
 
 
 # Circle - Circle
-method collide(a: PCircleCollider, b: PCircleCollider): bool =
+method collide*(a: PCircleCollider, b: PCircleCollider): bool =
   if distance((a.centerX, a.centerY), (b.centerX, b.centerY)).toInt < (a.radius + b.radius):
     return true
   return false
 
 
+# Mask - Mask
+method collide*(a: PMaskCollider, b: PMaskCollider): bool =
+  # Check bounding boxes
+  var boxA, boxB: TRect
+  boxA = a.mask.getRect()
+  boxA.x = boxA.x + a.x
+  boxA.y = boxA.y + a.y
+  boxB = b.mask.getRect()
+  boxB.x = boxB.x + b.x
+  boxB.y = boxB.y + b.y
+  if not collide(newBoxCollider(boxA), newBoxCollider(boxB)):
+    return false
+  # Check intersection rect
+  var rectA, rectB: TRect
+  var width, height: int16
+  if a.x > b.x:
+    rectA.x = 0'i16
+    rectB.x = a.x - b.x
+    width = min(b.mask.w - rectB.x, a.mask.w)
+  else:
+    rectA.x = b.x - a.x
+    rectB.x = 0'i16
+    width = min(a.mask.w - rectA.x, b.mask.w)
+  if a.y > b.y:
+    rectA.y = 0'i16
+    rectB.y = a.y - b.y
+    height = min(b.mask.h - rectB.y, a.mask.h)
+  else:
+    rectA.y = b.y - a.y
+    rectB.y = 0'i16
+    height = min(a.mask.h - rectA.y, b.mask.h)
+  rectA.w = width
+  rectB.w = width
+  rectA.h = height
+  rectB.h = height
+  # Per-pixel scan
+  for y in 0..height-1:
+    for x in 0..width-1:
+      if a.mask.data[rectA.y + y][rectA.x + x] and
+         b.mask.data[rectB.y + y][rectB.x + x]:
+        return true
+  return false
+  
+
 # Point - Box
-method collide(a: PPointCollider, b: PBoxCollider): bool =
-  if (a.x < b.left) or (a.x > b.right): return false
-  if (a.y < b.top) or (a.y > b.bottom): return false
+method collide*(a: PPointCollider, b: PBoxCollider): bool =
+  if (a.x < b.left) or (a.x >= b.right): return false
+  if (a.y < b.top) or (a.y >= b.bottom): return false
   return true
 
 
 # Box - Point
-method collide(a: PBoxCollider, b: PPointCollider): bool {.inline.} =
+method collide*(a: PBoxCollider, b: PPointCollider): bool {.inline.} =
   return collide(b, a)
 
 
 # Point - Circle
-method collide(a: PPointCollider, b: PCircleCollider): bool =
+method collide*(a: PPointCollider, b: PCircleCollider): bool =
   if UInt16(distance((a.x, a.y), (b.centerX, b.centerY))) > b.radius: return false
   return true
 
 
 # Circle - Point
-method collide(a: PCircleCollider, b: PPointCollider): bool {.inline.} =
+method collide*(a: PCircleCollider, b: PPointCollider): bool {.inline.} =
+  return collide(b, a)
+
+
+# Point - Mask
+method collide*(a: PPointCollider, b: PMaskCollider): bool =
+  var boxB: TRect
+  boxB = b.mask.getRect()
+  boxB.x = boxB.x + b.x
+  boxB.y = boxB.y + b.y
+  if not collide(a, newBoxCollider(boxB)):
+    return false
+  if b.mask.data[a.y - boxB.y][a.x - boxB.x]:
+    return true
+  return false
+
+
+# Mask - Point
+method collide*(a: PMaskCollider, b: PPointCollider): bool {.inline.} =
   return collide(b, a)
 
 
 # Circle - Box
-method collide(a: PCircleCollider, b: PBoxCollider): bool =
+method collide*(a: PCircleCollider, b: PBoxCollider): bool =
   var cx, cy: int16 # closest point
   # cx
   if a.centerX < b.left: cx = b.left
@@ -181,5 +270,90 @@ method collide(a: PCircleCollider, b: PBoxCollider): bool =
 
 
 # Box - Circle
-method collide(a: PBoxCollider, b: PCircleCollider): bool {.inline.} =
+method collide*(a: PBoxCollider, b: PCircleCollider): bool {.inline.} =
+  return collide(b, a)
+
+
+# Circle - Mask
+method collide*(a: PCircleCollider, b: PMaskCollider): bool =
+  # Check bounding boxes
+  var boxB: TRect
+  boxB = b.mask.getRect()
+  boxB.x = boxB.x + b.x
+  boxB.y = boxB.y + b.y
+  if not collide(a, newBoxCollider(boxB)):
+    return false
+  # Check intersection rect
+  var boxA, rectB: TRect
+  var width, height: int16
+  boxA.x = a.centerX - a.radius
+  boxA.y = a.centerY - a.radius
+  boxA.w = a.centerX + a.radius
+  boxA.h = a.centerY + a.radius
+  if boxA.x > b.x:
+    rectB.x = boxA.x - b.x
+    width = min(b.mask.w - rectB.x, boxA.w)
+  else:
+    rectB.x = 0'i16
+    width = min(boxA.x + boxA.w - b.x, b.mask.w)
+  if boxA.y > b.y:
+    rectB.y = boxA.y - b.y
+    height = min(b.mask.h - rectB.y, boxA.h)
+  else:
+    rectB.y = 0'i16
+    height = min(boxA.x + boxA.h - b.y, b.mask.h)
+  rectB.w = width
+  rectB.h = height
+  # Per-pixel scan
+  let offsetX = boxB.x + rectB.x - a.centerX
+  let offsetY = boxB.y + rectB.y - a.centerY
+  for y in 0..height-1:
+    for x in 0..width-1:
+      let dx = abs(offsetX + x)
+      let dy = abs(offsetY + y)
+      if dx*dx + dy*dy <= a.radius*a.radius and
+         b.mask.data[rectB.y + y][rectB.x + x]:
+        return true
+  return false
+
+
+# Mask - Circle
+method collide*(a: PMaskCollider, b: PCircleCollider): bool {.inline.} =
+  return collide(b, a)
+
+# Box - Mask
+method collide*(a: PBoxCollider, b: PMaskCollider): bool =
+  # Check bounding boxes
+  var boxB: TRect
+  boxB = b.mask.getRect()
+  boxB.x = boxB.x + b.x
+  boxB.y = boxB.y + b.y
+  if not collide(a, newBoxCollider(boxB)):
+    return false
+  # Check intersection rect
+  var rectB: TRect
+  var width, height: int16
+  if a.left > b.x:
+    rectB.x = a.left - b.x
+    width = min(b.mask.w - rectB.x, a.right - a.left)
+  else:
+    rectB.x = 0'i16
+    width = min(a.right - b.x, b.mask.w)
+  if a.top > b.y:
+    rectB.y = a.top - b.y
+    height = min(b.mask.h - rectB.y, a.bottom - a.top)
+  else:
+    rectB.y = 0'i16
+    height = min(a.bottom - b.y, b.mask.h)
+  rectB.w = width
+  rectB.h = height
+  # Per-pixel scan
+  for y in 0..height-1:
+    for x in 0..width-1:
+      if b.mask.data[rectB.y + y][rectB.x + x]:
+        return true
+  return false
+
+# Mask - Box
+method collide*(a: PMaskCollider, b: PBoxCollider): bool {.inline.} =
   return collide(b, a)

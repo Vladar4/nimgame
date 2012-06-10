@@ -65,17 +65,17 @@ method update*(obj: PEntity) {.inline.} =
 
 # get/set methods
 
-method rect*(obj: PEntity): TRect {.inline.} =
+method getRect*(obj: PEntity): TRect {.inline.} =
   result.x = obj.fX + obj.graphic.x
   result.y = obj.fY + obj.graphic.y
   result.w = UInt16(obj.graphic.surface.w)
   result.h = UInt16(obj.graphic.surface.h)
 
-method circle*(obj: PEntity): TCircle {.inline.} =
-  result.r = UInt16(min(obj.graphic.surface.w, obj.graphic.surface.h)/2)
-  result.x = obj.fX + obj.graphic.x + result.r
-  result.y = obj.fY + obj.graphic.y + result.r
 
+method getCircle*(obj: PEntity): TCircle {.inline.} =
+  result.r = UInt16(min(obj.graphic.surface.w, obj.graphic.surface.h)/2)
+  result.x = obj.fX + result.r + obj.graphic.x
+  result.y = obj.fY + result.r + obj.graphic.y
 
 # x
 method x*(obj: PEntity): int {.inline.} =
