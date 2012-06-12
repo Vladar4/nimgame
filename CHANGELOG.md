@@ -3,6 +3,9 @@ v0.2
 * Collisions:
     + point
     + mask
+* Input:
+    + mouse button events
+    + mouse movement
 
 v0.1
 ====

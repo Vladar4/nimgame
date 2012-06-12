@@ -55,7 +55,7 @@ proc newEngine*(width: int32 = 640,   # screen width
   result.fUpdateInterval = updateInterval
   # FPS
   result.fps = fps
-  result.fFPSText = newText("fnt/DejaVuSans.ttf", text=" ")
+  result.fFPSText = newText("fnt/FSEX300.ttf", text=" ")
   # randomize
   randomize()
 

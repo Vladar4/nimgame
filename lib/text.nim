@@ -36,7 +36,7 @@ method redraw(obj: PText) {.inline.} =
 proc init*(obj: PText,
            filename: cstring,
            text: string = "text",
-           size: cint = 12,
+           size: cint = 16,
            color: TColor = color(255, 255, 255),
            background: TColor = color(0, 0, 0),
            mode: TTextRenderMode = solid,
@@ -63,7 +63,7 @@ proc newText*(filename: cstring, # font filename
               x: int = 0, # x draw offset
               y: int = 0, # y draw offset
               text: string = "text", # text to show
-              size: cint = 12, # font size
+              size: cint = 16, # font size
               color: TColor = color(255, 255, 255), # font color
               background: TColor = color(0, 0, 0), # background color (only for shaded render mode)
               mode: TTextRenderMode = solid, # text render mode (see sdl_ttf documentation)
