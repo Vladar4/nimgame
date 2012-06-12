@@ -127,6 +127,12 @@ proc start*(obj: PEngine) =
       of KEYUP:
         addKeyEvent(EvKeyboard(eventp).keysym.sym, up)
       
+      of MOUSEBUTTONDOWN:
+        addButtonEvent(EvMouseButton(eventp).button, down)
+      
+      of MOUSEBUTTONUP:
+        addButtonEvent(EvMouseButton(eventp).button, up)
+
       of USEREVENT:
         case EvUser(eventp).code:
         of UE_UPDATE_TIMER: update = true
@@ -139,6 +145,7 @@ proc start*(obj: PEngine) =
       update = false
       if obj.state != nil: obj.state.update()
       resetKeyEvents()
+      resetButtonEvents()
     
     # render
     do(screen().fillRect(nil, obj.bgColor))

@@ -109,4 +109,3 @@ method centerOffsetX*(obj: PImageEx) {.inline.} =
 method centerOffsetY*(obj: PImageEx) {.inline.} =
   obj.originalPos.y = int16(obj.original.h / 2)
   obj.updateRotZoom()
-  

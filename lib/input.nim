@@ -1,26 +1,32 @@
-import sdl
-
-let keystate: PKeyStateArr = cast[PKeyStateArr](getKeyState(nil))
+import
+  sdl,
+  common
 
 type
   TKeyEventKind* = enum down, up
   TKeyEvent* = tuple[key: TKey, event: TKeyEventKind]
+  TButtonEvent* = tuple[button: int, event: TKeyEventKind]
 
+let keystate: PKeyStateArr = cast[PKeyStateArr](getKeyState(nil))
 var keyevents: seq[TKeyEvent] = @[]
-
-
-# check if key is pressed now
-proc keyPressed*(key: TKey): bool {.inline.} =
-  if keystate[int(key)] == 1: return true
-  else: return false
-
+var buttonevents: seq[TButtonEvent] = @[]
+var buttonispressed: array[1..MAX_BUTTONS, bool]
 
 proc resetKeyEvents*() {.inline.} =
   for i in countdown(keyevents.high, 0): keyevents.del(i)
 
+proc resetButtonEvents*() {.inline.} =
+  for i in countdown(buttonevents.high, 0): buttonevents.del(i)
+
 
 proc addKeyEvent*(key: TKey, event: TKeyEventKind) {.inline.} =
   keyevents.add((key, event))
+
+
+proc addButtonEvent*(btn: int, event: TKeyEventKind) {.inline.} =
+  buttonevents.add((btn, event))
+  if event == down: buttonispressed[btn] = true
+  else: buttonispressed[btn] = false
 
 
 proc isKeyEvent*(key: TKey, event: TKeyEventKind): bool =
@@ -31,6 +37,20 @@ proc isKeyEvent*(key: TKey, event: TKeyEventKind): bool =
   return false
 
 
+proc isButtonEvent*(btn: int, event: TKeyEventKind): bool =
+  for item in buttonevents.items:
+    if item.button == btn:
+      if item.event == event:
+        return true
+  return false
+
+
+# check if key is pressed now
+proc keyPressed*(key: TKey): bool {.inline.} =
+  if keystate[int(key)] == 1: return true
+  else: return false
+
+
 # check if was KEYDOWN event of this key since last update
 template isKeyDown*(key: TKey): bool =
   isKeyEvent(key, down)
@@ -39,3 +59,34 @@ template isKeyDown*(key: TKey): bool =
 # check if was KEYUP event of this key since last update
 template isKeyUp*(key: TKey): bool =
   isKeyEvent(key, up)
+
+
+# check if mouse button is pressed now
+proc buttonPressed*(btn: int): bool {.inline.} =
+  return buttonispressed[btn]
+
+
+# check if was MOUSEBUTTONDOWN event of this button since last update
+template isButtonDown*(btn: int): bool =
+  isButtonEvent(btn, down)
+
+
+# check if was MOUSEBUTTONUP event of this button since last update
+template isButtonUp*(btn: int): bool =
+  isKeyEvent(btn, up)
+
+
+# get mouse position
+proc mousePos*(): TPoint {.inline.} =
+  var x, y: int
+  discard getMouseState(x, y)
+  result.x = int16(x)
+  result.y = int16(y)
+
+
+# get relative mouse position
+proc mouseRelativePos*(): TPoint {.inline.} =
+  var x, y: int
+  discard getRelativeMouseState(x, y)
+  result.x = int16(x)
+  result.y = int16(y)
