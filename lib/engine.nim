@@ -1,6 +1,6 @@
 import
-  sdl, sdl_ttf, math,
-  common, state, timer, input, image, text
+  sdl, sdl_ttf, sdl_gfx, math,
+  common, state, timer, input, image, text, font
 
 type
   
@@ -55,7 +55,7 @@ proc newEngine*(width: int32 = 640,   # screen width
   result.fUpdateInterval = updateInterval
   # FPS
   result.fps = fps
-  result.fFPSText = newText("fnt/FSEX300.ttf", text=" ")
+  result.fFPSText = newText(newTTFFont("fnt/FSEX300.ttf"), text=" ")
   # randomize
   randomize()
 

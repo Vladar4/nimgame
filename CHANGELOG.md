@@ -3,6 +3,9 @@ v0.2
 * Collisions:
     + point
     + mask
+* Graphics:
+    + ttf fonts
+    + bmp fonts
 * Input:
     + mouse button events
     + mouse movement
