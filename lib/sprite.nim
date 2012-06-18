@@ -15,6 +15,15 @@ type
     fFrame: int
 
 
+# Fill sprite map with given color but save alpha channel
+method maskedFill*(obj: PSprite, color: TColor) =
+  let colorize = newSurface(obj.fSpritemap.surface.w, obj.fSpritemap.surface.h, true)
+  do(colorize.fillRect(nil, mapRGBA(colorize.format, color.r, color.g, color.b, 255'i8)))
+  do(colorize.blitSurface(nil, obj.fSpritemap.surface, nil))
+  freeSurface(colorize)
+
+
+# Blit single frame to the given surface without changing current frame
 method blitFrame*(obj: PSprite, frame: int, dstSurface: PSurface,
                   x: int16 = 0'i16, y: int16 = 0'i16) =
   var dstRect: TRect
@@ -22,20 +31,20 @@ method blitFrame*(obj: PSprite, frame: int, dstSurface: PSurface,
   dstRect.y = y
   dstRect.w = obj.fSpriteInfo.w
   dstRect.h = obj.fSpriteInfo.h
-  do(blitSurface(obj.fSpritemap.surface,
-                 addr(obj.fSpriteInfo.frames[frame]),
-                 dstSurface,
-                 addr(dstRect)))
+  do(blitSurfaceAlpha(obj.fSpritemap.surface,
+                      addr(obj.fSpriteInfo.frames[frame]),
+                      dstSurface,
+                      addr(dstRect)))
 
 
 method changeFrame(obj: PSprite, frame: int) =
   obj.fFrame = frame
   var dstRect: TRect
   do(fillRect(obj.original, nil, 0))
-  do(blitSurface(obj.fSpritemap.surface,
-                 addr(obj.fSpriteInfo.frames[obj.fFrame]),
-                 obj.original,
-                 addr(dstRect)))
+  do(blitSurfaceAlpha(obj.fSpritemap.surface,
+                      addr(obj.fSpriteInfo.frames[obj.fFrame]),
+                      obj.original,
+                      addr(dstRect)))
   obj.updateRotZoom()
 
 
@@ -60,6 +69,10 @@ proc init*(obj: PSprite,
     obj.fSpriteInfo.h = UInt16(obj.fSpritemap.surface.h - offsetY)
     obj.fSpriteInfo.cols = 1
     obj.fSpriteInfo.rows = 1
+  # check spritemap size
+  if obj.fSpriteInfo.w > obj.fSpritemap.surface.w or
+     obj.fSpriteInfo.w > obj.fSpritemap.surface.h:
+      echo("Error: spritemap size is too small")
   # generate frame rects
   for row in 0..obj.fSpriteInfo.rows-1:
     for col in 0..obj.fSpriteInfo.cols-1:
@@ -70,7 +83,8 @@ proc init*(obj: PSprite,
       rect.h = UInt16(obj.fSpriteInfo.h)
       obj.fSpriteInfo.frames.add(rect)
   # create surface
-  obj.surface = newSurface(obj.fSpriteInfo.w, obj.fSpriteInfo.h)
+  freeSurface(obj.surface)
+  obj.surface = newSurface(obj.fSpriteInfo.w, obj.fSpriteInfo.h, true)
 
 
 proc free*(obj: PSprite) =

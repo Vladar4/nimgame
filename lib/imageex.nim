@@ -18,7 +18,7 @@ proc init*(obj: PImageEx,
           ) =
   obj.original = convertSurface(obj.surface,
                                 obj.surface.format,
-                                obj.surface.flags)
+                               obj.surface.flags)
   obj.originalPos.x = obj.x
   obj.originalPos.y = obj.y
   obj.fAngle = 0.0
@@ -92,7 +92,10 @@ method angle*(obj: PImageEx): float64 {.inline.} =
   return obj.fAngle
 
 method `angle=`*(obj: PImageEx, value: float64) {.inline.} =
-  obj.fAngle = value
+  var val = value
+  if value > 360.0: val = float64(int(value) mod 360)
+  elif value < 360.0: val = float64(int(value) mod 360)
+  obj.fAngle = val
   obj.updateRotZoom()
 
 # Center offset

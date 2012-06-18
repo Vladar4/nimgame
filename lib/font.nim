@@ -24,7 +24,8 @@ type
   PBitmapFont* = ref TBitmapFont
   TBitmapFont* = object of TFontObject
     fFont: PSprite
-    color*: TColor
+    fColor: TColor
+    fUseColor: bool
 
 
 # methods
@@ -86,9 +87,19 @@ proc newTTFFont*(filename: cstring, # font filename
 
 # Bitmap Font
 
+
+method color*(obj: PBitmapFont): TColor {.inline.} =
+  return obj.fColor
+
+method `color=`*(obj: PBitmapFont, value: TColor) {.inline.} =
+  if obj.fUseColor:
+    obj.fColor = value
+    obj.fFont.maskedFill(obj.fColor)
+
+
 method render*(obj: PBitmapFont, text: string): PSurface {.inline.} =
   let width = obj.fFont.w * text.len
-  result = newSurface(width, obj.fFont.h)
+  result = newSurface(width, obj.fFont.h, true)
   var x: int16 = 0'i16
   for chr in text.items():
     let idx = ord(chr)
@@ -99,11 +110,21 @@ method render*(obj: PBitmapFont, text: string): PSurface {.inline.} =
 proc init*(obj: PBitmapFont,
            filename: cstring,
            w, h: UInt16,
-           color: TColor = color(255, 255, 255),
           ) =
+  obj.fUseColor = false
+  obj.fFont = newSprite(filename, w=w, h=h)
+  obj.color = color(0, 0, 0)
+
+
+proc init*(obj: PBitmapFont,
+           filename: cstring,
+           w, h: UInt16,
+           color: TColor,
+          ) =
+  obj.fUseColor = true
   obj.fFont = newSprite(filename, w=w, h=h)
   obj.color = color
-
+  
 
 proc free*(obj: PBitmapFont) =
   obj.fFont.free()
@@ -111,8 +132,15 @@ proc free*(obj: PBitmapFont) =
 
 
 proc newBitmapFont*(filename: cstring, # font filename
-                    w, h: int,
-                    color: TColor = color(255, 255, 255), # font color
+                    w, h: int,         # char dimensions
+                   ): PBitmapFont =
+  new(result, free)
+  init(result, filename, UInt16(w), UInt16(h))
+
+
+proc newBitmapFont*(filename: cstring, # font filename
+                    w, h: int,         # char dimensions
+                    color: TColor,     # font color
                    ): PBitmapFont =
   new(result, free)
   init(result, filename, UInt16(w), UInt16(h), color)

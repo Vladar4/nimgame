@@ -56,9 +56,22 @@ proc screen*(): PSurface {.inline.} =
 
 
 # create new surface
-proc newSurface*(width, height: int): PSurface {.inline.} =
-  let scr = screen()
-  return do(
+proc newSurface*(width, height: int, alpha: bool = false): PSurface {.inline.} =
+  let fmt = screen().format
+  let surface = do(
     createRGBSurface(
-      scr.flags, width, height, scr.format.bitsPerPixel,
-      scr.format.rMask, scr.format.gMask, scr.format.bMask, scr.format.aMask))
+      screen().flags, width, height, fmt.bitsPerPixel,
+      fmt.Rmask, fmt.Gmask, fmt.Bmask, fmt.Amask))
+  if alpha:
+    result = displayFormatAlpha(surface)
+    do(result.fillRect(nil, mapRGBA(result.format, 0'i8, 0'i8, 0'i8, 0'i8)))
+    freeSurface(surface)
+  else:
+    return surface
+
+# blit surface preserving alpha channel
+proc blitSurfaceAlpha*(src: PSurface, srcrect: PRect, dst: PSurface, dstrect: PRect): int =
+  do(src.setAlpha(0, 255'i8))
+  result = blitSurface(src, srcrect, dst, dstRect)
+  do(src.setAlpha(SRCALPHA, 255'i8))
+  do(src.setAlpha(SRCALPHA, 255'i8))
