@@ -15,6 +15,46 @@ const UE_UPDATE_FPS*: cint = 2
 proc distance*(a: TPoint, b: TPoint): float32 =
   return sqrt(pow(toFloat(b.x) - toFloat(a.x), 2.0) + pow(toFloat(b.y) - toFloat(a.y), 2.0))
 
+proc distance*(ax, ay: int16, b: TPoint): float32 {.inline.} =
+  return distance((ax, ay), b)
+
+proc distance*(a: TPoint, bx, by: int16): float32 {.inline.} =
+  return distance(a, (bx, by))
+
+proc distance*(ax, ay: int, b: TPoint): float32 {.inline.} =
+  return distance((ax.int16, ay.int16), b)
+
+proc distance*(a: TPoint, bx, by: int): float32 {.inline.} =
+  return distance(a, (bx.int16, by.int16))
+
+
+# angle direction from one to other point
+proc direction*(a: TPoint, b: TPoint): float64 =
+  let dx = float(a.x - b.x)
+  let dy = float(a.y - b.y)
+  return -(arctan2(dy, dx) / pi) * 180.0 + 90.0
+
+proc direction*(ax, ay: int16, b: TPoint): float64 {.inline.} =
+  return direction((ax, ay), b)
+
+proc direction*(a: TPoint, bx, by: int16): float64 {.inline.} =
+  return direction(a, (bx, by))
+
+proc direction*(ax, ay: int, b: TPoint): float64 {.inline.} =
+  return direction((ax.int16, ay.int16), b)
+
+proc direction*(a: TPoint, bx, by: int): float64 {.inline.} =
+  return direction(a, (bx.int16, by.int16))
+
+
+# convert degrees to radians
+template toRad*(a: float64): expr =
+  (a * pi / 180.0)
+
+# convert radians to degrees
+template toDeg*(a: float64): expr =
+  (a * 180.0 / pi)
+
 
 # create TColor
 proc color*(r: int, g: int, b: int): TColor {.inline.} =

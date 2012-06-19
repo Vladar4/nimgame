@@ -1,12 +1,13 @@
 import
-  sdl,
+  sdl, math,
   common, engine, image, collider
 
 type
 
   PEntity* = ref TEntity
   TEntity* = object of TObject
-    fX, fY: int16
+    fX, fY: float
+    fXi, fYi: int16
     fLayer*: int
     updateLayer*, deleteEntity*: bool
     kind*: string
@@ -21,14 +22,16 @@ proc free*(obj: PEntity) =
 
 proc init*(obj: PEntity,
            graphic: PImage,
-           x: int16 = 0'i16,
-           y: int16 = 0'i16,
+           x: float = 0.0,
+           y: float = 0.0,
            layer: int = 0,
            kind: string = "",
            collider: PCollider = nil
           ) =
   obj.fX = x
+  obj.fXi = x.round.int16
   obj.fY = y
+  obj.fYi = y.round.int16
   obj.fLayer = layer
   obj.updateLayer = false
   obj.deleteEntity = false
@@ -38,19 +41,20 @@ proc init*(obj: PEntity,
 
 
 proc newEntity*(graphic: PImage,
-                x: int = 0,
-                y: int = 0,
+                x: float = 0.0,
+                y: float = 0.0,
                 layer: int = 0,
                 kind: string = "",
                 collider: PCollider = nil
                ): PEntity =
   new(result, free)
-  init(result, graphic, int16(x), int16(y), layer, kind, collider)
+  init(result, graphic, x, y, layer, kind, collider)
+
 
 # render
 
 proc renderEntity*(obj: PEntity) =
-  obj.graphic.blit(obj.fX, obj.fY)
+  obj.graphic.blit(obj.fXi, obj.fYi)
 
 method render*(obj: PEntity) {.inline.} =
   obj.renderEntity()
@@ -66,33 +70,51 @@ method update*(obj: PEntity) {.inline.} =
 # get/set methods
 
 method getRect*(obj: PEntity): TRect {.inline.} =
-  result.x = obj.fX + obj.graphic.x
-  result.y = obj.fY + obj.graphic.y
+  result.x = obj.fXi + obj.graphic.x
+  result.y = obj.fYi + obj.graphic.y
   result.w = UInt16(obj.graphic.surface.w)
   result.h = UInt16(obj.graphic.surface.h)
 
 
 method getCircle*(obj: PEntity): TCircle {.inline.} =
   result.r = UInt16(min(obj.graphic.surface.w, obj.graphic.surface.h)/2)
-  result.x = obj.fX + result.r + obj.graphic.x
-  result.y = obj.fY + result.r + obj.graphic.y
+  result.x = obj.fXi + result.r + obj.graphic.x
+  result.y = obj.fYi + result.r + obj.graphic.y
 
 # x
-method x*(obj: PEntity): int {.inline.} =
+method x*(obj: PEntity): float {.inline.} =
   return obj.fX
 
+method xi*(obj: PEntity): int {.inline.} =
+  return obj.fXi
+
 method `x=`*(obj: PEntity, value: int) {.inline.} =
-  obj.fX = int16(value)
-  obj.collider.x = obj.fX + obj.graphic.x
+  obj.fX = float(value)
+  obj.fXi = int16(value)
+  obj.collider.x = obj.fXi + obj.graphic.x
+
+method `x=`*(obj: PEntity, value: float) {.inline.} =
+  obj.fX = value
+  obj.fXi = value.round.int16
+  obj.collider.x = obj.fXi + obj.graphic.x
 
 
 # y
-method y*(obj: PEntity): int {.inline.} =
+method y*(obj: PEntity): float {.inline.} =
   return obj.fY
 
+method yi*(obj: PEntity): int {.inline.} =
+  return obj.fYi
+
 method `y=`*(obj: PEntity, value: int) {.inline.} =
-  obj.fY = int16(value)
-  obj.collider.y = obj.fY + obj.graphic.y
+  obj.fY = float(value)
+  obj.fYi = int16(value)
+  obj.collider.y = obj.fY.round.int16 + obj.graphic.y
+
+method `y=`*(obj: PEntity, value: float) {.inline.} =
+  obj.fY = value
+  obj.fYi = value.round.int16
+  obj.collider.y = obj.fYi + obj.graphic.y
 
 
 # layer

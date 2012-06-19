@@ -61,6 +61,12 @@ proc newBoxCollider*(x, y, w, h: int): PBoxCollider =
   new(result)
   init(result, int16(x), int16(y), UInt16(w), UInt16(h))
 
+
+proc newBoxCollider*(pos: TPoint, w, h: int): PBoxCollider =
+  new(result)
+  init(result, pos.x, pos.y, UInt16(w), UInt16(h))
+
+
 # CircleCollider
 
 proc init*(obj: PCircleCollider, x, y: int16, r: UInt16) =
@@ -76,6 +82,11 @@ proc newCircleCollider*(x, y, r: int): PCircleCollider =
   new(result)
   init(result, int16(x), int16(y), UInt16(r))
 
+proc newCircleCollider*(pos: TPoint, r: int): PCircleCollider =
+  new(result)
+  init(result, pos.x, pos.y, UInt16(r))
+
+
 # MaskCollider
 
 proc init*(obj: PMaskCollider, mask: PMask, x, y: int16) =
@@ -86,6 +97,10 @@ proc init*(obj: PMaskCollider, mask: PMask, x, y: int16) =
 proc newMaskCollider*(mask: PMask, x, y: int): PMaskCollider =
   new(result)
   init(result, mask, int16(x), int16(y))
+
+proc newMaskCollider*(mask: PMask, pos: TPoint): PMaskCollider =
+  new(result)
+  init(result, mask, pos.x, pos.y)
 
 
 # methods
