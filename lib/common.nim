@@ -47,6 +47,10 @@ proc direction*(a: TPoint, bx, by: int): float64 {.inline.} =
   return direction(a, (bx.int16, by.int16))
 
 
+# vector absolute size
+proc absVector*(x, y: float): float32 {.inline.} =
+  return sqrt(x * x + y * y)
+
 # convert degrees to radians
 template toRad*(a: float64): expr =
   (a * pi / 180.0)
