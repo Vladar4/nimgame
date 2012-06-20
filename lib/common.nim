@@ -4,6 +4,7 @@ import
 type
   TPoint* = tuple [x: int16, y: int16]
   TCircle* = tuple [x: int16, y: int16, r: UInt16]
+  TVector* = tuple[x: float32, y: float32]
 
 
 # USEREVENT codes
@@ -47,10 +48,6 @@ proc direction*(a: TPoint, bx, by: int): float64 {.inline.} =
   return direction(a, (bx.int16, by.int16))
 
 
-# vector absolute size
-proc absVector*(x, y: float): float32 {.inline.} =
-  return sqrt(x * x + y * y)
-
 # convert degrees to radians
 template toRad*(a: float64): expr =
   (a * pi / 180.0)
@@ -58,6 +55,26 @@ template toRad*(a: float64): expr =
 # convert radians to degrees
 template toDeg*(a: float64): expr =
   (a * 180.0 / pi)
+
+
+# calculete vector
+proc vector*(angle: float, size: float = 1.0): TVector {.inline.} =
+  result.x = - size * cos(toRad(angle - 90.0))
+  result.y = size * sin(toRad(angle - 90.0))
+
+proc vectorX*(angle: float, size: float = 1.0): float32 {.inline.} =
+  return - size * cos(toRad(angle - 90.0))
+
+proc vectorY*(angle: float, size: float = 1.0): float32 {.inline.} =
+  return size * sin(toRad(angle - 90.0))
+
+
+# vector absolute size
+proc absVector*(vector: TVector): float32 {.inline.} =
+  return sqrt(vector.x * vector.x + vector.y * vector.y)
+
+proc absVector*(x, y: float): float32 {.inline.} =
+  return sqrt(x * x + y * y)
 
 
 # create TColor

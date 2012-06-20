@@ -114,10 +114,11 @@ proc newSprite*(filename: cstring,
 method frame*(obj: PSprite): int {.inline.} = return obj.fFrame
 
 method `frame=`*(obj: PSprite, value: int) {.inline.} =
-  if value >= 0 and value <= obj.fSpriteInfo.frames.high():
-    obj.changeFrame(value)
-  else:
-    echo("Warning: frame index out of range (", value, ").")
+  if value != obj.fFrame:
+    if value >= 0 and value <= obj.fSpriteInfo.frames.high():
+      obj.changeFrame(value)
+    else:
+      echo("Warning: frame index out of range (", value, ").")
 
 
 # usage: frame = [col, row]
@@ -127,11 +128,13 @@ method `frame=`*(obj: PSprite, value: openarray[int]) {.inline.} =
     return
   let col = value[0]
   let row = value[1]
-  if col >= 0 and col < obj.fSpriteInfo.cols and
-     row >= 0 and row < obj.fSpriteInfo.rows:
-    obj.changeFrame(col + row * obj.fSpriteInfo.cols)
-  else:
-    echo("Warning: frame index out of range (", value[0], ":", value[1], ").")
+  let frame = col + row * obj.fSpriteInfo.cols
+  if frame != obj.fFrame:
+    if col >= 0 and col < obj.fSpriteInfo.cols and
+       row >= 0 and row < obj.fSpriteInfo.rows:
+      obj.changeFrame(frame)
+    else:
+      echo("Warning: frame index out of range (", value[0], ":", value[1], ").")
 
 method w*(obj: PSprite): Uint16 {.inline.} = return obj.fSpriteInfo.w
 method h*(obj: PSprite): Uint16 {.inline.} = return obj.fSpriteInfo.h
