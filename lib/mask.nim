@@ -58,6 +58,8 @@ proc init*(obj: PMask,
           ) =
   obj.x = x
   obj.y = y
+  obj.w = UInt16(surface.w)
+  obj.h = UInt16(surface.h)
   obj.setMask(surface)
 
 
