@@ -65,10 +65,10 @@ method updateEntityList(obj: PState) =
   # add
   while obj.fAddList.len > 0:
     obj.addToEntityList(obj.fAddList.pop())
-  # delete
   var max = obj.fEntityList.high
+  # delete
   for i in 0..max:
-    if obj.fEntityList[i].deleteEntity:
+    if obj.fEntityList[i].deleteEntity or obj.fEntityList[i].graphic.deleteEntity:
       obj.fEntityList.delete(i)
       i -= 1
       max -= 1
@@ -80,6 +80,7 @@ method updateEntityList(obj: PState) =
       let new_i = obj.updateLayer(i)
       if new_i < i: i = new_i
     i += 1
+
 
 # Collisions
 
@@ -128,7 +129,7 @@ method render*(obj: PState) {.inline.} =
 
 # update
 
-proc updateState*(obj: Pstate) =
+proc updateState*(obj: PState) =
   obj.updateEntityList()
   for entity in obj.fEntityList.items():
     entity.update()

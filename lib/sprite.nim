@@ -4,15 +4,22 @@ import
 
 type
 
-  TSpriteInfo = tuple[frames: seq[TRect], # sequence of frame rects
-                      w, h: UInt16,       # frame size
-                      cols, rows: int]    # frame grid dimensions
+  TSpriteInfo* = tuple[frames: seq[TRect], # sequence of frame rects
+                      w, h: UInt16,        # frame size
+                      cols, rows: int]     # frame grid dimensions
+
+
+  TAnimationAction* = enum doNothing, setFirstFrame, deleteEntity
 
   PSprite* = ref TSprite
   TSprite* = object of TImageEx
     fSpritemap: PImage
     fSpriteInfo: TSpriteInfo
     fFrame: int
+    play*, loop*: bool
+    animFirst*, animLast*: int
+    animRate*, animRateCounter: UInt32
+    animAction*: TAnimationAction
 
 
 # Fill sprite map with given color but save alpha channel
@@ -71,7 +78,7 @@ proc init*(obj: PSprite,
     obj.fSpriteInfo.rows = 1
   # check spritemap size
   if obj.fSpriteInfo.w > obj.fSpritemap.surface.w or
-     obj.fSpriteInfo.w > obj.fSpritemap.surface.h:
+     obj.fSpriteInfo.h > obj.fSpritemap.surface.h:
       echo("Error: spritemap size is too small")
   # generate frame rects
   for row in 0..obj.fSpriteInfo.rows-1:
@@ -85,6 +92,12 @@ proc init*(obj: PSprite,
   # create surface
   freeSurface(obj.surface)
   obj.surface = newSurface(obj.fSpriteInfo.w, obj.fSpriteInfo.h, true)
+  obj.play = false
+  obj.loop = false
+  obj.animFirst = 0
+  obj.animLast = obj.fSpriteInfo.frames.high
+  obj.animRate = 1
+  obj.animRateCounter = 0
 
 
 proc free*(obj: PSprite) =
@@ -141,3 +154,47 @@ method h*(obj: PSprite): Uint16 {.inline.} = return obj.fSpriteInfo.h
 method cols*(obj: PSprite): int {.inline.} = return obj.fSpriteInfo.cols
 method rows*(obj: PSprite): int {.inline.} = return obj.fSpriteInfo.rows
 method count*(obj: PSprite): int {.inline.} = return obj.fSpriteInfo.frames.len()
+
+
+# animation
+method setAnimation*(obj: PSprite,
+                     first: int = 0, last: int = -1 ,rate: UInt32 = 1,
+                     loop: bool = false, play: bool = true,
+                     action: TAnimationAction = doNothing) =
+  obj.animFirst = first
+  if last == -1:
+    obj.animLast = obj.fSpriteInfo.frames.high
+  else:
+    obj.animLast = last
+  obj.animRate = rate
+  obj.loop = loop
+  obj.play = play
+  obj.animAction = action
+
+
+# update
+
+proc updateSprite*(obj: PSprite) =
+  if obj.play:
+    if obj.frame >= obj.animLast:
+      if obj.loop: # start new cycle
+        obj.frame = obj.animFirst
+      else: # stop animation
+        obj.play = false
+        case obj.animAction:
+        of doNothing: nil
+        of setFirstFrame: obj.frame = obj.animFirst
+        of deleteEntity: obj.deleteEntity = true
+    else: # next frame
+      if obj.animRate == 1:
+        obj.frame = obj.frame + 1
+      else:
+        if obj.animRateCounter < obj.animRate - 1:
+          obj.animRateCounter = obj.animRateCounter + 1
+        else:
+          obj.animRateCounter = 0
+          obj.frame = obj.frame + 1
+
+
+method update*(obj: PSprite) {.inline.} =
+  obj.updateSprite()

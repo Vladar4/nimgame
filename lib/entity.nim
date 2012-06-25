@@ -59,13 +59,6 @@ proc renderEntity*(obj: PEntity) =
 method render*(obj: PEntity) {.inline.} =
   obj.renderEntity()
 
-# update
-
-proc updateEntity*(obj: PEntity) =
-  nil
-
-method update*(obj: PEntity) {.inline.} =
-  obj.updateEntity()
 
 # get/set methods
 
@@ -130,3 +123,12 @@ method `layer=`*(obj: PEntity, value: int) {.inline.} =
 # mark entity for deletion
 method delete*(obj: PEntity) {.inline.} =
   obj.deleteEntity = true
+
+
+# update
+
+proc updateEntity*(obj: PEntity) =
+  obj.graphic.update()
+
+method update*(obj: PEntity) {.inline.} =
+  obj.updateEntity()

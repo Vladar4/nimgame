@@ -8,6 +8,8 @@ type
   TImage* = object of TObject
     x*, y*: int16
     surface*: PSurface
+    visible*: bool
+    deleteEntity*: bool
 
 
 # TImage methods
@@ -20,6 +22,8 @@ proc init*(obj: PImage,
   # set position
   obj.x = x
   obj.y = y
+  obj.visible = true
+  obj.deleteEntity = false
   # load image
   if filename != nil:
     let surface: PSurface = do(imgLoad(filename))
@@ -28,7 +32,8 @@ proc init*(obj: PImage,
 
 
 method free*(obj: PImage) =
-  freeSurface(obj.surface)
+  # ERROR
+  #freeSurface(obj.surface)
 
 
 proc newImage*(filename: cstring,
@@ -42,10 +47,17 @@ proc newImage*(filename: cstring,
 # blit
 
 method blit*(obj: PImage, x = 0'i16, y = 0'i16) =
+  if not obj.visible: return
   var dstRect: TRect
   dstRect.x = x + obj.x
   dstRect.y = y + obj.y
   do(blitSurface(obj.surface, nil, screen(), addr(dstRect)))
+
+
+# update
+method update*(obj: PImage) {.inline.} =
+  nil
+
 
 # get/set methods
 
@@ -54,6 +66,7 @@ method getRect*(obj: PImage): TRect =
   result.y = obj.y
   result.w = UInt16(obj.surface.w)
   result.h = UInt16(obj.surface.h)
+
 
 # center offset
 
@@ -66,3 +79,12 @@ method centerOffsetX*(obj: PImage) {.inline.} =
 
 method centerOffsetY*(obj: PImage) {.inline.} =
   obj.y = -int16(obj.surface.h / 2)
+
+
+# visibility
+
+method show*(obj: PImage) {.inline.} =
+  obj.visible = true
+
+method hide*(obj: PImage) {.inline.} =
+  obj.visible = false
