@@ -1,5 +1,5 @@
 import
-  sdl, sdl_image,
+  sdl,
   common
 
 type
@@ -24,11 +24,20 @@ proc init*(obj: PImage,
   obj.y = y
   obj.visible = true
   obj.deleteEntity = false
-  # load image
-  if filename != nil:
-    let surface: PSurface = do(imgLoad(filename))
-    obj.surface = displayFormatAlpha(surface)
-    freeSurface(surface)
+  obj.surface = loadImage(filename)
+
+
+proc init*(obj: PImage,
+           surface: PSurface,
+           x: int16 = 0'i16,
+           y: int16 = 0'i16,
+          ) =
+  # set position
+  obj.x = x
+  obj.y = y
+  obj.visible = true
+  obj.deleteEntity = false
+  obj.surface = surface
 
 
 method free*(obj: PImage) =
@@ -42,6 +51,14 @@ proc newImage*(filename: cstring,
               ): PImage =
   new(result, free)
   init(result, filename, int16(x), int16(y))
+
+
+proc newImage*(surface: PSurface,
+               x: int = 0,  # x draw offset
+               y: int = 0,  # y draw offset
+              ): PImage =
+  new(result, free)
+  init(result, surface, int16(x), int16(y))
 
 
 # blit

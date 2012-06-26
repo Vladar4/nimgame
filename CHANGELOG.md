@@ -6,6 +6,7 @@ v0.2
 * Graphics:
     + ttf fonts
     + bmp fonts
+    + sprite animations
 * Input:
     + mouse button events
     + mouse movement

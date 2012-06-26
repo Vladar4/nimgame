@@ -117,6 +117,15 @@ proc init*(obj: PBitmapFont,
 
 
 proc init*(obj: PBitmapFont,
+           surface: PSurface,
+           w, h: UInt16,
+          ) =
+  obj.fUseColor = false
+  obj.fFont = newSprite(surface, w=w, h=h)
+  obj.color = color(0, 0, 0)
+
+
+proc init*(obj: PBitmapFont,
            filename: cstring,
            w, h: UInt16,
            color: TColor,
@@ -124,7 +133,17 @@ proc init*(obj: PBitmapFont,
   obj.fUseColor = true
   obj.fFont = newSprite(filename, w=w, h=h)
   obj.color = color
-  
+
+
+proc init*(obj: PBitmapFont,
+           surface: PSurface,
+           w, h: UInt16,
+           color: TColor,
+          ) =
+  obj.fUseColor = true
+  obj.fFont = newSprite(surface, w=w, h=h)
+  obj.color = color
+
 
 proc free*(obj: PBitmapFont) =
   obj.fFont.free()
@@ -138,9 +157,25 @@ proc newBitmapFont*(filename: cstring, # font filename
   init(result, filename, UInt16(w), UInt16(h))
 
 
+proc newBitmapFont*(surface: PSurface, # font surface
+                    w, h: int,         # char dimensions
+                   ): PBitmapFont =
+  new(result, free)
+  init(result, surface, UInt16(w), UInt16(h))
+
+
 proc newBitmapFont*(filename: cstring, # font filename
                     w, h: int,         # char dimensions
                     color: TColor,     # font color
                    ): PBitmapFont =
   new(result, free)
   init(result, filename, UInt16(w), UInt16(h), color)
+
+
+proc newBitmapFont*(surface: PSurface, # font surface
+                    w, h: int,         # char dimensions
+                    color: TColor,     # font color
+                   ): PBitmapFont =
+  new(result, free)
+  init(result, surface, UInt16(w), UInt16(h), color)
+

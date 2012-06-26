@@ -1,5 +1,5 @@
 import
-  sdl, sdl_ttf, math
+  sdl, sdl_image, sdl_ttf, math
 
 type
   TPoint* = tuple [x: int16, y: int16]
@@ -117,7 +117,7 @@ proc screen*(): PSurface {.inline.} =
 
 
 # create new surface
-proc newSurface*(width, height: int, alpha: bool = false): PSurface {.inline.} =
+proc newSurface*(width, height: int, alpha: bool = false): PSurface =
   let fmt = screen().format
   let surface = do(
     createRGBSurface(
@@ -129,6 +129,18 @@ proc newSurface*(width, height: int, alpha: bool = false): PSurface {.inline.} =
     freeSurface(surface)
   else:
     return surface
+
+
+# Load image to the new surface
+proc loadImage*(filename: cstring): PSurface =
+  if filename != nil:
+    if filename.len > 0:
+      let surface: PSurface = do(imgLoad(filename))
+      result = displayFormatAlpha(surface)
+      freeSurface(surface)
+  else:
+    return nil
+
 
 # blit surface preserving alpha channel
 proc blitSurfaceAlpha*(src: PSurface, srcrect: PRect, dst: PSurface, dstrect: PRect): int =

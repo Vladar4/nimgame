@@ -116,11 +116,31 @@ proc newSprite*(filename: cstring,
                 smooth: cint = 1, # smooth
                ): PSprite =
   new(result, free)
-  init(PImage(result), nil, int16(x), int16(y))
+  init(PImage(result), "", int16(x), int16(y))
   result.fSpritemap = newImage(filename)
   init(result, UInt16(w), UInt16(h), rows, cols, int16(offsetX), int16(offsetY))
   init(PImageEx(result), smooth)
   result.changeFrame(0)
+
+
+proc newSprite*(surface: PSurface,
+                x: int = 0, # x draw offset
+                y: int = 0, # y draw offset
+                w: int = 0, # frame width
+                h: int = 0, # frame height
+                rows: int = 0,  # frame grid rows
+                cols: int = 0,  # frame grid cols
+                offsetX: int = 0, # x frame grid offset
+                OffsetY: int = 0, # y frame grid offset
+                smooth: cint = 1, # smooth
+               ): PSprite =
+  new(result, free)
+  init(PImage(result), "", int16(x), int16(y))
+  result.fSpritemap = newImage(surface)
+  init(result, UInt16(w), UInt16(h), rows, cols, int16(offsetX), int16(offsetY))
+  init(PImageEx(result), smooth)
+  result.changeFrame(0)
+
 
 # get/set methods
 

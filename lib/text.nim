@@ -38,7 +38,7 @@ proc newText*(font: PFontObject, # font
               text: string = "text", # text to show
              ): PText =
   new(result, free)
-  init(PImage(result), nil, int16(x), int16(y))
+  init(PImage(result), "", int16(x), int16(y))
   init(result, font, text)
 
 

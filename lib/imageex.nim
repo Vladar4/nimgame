@@ -41,6 +41,16 @@ proc newImageEx*(filename: cstring,
   init(result, smooth)
 
 
+proc newImageEx*(surface: PSurface,
+                 x: int = 0,  # x draw offset
+                 y: int = 0,  # y draw offset
+                 smooth: cint = 1,  # smooth
+                ): PImageEx =
+  new(result, free)
+  init(PImage(result), surface, int16(x), int16(y))
+  init(result, smooth)
+
+
 method updateRotZoom*(obj: PImageEx) =
   var pos: TPoint
   pos.x = obj.originalPos.x
