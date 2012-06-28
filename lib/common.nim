@@ -5,11 +5,18 @@ type
   TPoint* = tuple [x: int16, y: int16]
   TCircle* = tuple [x: int16, y: int16, r: UInt16]
   TVector* = tuple[x: float32, y: float32]
+  
+  PPixelArray* = ref TPixelArray
+  TPixelArray* = array[0..524288, UInt32] # 524288 is 2560x2048 (QSXGA) surface size
 
 
 # USEREVENT codes
 const UE_UPDATE_TIMER*: cint = 1
 const UE_UPDATE_FPS*: cint = 2
+
+
+var scrBuffer: PSurface = nil
+var scrScale: int32 = 1
 
 
 # distance between two points
@@ -113,7 +120,13 @@ proc do*(ret: PFont): PFont =
 
 # get screen surface
 proc screen*(): PSurface {.inline.} =
-  return do(getVideoSurface())
+  if scrScale == 1: return do(getVideoSurface())
+  else: return scrBuffer
+
+
+# get screen scale
+proc screenScale*(): int {.inline.} =
+  return scrScale
 
 
 # create new surface
@@ -129,6 +142,15 @@ proc newSurface*(width, height: int, alpha: bool = false): PSurface =
     freeSurface(surface)
   else:
     return surface
+
+
+# screen buffer
+proc initScreenBuffer*(w, h, scale: int) =
+  if scale > 1: scrBuffer = newSurface(w, h)
+  scrScale = scale
+
+proc freeScreenBuffer*() =
+  if scrBuffer != nil: freeSurface(scrBuffer)
 
 
 # Load image to the new surface

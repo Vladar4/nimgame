@@ -5,7 +5,7 @@ import
 type
   
   TScreen* = tuple[surface: PSurface,
-                   width, height, bpp, flags: int32]
+                   width, height, flags: int32, scale: UInt16]
 
   PEngine* = ref TEngine
   TEngine* = object of TObject
@@ -27,13 +27,14 @@ var game*: PEngine
 method free*(obj: PEngine) =
   echo("Shutdown")
   if obj.state != nil: obj.state.free()
+  freeScreenBuffer()
   sdl.quit()
 
 
 proc newEngine*(width: int32 = 640,   # screen width
                 height: int32 = 480,  # screen height
-                bpp: int32 = 32,      # bits per pixel
                 flags: int32 = 0,     # init flags
+                scale: int32 = 1,     # screen scale rate
                 title: cstring = "",  # window caption
                 updateInterval: int32 = 20, # interval of update event in ms
                 fps: bool = false, # show FPS
@@ -41,14 +42,16 @@ proc newEngine*(width: int32 = 640,   # screen width
                ): PEngine =
   new(result, free)
   # screen setup
-  result.fScreen.width = width
-  result.fScreen.height = height
-  result.fScreen.BPP = bpp
+  result.fScreen.width = width * scale
+  result.fScreen.height = height * scale
   result.fScreen.flags = flags
+  result.fScreen.scale = toU16(scale)
   # init
   do(sdl.init(INIT_VIDEO))
   do(sdl_ttf.init())
-  result.fScreen.surface = do(setVideoMode(width, height, bpp, flags))
+  result.fScreen.surface = do(setVideoMode(result.fScreen.width, result.fScreen.height,
+                                           32, flags))
+  initScreenBuffer(width, height, scale)
   result.bgColor = mapRGB(result.fScreen.surface.format, bgColor.r, bgColor.g, bgColor.b)
   if title != "": WM_SetCaption(title, nil)
   # Update
@@ -64,6 +67,27 @@ proc newEngine*(width: int32 = 640,   # screen width
 method run*(obj: PEngine): bool {.inline.} = return obj.fRun
 method `run=`*(obj: PEngine, value: bool) {.inline.} = obj.fRun = value
 method stop*(obj: PEngine) {.inline.} = obj.fRun = false
+
+
+# scale screen
+proc scale(obj: PEngine) =
+  let scr = screen()
+  let pixels: PPixelArray = cast[PPixelArray](scr.pixels)
+  var offset: int
+  var pixel: UInt32
+  var rect: TRect
+  rect.w = obj.fScreen.scale
+  rect.h = obj.fScreen.scale
+  # scaling
+  do(lockSurface(scr))
+  for y in 0..scr.h-1:
+    for x in 0..scr.w-1:
+      offset = y * scr.w + x
+      pixel = pixels[offset]
+      rect.x = int16(x) * obj.fScreen.scale
+      rect.y = int16(y) * obj.fScreen.scale
+      do(obj.fScreen.surface.fillRect(addr(rect), pixel))
+  unlockSurface(scr)
 
 
 # flip screen
@@ -91,7 +115,7 @@ proc onFPSTimer() =
   EvUser(eventp).data1 = nil
   EvUser(eventp).data2 = nil
   do(pushEvent(addr(event)))
-  
+
 
 # main cycle
 proc start*(obj: PEngine) =
@@ -157,4 +181,5 @@ proc start*(obj: PEngine) =
     if obj.fps: obj.fFPSText.blit()
     FPSCounter = FPSCounter + 1
     # flip screen
+    if obj.fScreen.scale > 1: obj.scale()      
     obj.flip()

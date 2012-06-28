@@ -1,3 +1,8 @@
+v0.3 (in process)
+=================
+* Graphics:
+    + screen scaling
+
 v0.2
 ====
 * Collisions:

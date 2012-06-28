@@ -80,13 +80,20 @@ template isButtonUp*(btn: int): bool =
 proc mousePos*(): TPoint {.inline.} =
   var x, y: int
   discard getMouseState(x, y)
-  result.x = int16(x)
-  result.y = int16(y)
-
+  if screenScale() == 1:
+    result.x = int16(x)
+    result.y = int16(y)
+  else:
+    result.x = int16(x / screenScale())
+    result.y = int16(y / screenScale())
 
 # get relative mouse position
 proc mouseRelativePos*(): TPoint {.inline.} =
   var x, y: int
   discard getRelativeMouseState(x, y)
-  result.x = int16(x)
-  result.y = int16(y)
+  if screenScale() == 1:
+    result.x = int16(x)
+    result.y = int16(y)
+  else:
+    result.x = int16(x / screenScale())
+    result.y = int16(y / screenScale())
