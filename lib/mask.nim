@@ -13,7 +13,7 @@ proc setMask*(obj: PMask,
               surface: PSurface) =
   do(lockSurface(surface))
   let format = surface.format
-  let pixels: PByteArray = cast[PByteArray](surface.pixels)
+  let pixels: PPixelArray = cast[PPixelArray](surface.pixels)
   var offset: int
   var pixel, temp: UInt32
   var alpha: int16
@@ -22,7 +22,7 @@ proc setMask*(obj: PMask,
     obj.data.add(@[])
     #write(stdout, "\n")  # DEBUG: Uncomment to output mask
     for x in 0..surface.w-1:
-      offset = y * surface.pitch + x * format.BytesPerPixel + 3
+      offset = y * surface.w + x
       pixel = pixels[offset]
       temp = pixel and format.Amask
       temp = temp shr format.Ashift
