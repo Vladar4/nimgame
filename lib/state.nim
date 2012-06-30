@@ -38,6 +38,25 @@ method del*(obj: PState, entity: PEntity) =
   obj.fEntityList.delete(index)
 
 
+# delete all entities from state
+method clear*(obj: PState) =
+  while len(obj.fEntityList) > 0:
+    obj.fEntityList.del(obj.fEntityList.high)
+
+
+# return count of entities in state
+method count*(obj: PState): int {.inline.} =
+  return obj.fEntityList.len
+
+
+# return sequence of entities of given kind
+method findKind*(obj: PState, kind: string): seq[PEntity] =
+  result = @[]
+  for i in 0..obj.fEntityList.high:
+    if obj.fEntityList[i].kind == kind:
+      result.add(obj.fEntityList[i])
+
+
 method addToEntityList(obj: PState, entity: PEntity) =
   if obj.fEntityList.len > 0:
     for i in 0..obj.fEntityList.high:
@@ -123,7 +142,6 @@ proc renderState*(obj: PState) =
   for entity in obj.fEntityList.items():
     entity.render()
 
-
 method render*(obj: PState) {.inline.} =
   obj.renderState()
 
@@ -134,11 +152,5 @@ proc updateState*(obj: PState) =
   for entity in obj.fEntityList.items():
     entity.update()
 
-
 method update*(obj: PState) {.inline.} =
   obj.updateState()
-
-
-# return count of entities in state
-method count*(obj: PState): int {.inline.} =
-  return obj.fEntityList.len

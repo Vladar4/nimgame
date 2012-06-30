@@ -1,6 +1,6 @@
 import
   sdl, sdl_ttf,
-  common, sprite
+  common, screen, sprite
 
 type
 

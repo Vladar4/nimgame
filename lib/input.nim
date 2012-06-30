@@ -1,6 +1,6 @@
 import
   sdl,
-  common
+  common, screen
 
 type
   TKeyEventKind* = enum down, up

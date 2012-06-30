@@ -1,6 +1,6 @@
 import
   sdl, sdl_image, math,
-  common, image, imageex
+  common, screen, image, imageex
 
 type
 
@@ -196,7 +196,8 @@ method setAnimation*(obj: PSprite,
 
 proc updateSprite*(obj: PSprite) =
   if obj.play:
-    if obj.frame >= obj.animLast:
+    if obj.frame >= obj.animLast and obj.animRateCounter >= obj.animRate - 1:
+      obj.animRateCounter = 0
       if obj.loop: # start new cycle
         obj.frame = obj.animFirst
       else: # stop animation

@@ -1,5 +1,6 @@
 import
-  sdl, sdl_image, common
+  sdl, sdl_image,
+  common, screen
 
 type
   PMask* = ref TMask

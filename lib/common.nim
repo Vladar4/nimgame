@@ -6,20 +6,14 @@ type
   TCircle* = tuple [x: int16, y: int16, r: UInt16]
   TVector* = tuple[x: float32, y: float32]
   
-  PPixelArray* = ref TPixelArray
-  TPixelArray* = array[0..524288, UInt32] # 524288 is 2560x2048 (QSXGA) surface size
-
 
 # USEREVENT codes
 const UE_UPDATE_TIMER*: cint = 1
 const UE_UPDATE_FPS*: cint = 2
 
 
-var scrBuffer: PSurface = nil
-var scrScale: int32 = 1
-
-
 # distance between two points
+
 proc distance*(a: TPoint, b: TPoint): float32 =
   return sqrt(pow(toFloat(b.x) - toFloat(a.x), 2.0) + pow(toFloat(b.y) - toFloat(a.y), 2.0))
 
@@ -37,6 +31,7 @@ proc distance*(a: TPoint, bx, by: int): float32 {.inline.} =
 
 
 # angle direction from one to other point
+
 proc direction*(a: TPoint, b: TPoint): float64 =
   let dx = float(a.x - b.x)
   let dy = float(a.y - b.y)
@@ -65,6 +60,7 @@ template toDeg*(a: float64): expr =
 
 
 # calculete vector
+
 proc vector*(angle: float, size: float = 1.0): TVector {.inline.} =
   result.x = - size * cos(toRad(angle - 90.0))
   result.y = size * sin(toRad(angle - 90.0))
@@ -77,6 +73,7 @@ proc vectorY*(angle: float, size: float = 1.0): float32 {.inline.} =
 
 
 # vector absolute size
+
 proc absVector*(vector: TVector): float32 {.inline.} =
   return sqrt(vector.x * vector.x + vector.y * vector.y)
 
@@ -116,57 +113,3 @@ proc do*(ret: PFont): PFont =
     echo(sdl.getError())
     sdl.quit()
   return ret
-
-
-# get screen surface
-proc screen*(): PSurface {.inline.} =
-  if scrScale == 1: return do(getVideoSurface())
-  else: return scrBuffer
-
-
-# get screen scale
-proc screenScale*(): int {.inline.} =
-  return scrScale
-
-
-# create new surface
-proc newSurface*(width, height: int, alpha: bool = false): PSurface =
-  let fmt = screen().format
-  let surface = do(
-    createRGBSurface(
-      screen().flags, width, height, fmt.bitsPerPixel,
-      fmt.Rmask, fmt.Gmask, fmt.Bmask, fmt.Amask))
-  if alpha:
-    result = displayFormatAlpha(surface)
-    do(result.fillRect(nil, mapRGBA(result.format, 0'i8, 0'i8, 0'i8, 0'i8)))
-    freeSurface(surface)
-  else:
-    return surface
-
-
-# screen buffer
-proc initScreenBuffer*(w, h, scale: int) =
-  if scale > 1: scrBuffer = newSurface(w, h)
-  scrScale = scale
-
-proc freeScreenBuffer*() =
-  if scrBuffer != nil: freeSurface(scrBuffer)
-
-
-# Load image to the new surface
-proc loadImage*(filename: cstring): PSurface =
-  if filename != nil:
-    if filename.len > 0:
-      let surface: PSurface = do(imgLoad(filename))
-      result = displayFormatAlpha(surface)
-      freeSurface(surface)
-  else:
-    return nil
-
-
-# blit surface preserving alpha channel
-proc blitSurfaceAlpha*(src: PSurface, srcrect: PRect, dst: PSurface, dstrect: PRect): int =
-  do(src.setAlpha(0, 255'i8))
-  result = blitSurface(src, srcrect, dst, dstRect)
-  do(src.setAlpha(SRCALPHA, 255'i8))
-  do(src.setAlpha(SRCALPHA, 255'i8))
