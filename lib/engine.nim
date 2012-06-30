@@ -1,6 +1,6 @@
 import
   sdl, sdl_ttf, sdl_gfx, math,
-  common, state, timer, input, image, text, font
+  common, screen, state, timer, input, image, text, font
 
 type
   
@@ -73,20 +73,20 @@ method stop*(obj: PEngine) {.inline.} = obj.fRun = false
 proc scale(obj: PEngine) =
   let scr = screen()
   let pixels: PPixelArray = cast[PPixelArray](scr.pixels)
-  var offset: int
-  var pixel: UInt32
   var rect: TRect
   rect.w = obj.fScreen.scale
   rect.h = obj.fScreen.scale
+  var offset: int = 0
   # scaling
   do(lockSurface(scr))
+  rect.y = 0'i16
   for y in 0..scr.h-1:
+    rect.x = 0'i16
     for x in 0..scr.w-1:
-      offset = y * scr.w + x
-      pixel = pixels[offset]
-      rect.x = int16(x) * obj.fScreen.scale
-      rect.y = int16(y) * obj.fScreen.scale
-      do(obj.fScreen.surface.fillRect(addr(rect), pixel))
+      do(obj.fScreen.surface.fillRect(addr(rect), pixels[offset]))
+      offset += 1
+      rect.x = rect.x + obj.fScreen.scale
+    rect.y = rect.y + obj.fScreen.scale
   unlockSurface(scr)
 
 
