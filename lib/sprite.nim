@@ -17,7 +17,8 @@ type
     fSpriteInfo: TSpriteInfo
     fFrame: int
     play*, loop*: bool
-    animFirst*, animLast*: int
+    animFrames: seq[int]
+    animIndex: int
     animRate*, animRateCounter: UInt32
     animAction*: TAnimationAction
 
@@ -94,8 +95,8 @@ proc init*(obj: PSprite,
   obj.surface = newSurface(obj.fSpriteInfo.w, obj.fSpriteInfo.h, true)
   obj.play = false
   obj.loop = false
-  obj.animFirst = 0
-  obj.animLast = obj.fSpriteInfo.frames.high
+  obj.animFrames = @[0]
+  obj.animIndex = 0
   obj.animRate = 1
   obj.animRateCounter = 0
 
@@ -178,43 +179,59 @@ method count*(obj: PSprite): int {.inline.} = return obj.fSpriteInfo.frames.len(
 
 # animation
 method setAnimation*(obj: PSprite,
-                     first: int = 0, last: int = -1 ,rate: UInt32 = 1,
+                     frames: seq[int], rate: UInt32 = 1,
                      loop: bool = false, play: bool = true,
                      action: TAnimationAction = doNothing) =
-  obj.animFirst = first
-  if last == -1:
-    obj.animLast = obj.fSpriteInfo.frames.high
-  else:
-    obj.animLast = last
+  if frames.len < 1:
+    obj.frame = 0
+    return
+  obj.frame = frames[0]
+  obj.animFrames = frames
   obj.animRate = rate
+  obj.animRateCounter = 0
   obj.loop = loop
   obj.play = play
   obj.animAction = action
 
+method setAnimation*(obj: PSprite,
+                     first: int = 0, last: int = -1, rate: UInt32 = 1,
+                     loop: bool = false, play: bool = true,
+                     action: TAnimationAction = doNothing) =
+  var frames: seq[int] = @[]
+  if last < 0:
+    for i in first..obj.fSpriteInfo.frames.high:
+      frames.add(i)
+  else:
+    for i in first..last:
+      frames.add(i)
+  obj.setAnimation(frames, rate, loop, play, action)
+  
 
 # update
 
 proc updateSprite*(obj: PSprite) =
   if obj.play:
-    if obj.frame >= obj.animLast and obj.animRateCounter >= obj.animRate - 1:
+    if obj.animIndex >= obj.animFrames.high and
+       obj.animRateCounter >= obj.animRate - 1:
       obj.animRateCounter = 0
       if obj.loop: # start new cycle
-        obj.frame = obj.animFirst
+        obj.animIndex = 0
       else: # stop animation
         obj.play = false
         case obj.animAction:
         of doNothing: nil
-        of setFirstFrame: obj.frame = obj.animFirst
+        of setFirstFrame: obj.animIndex = 0
         of deleteEntity: obj.deleteEntity = true
     else: # next frame
       if obj.animRate == 1:
-        obj.frame = obj.frame + 1
+        obj.animIndex += 1
       else:
         if obj.animRateCounter < obj.animRate - 1:
           obj.animRateCounter = obj.animRateCounter + 1
         else:
           obj.animRateCounter = 0
-          obj.frame = obj.frame + 1
+          obj.animIndex += 1
+    obj.frame = obj.animFrames[obj.animIndex]
 
 
 method update*(obj: PSprite) {.inline.} =
