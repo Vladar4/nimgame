@@ -88,6 +88,8 @@ method updateEntityList(obj: PState) =
   # delete
   for i in 0..max:
     if obj.fEntityList[i].deleteEntity or obj.fEntityList[i].graphic.deleteEntity:
+      obj.fEntityList[i].deleteEntity = false
+      obj.fEntityList[i].graphic.deleteEntity = false
       obj.fEntityList.delete(i)
       i -= 1
       max -= 1

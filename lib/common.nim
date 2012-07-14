@@ -9,7 +9,7 @@ type
 
 # USEREVENT codes
 const UE_UPDATE_TIMER*: cint = 1
-const UE_UPDATE_FPS*: cint = 2
+const UE_UPDATE_INFO*: cint = 2
 
 
 # distance between two points

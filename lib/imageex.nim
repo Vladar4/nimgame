@@ -18,7 +18,7 @@ proc init*(obj: PImageEx,
           ) =
   obj.original = convertSurface(obj.surface,
                                 obj.surface.format,
-                               obj.surface.flags)
+                                obj.surface.flags)
   obj.originalPos.x = obj.x
   obj.originalPos.y = obj.y
   obj.fAngle = 0.0
@@ -67,9 +67,15 @@ method updateRotZoom*(obj: PImageEx) =
   else:
     height = int16(obj.original.h.float64 * obj.fZoomY)
   # transform
+  if obj.surface != nil: freeSurface(obj.surface)
   obj.surface = obj.original.zoomSurface(obj.fZoomX, obj.fZoomY, obj.smooth)
   if obj.fAngle != 0.0:
-    obj.surface = obj.surface.rotozoomSurface(obj.fAngle, 1.0, obj.smooth)
+    var tmpSurface: PSurface = obj.surface.rotozoomSurface(obj.fAngle, 1.0, obj.smooth)
+    freeSurface(obj.surface)
+    obj.surface = convertSurface(tmpSurface,
+                                 tmpSurface.format,
+                                 tmpSurface.flags)
+    freeSurface(tmpSurface)
   # calculate offset
   let angle = obj.fAngle * PI / 180.0
   obj.x = int16(-((pos.y.float64 * obj.fZoomY - height / 2) * sin(angle) + (pos.x.float64 * obj.fZoomX - width / 2) * cos(angle))) - int16((obj.surface.w - width) / 2 + width / 2)

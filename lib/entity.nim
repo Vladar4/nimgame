@@ -26,7 +26,7 @@ proc init*(obj: PEntity,
            y: float = 0.0,
            layer: int = 0,
            kind: string = "",
-           collider: PCollider = nil
+           collider: PCollider = nil,
           ) =
   obj.fX = x
   obj.fXi = x.round.int16
@@ -45,7 +45,7 @@ proc newEntity*(graphic: PImage,
                 y: float = 0.0,
                 layer: int = 0,
                 kind: string = "",
-                collider: PCollider = nil
+                collider: PCollider = nil,
                ): PEntity =
   new(result, free)
   init(result, graphic, x, y, layer, kind, collider)

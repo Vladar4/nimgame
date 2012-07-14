@@ -11,11 +11,11 @@ type
   TEngine* = object of TObject
     fRun: bool
     fScreen: TScreen
-    fUpdateTimer, fFPSTimer: PTimer
+    fUpdateTimer, fInfoTimer: PTimer
     fUpdateInterval: int32
-    fFPSText: PText
+    fInfoText: PText
     state*: PState
-    fps*: bool
+    info*: bool
     bgColor*: int32
 
 var FPSCounter, lastFPS: int
@@ -37,7 +37,7 @@ proc newEngine*(width: int32 = 640,   # screen width
                 scale: int32 = 1,     # screen scale rate
                 title: cstring = "",  # window caption
                 updateInterval: int32 = 20, # interval of update event in ms
-                fps: bool = false, # show FPS
+                info: bool = false, # show info
                 bgColor: TColor = color(0, 0, 0), # background color
                ): PEngine =
   new(result, free)
@@ -56,9 +56,9 @@ proc newEngine*(width: int32 = 640,   # screen width
   if title != "": WM_SetCaption(title, nil)
   # Update
   result.fUpdateInterval = updateInterval
-  # FPS
-  result.fps = fps
-  result.fFPSText = newText(newBitmapFont("fnt/default8x16.png", 8, 16), x=4, y=2, text=" ")
+  # Info
+  result.info = info
+  result.fInfoText = newText(newBitmapFont("fnt/default8x16.png", 8, 16), x=4, y=2, text=" ")
   # randomize
   randomize()
 
@@ -67,6 +67,10 @@ proc newEngine*(width: int32 = 640,   # screen width
 method run*(obj: PEngine): bool {.inline.} = return obj.fRun
 method `run=`*(obj: PEngine, value: bool) {.inline.} = obj.fRun = value
 method stop*(obj: PEngine) {.inline.} = obj.fRun = false
+
+# switch info view
+proc switchInfo*(obj: PEngine) {.inline.} =
+  obj.info = not obj.info
 
 
 # scale screen
@@ -105,13 +109,13 @@ proc onUpdateTimer() =
   do(pushEvent(addr(event)))
 
 
-proc onFPSTimer() =
+proc onInfoTimer() =
   lastFPS = FPSCounter
   FPSCounter = 0
   var event: TEvent
   var eventp: PEvent = addr(event)
   event.kind = TEventKind.USEREVENT
-  EvUser(eventp).code = UE_UPDATE_FPS
+  EvUser(eventp).code = UE_UPDATE_INFO
   EvUser(eventp).data1 = nil
   EvUser(eventp).data2 = nil
   do(pushEvent(addr(event)))
@@ -123,11 +127,11 @@ proc start*(obj: PEngine) =
   obj.fRun = true
   # update timer
   obj.fUpdateTimer = newTimer(obj.fUpdateInterval, onUpdateTimer)
-  # FPS timer
-  var fpsUpd: bool = false
+  # Info timer
+  var infoUpd: bool = false
   FPSCounter = 0
   lastFPS = 0
-  obj.fFPSTimer = newTimer(1000, onFPSTimer)
+  obj.fInfoTimer = newTimer(1000, onInfoTimer)
   # state update
   var update: bool = false
   
@@ -135,7 +139,7 @@ proc start*(obj: PEngine) =
     
     # update timers
     obj.fUpdateTimer.update()
-    if obj.fps: obj.fFPSTimer.update()
+    if obj.info: obj.fInfoTimer.update()
     
     while pollEvent(addr(event)) == 1:
       let eventp = addr(event)
@@ -160,7 +164,7 @@ proc start*(obj: PEngine) =
       of USEREVENT:
         case EvUser(eventp).code:
         of UE_UPDATE_TIMER: update = true
-        of UE_UPDATE_FPS: fpsUpd = true
+        of UE_UPDATE_INFO: infoUpd = true
         else: nil
       
       else: nil
@@ -174,11 +178,12 @@ proc start*(obj: PEngine) =
     # render
     do(screen().fillRect(nil, obj.bgColor))
     obj.state.render()
-    if fpsUpd:
-      fpsUpd = false
-      obj.fFPSText.text = "FPS: " & repr(lastFPS) & "    Entities: " & repr(obj.state.count)
-    # blit FPS
-    if obj.fps: obj.fFPSText.blit()
+    if infoUpd:
+      infoUpd = false
+      obj.fInfoText.text = ["FPS: " & repr(lastFPS) & "    Entities: " & repr(obj.state.count),
+                            "Mem.: " & repr(getTotalMem()) & " total (" & repr(getOccupiedMem()) & " occupied, " & repr(getFreeMem()) & " free)"]
+    # blit info
+    if obj.info: obj.fInfoText.blit()
     FPSCounter = FPSCounter + 1
     # flip screen
     if obj.fScreen.scale > 1: obj.scale()      

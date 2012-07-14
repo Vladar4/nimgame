@@ -34,9 +34,24 @@ type
 
 method render*(obj: PFontObject, text: string): PSurface {.inline.} = nil
 method free*(obj: PFontObject) = nil
+method width*(obj: PFontObject, text: string): int {.inline.} = nil
+method height*(obj: PFontObject): int {.inline.} = nil
 
 
 # TTF Font
+
+method width*(obj: PTTFFont, text: string): int {.inline.} =
+  var w, h: cint
+  if obj.utf8:
+    do(sizeText(obj.fFont, text, w, h))
+  else:
+    do(sizeUTF8(obj.fFont, text, w, h))
+  return w
+
+
+method height*(obj: PTTFFont): int {.inline.} =
+  return fontHeight(obj.fFont)
+
 
 method render*(obj: PTTFFont, text: string): PSurface {.inline.} =
   if obj.utf8:
@@ -87,6 +102,13 @@ proc newTTFFont*(filename: cstring, # font filename
 
 # Bitmap Font
 
+method width*(obj: PBitmapFont, text: string): int {.inline.} =
+  return obj.fFont.w * text.len
+
+
+method height*(obj: PBitmapFont): int {.inline.} =
+  return obj.fFont.h
+
 
 method color*(obj: PBitmapFont): TColor {.inline.} =
   return obj.fColor
@@ -98,8 +120,7 @@ method `color=`*(obj: PBitmapFont, value: TColor) {.inline.} =
 
 
 method render*(obj: PBitmapFont, text: string): PSurface {.inline.} =
-  let width = obj.fFont.w * text.len
-  result = newSurface(width, obj.fFont.h, true)
+  result = newSurface(obj.width(text), obj.height, true)
   var x: int16 = 0'i16
   for chr in text.items():
     let idx = ord(chr)
@@ -179,3 +200,23 @@ proc newBitmapFont*(surface: PSurface, # font surface
   new(result, free)
   init(result, surface, UInt16(w), UInt16(h), color)
 
+
+# multi-line render
+proc render*(obj: PFontObject, text: openarray[string]): PSurface =
+  # get max width
+  var curw: int = 0
+  var maxw: int = 0
+  for i in 0..text.high:
+    curw = obj.width(text[i])
+    if curw > maxw: maxw = curw
+  let height: int16 = obj.height.int16
+  # create surface
+  result = newSurface(maxw, height * text.len, true)
+  # render
+  var tmpLine: PSurface
+  var dstRect: TRect
+  for i in 0..text.high:
+    tmpLine = render(obj, text[i])
+    do(blitSurfaceAlpha(tmpLine, nil, result, addr(dstRect)))
+    freeSurface(tmpLine)
+    dstRect.y = dstRect.y + height
