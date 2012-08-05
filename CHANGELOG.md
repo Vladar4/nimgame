@@ -2,6 +2,10 @@ v0.3 (in process)
 =================
 * Graphics:
     + screen scaling
+    + multi-line text
+* Audio:
+    + sound
+    + music
 
 v0.2
 ====

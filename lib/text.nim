@@ -12,6 +12,11 @@ type
 
 # render
 method render(obj: PText) {.inline.} =
+  # check for empty lines
+  for i in 0..obj.fText.high:
+    if obj.fText[i] == "":
+      obj.fText[i] = " "
+  # render
   freeSurface(obj.surface)
   obj.surface = obj.fFont.render(obj.fText)
 
@@ -21,7 +26,7 @@ proc init*(obj: PText,
            text: openarray[string],
           ) =
   obj.fFont = font
-  if text.len == 0 or (text.len == 1 and text[0] == ""):
+  if text.len == 0:
     obj.fText = @[" "]
   else:
     obj.fText = @[]
@@ -51,16 +56,12 @@ method text*(obj: PText): seq[string] {.inline.} =
   return obj.fText
 
 
-method `text=`*(obj: PText, value: openarray[string]) {.inline.} =
-  if value.len == 0 or (value.len == 1 and value[0] == ""):
+method `text=`*(obj: PText, value: openarray[string]) =
+  if value.len == 0:
     obj.fText = @[" "]
   else:
     obj.fText.setLen(0)
-    # ERROR
-    # next string frozes compiler for unknown reason
-    #obj.fText.add(value)
-    # so this is workaround
-    for item in value: obj.fText.add(item)
+    obj.fText.add(value)
   obj.render()
 
 
@@ -72,9 +73,11 @@ method font*(obj: PText): PFontObject {.inline.} =
   return obj.fFont
 
 
-template add*(obj: PText, value: string) =
+method add*(obj: PText, value: string) =
   obj.fText.add(value)
+  obj.render()
 
 
-template insert*(obj: PText, value: string, i: int = 0) =
+method insert*(obj: PText, value: string, i: int = 0) =
   obj.fText.insert(value, i)
+  obj.render()

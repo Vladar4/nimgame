@@ -1,12 +1,8 @@
 import
   sdl, sdl_ttf, sdl_gfx, math,
-  common, screen, state, timer, input, image, text, font
+  common, screen, audio, state, timer, input, image, text, font
 
 type
-  
-  TScreen* = tuple[surface: PSurface,
-                   width, height, flags: int32, scale: UInt16]
-
   PEngine* = ref TEngine
   TEngine* = object of TObject
     fRun: bool
@@ -28,6 +24,7 @@ method free*(obj: PEngine) =
   echo("Shutdown")
   if obj.state != nil: obj.state.free()
   freeScreenBuffer()
+  audio.closeAudio()
   sdl.quit()
 
 
@@ -39,6 +36,11 @@ proc newEngine*(width: int32 = 640,   # screen width
                 updateInterval: int32 = 20, # interval of update event in ms
                 info: bool = false, # show info
                 bgColor: TColor = color(0, 0, 0), # background color
+                audio: bool = true, # use audio system
+                audioFrequency: cint = DEFAULT_FREQUENCY,
+                audioFormat: int = DEFAULT_FORMAT,
+                audioChannels: cint = DEFAULT_CHANNELS,
+                audioChunkSize: cint = 1024
                ): PEngine =
   new(result, free)
   # screen setup
@@ -47,8 +49,15 @@ proc newEngine*(width: int32 = 640,   # screen width
   result.fScreen.flags = flags
   result.fScreen.scale = toU16(scale)
   # init
-  do(sdl.init(INIT_VIDEO))
+  if audio:
+    do(sdl.init(INIT_VIDEO or INIT_AUDIO))
+    do(openAudio(audioFrequency, toU16(audioFormat),
+                 audioChannels, audioChunkSize))
+  else:
+    do(sdl.init(INIT_VIDEO))  
+  # ttf
   do(sdl_ttf.init())
+  # screen
   result.fScreen.surface = do(setVideoMode(result.fScreen.width, result.fScreen.height,
                                            32, flags))
   initScreenBuffer(width, height, scale)
@@ -180,8 +189,10 @@ proc start*(obj: PEngine) =
     obj.state.render()
     if infoUpd:
       infoUpd = false
-      obj.fInfoText.text = ["FPS: " & repr(lastFPS) & "    Entities: " & repr(obj.state.count),
-                            "Mem.: " & repr(getTotalMem()) & " total (" & repr(getOccupiedMem()) & " occupied, " & repr(getFreeMem()) & " free)"]
+      obj.fInfoText.text = [
+        "FPS: " & repr(lastFPS) & "    Entities: " & repr(obj.state.count),
+        "Mem.: " & repr(getTotalMem()) & " total (" & repr(getOccupiedMem()) & " occupied, " & repr(getFreeMem()) & " free)"
+        ]
     # blit info
     if obj.info: obj.fInfoText.blit()
     FPSCounter = FPSCounter + 1

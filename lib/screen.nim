@@ -6,6 +6,9 @@ type
   PPixelArray* = ref TPixelArray
   TPixelArray* = array[0..524288, UInt32] # 524288 is 2560x2048 (QSXGA) surface size
 
+  TScreen* = tuple[surface: PSurface,
+                   width, height, flags: int32, scale: UInt16]
+
 var
   scrBuffer: PSurface = nil
   scrScale: int32 = 1
