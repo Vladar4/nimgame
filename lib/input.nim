@@ -47,7 +47,7 @@ proc isButtonEvent*(btn: int, event: TKeyEventKind): bool =
 
 # check if key is pressed now
 proc keyPressed*(key: TKey): bool {.inline.} =
-  if keystate[int(key)] == 1: return true
+  if keystate[int(key)].int == 1: return true
   else: return false
 
 

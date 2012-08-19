@@ -1,11 +1,12 @@
 import
-  sdl, sdl_image, math,
+  sdl, sdl_image,
+  unsigned, math,
   common, screen, image, imageex
 
 type
 
   TSpriteInfo* = tuple[frames: seq[TRect], # sequence of frame rects
-                      w, h: UInt16,        # frame size
+                      w, h: uint16,        # frame size
                       cols, rows: int]     # frame grid dimensions
 
 
@@ -19,15 +20,15 @@ type
     play*, loop*: bool
     animFrames: seq[int]
     animIndex: int
-    animRate*, animRateCounter: UInt32
+    animRate*, animRateCounter: int
     animAction*: TAnimationAction
 
 
 # Fill sprite map with given color but save alpha channel
 method maskedFill*(obj: PSprite, color: TColor) =
   let colorize = newSurface(obj.fSpritemap.surface.w, obj.fSpritemap.surface.h, true)
-  do(colorize.fillRect(nil, mapRGBA(colorize.format, color.r, color.g, color.b, 255'i8)))
-  do(colorize.blitSurface(nil, obj.fSpritemap.surface, nil))
+  check(colorize.fillRect(nil, mapRGBA(colorize.format, color.r, color.g, color.b, 255)))
+  check(colorize.blitSurface(nil, obj.fSpritemap.surface, nil))
   freeSurface(colorize)
 
 
@@ -39,56 +40,56 @@ method blitFrame*(obj: PSprite, frame: int, dstSurface: PSurface,
   dstRect.y = y
   dstRect.w = obj.fSpriteInfo.w
   dstRect.h = obj.fSpriteInfo.h
-  do(blitSurfaceAlpha(obj.fSpritemap.surface,
-                      addr(obj.fSpriteInfo.frames[frame]),
-                      dstSurface,
-                      addr(dstRect)))
+  check(blitSurfaceAlpha(obj.fSpritemap.surface,
+                         addr(obj.fSpriteInfo.frames[frame]),
+                         dstSurface,
+                         addr(dstRect)))
 
 
 method changeFrame(obj: PSprite, frame: int) =
   obj.fFrame = frame
   var dstRect: TRect
-  do(fillRect(obj.original, nil, 0))
-  do(blitSurfaceAlpha(obj.fSpritemap.surface,
-                      addr(obj.fSpriteInfo.frames[obj.fFrame]),
-                      obj.original,
-                      addr(dstRect)))
+  check(fillRect(obj.original, nil, 0))
+  check(blitSurfaceAlpha(obj.fSpritemap.surface,
+                         addr(obj.fSpriteInfo.frames[obj.fFrame]),
+                         obj.original,
+                         addr(dstRect)))
   obj.updateRotZoom()
 
 
 proc init*(obj: PSprite,
-           w: Uint16 = 0'i16, h: Uint16 = 0'i16,
+           w: uint16 = 0, h: uint16 = 0,
            rows: int = 0, cols: int = 0,
-           offsetX: int16 = 0'i16, offsetY: int16 = 0'i16,
+           offsetX: int = 0, offsetY: int = 0,
           ) =
   obj.fSpriteInfo.frames = @[]
-  if w > 0 and h > 0: # if width and height given
+  if w > 0'u16 and h > 0'u16: # if width and height given
     obj.fSpriteInfo.w = w
     obj.fSpriteInfo.h = h
-    obj.fSpriteInfo.cols = int(floor((obj.fSpritemap.surface.w - offsetX) / w))
-    obj.fSpriteInfo.rows = int(floor((obj.fSpritemap.surface.h - offsetY) / h))
+    obj.fSpriteInfo.cols = int(floor(float(obj.fSpritemap.surface.w - offsetX) / float(w)))
+    obj.fSpriteInfo.rows = int(floor(float(obj.fSpritemap.surface.h - offsetY) / float(h)))
   elif rows > 0 and cols > 0: # if rows and columns count given
     obj.fSpriteInfo.rows = rows
     obj.fSpriteInfo.cols = cols
-    obj.fSpriteInfo.w = UInt16(floor((obj.fSpritemap.surface.w - offsetX) / cols))
-    obj.fSpriteInfo.h = UInt16(floor((obj.fSpritemap.surface.h - offsetY) / rows))
+    obj.fSpriteInfo.w = uint16(floor((obj.fSpritemap.surface.w - offsetX) / cols))
+    obj.fSpriteInfo.h = uint16(floor((obj.fSpritemap.surface.h - offsetY) / rows))
   else: # if no frame size or grid dimensions is given — make single frame
-    obj.fSpriteInfo.w = UInt16(obj.fSpritemap.surface.w - offsetX)
-    obj.fSpriteInfo.h = UInt16(obj.fSpritemap.surface.h - offsetY)
+    obj.fSpriteInfo.w = uint16(obj.fSpritemap.surface.w - offsetX)
+    obj.fSpriteInfo.h = uint16(obj.fSpritemap.surface.h - offsetY)
     obj.fSpriteInfo.cols = 1
     obj.fSpriteInfo.rows = 1
   # check spritemap size
-  if obj.fSpriteInfo.w > obj.fSpritemap.surface.w or
-     obj.fSpriteInfo.h > obj.fSpritemap.surface.h:
+  if obj.fSpriteInfo.w > uint16(obj.fSpritemap.surface.w) or
+     obj.fSpriteInfo.h > uint16(obj.fSpritemap.surface.h):
       echo("Error: spritemap size is too small")
   # generate frame rects
   for row in 0..obj.fSpriteInfo.rows-1:
     for col in 0..obj.fSpriteInfo.cols-1:
       var rect: TRect
-      rect.x = int16(offsetX + col * obj.fSpriteInfo.w)
-      rect.y = int16(offsetY + row * obj.fSpriteInfo.h)
-      rect.w = UInt16(obj.fSpriteInfo.w)
-      rect.h = UInt16(obj.fSpriteInfo.h)
+      rect.x = int16(offsetX + col * int(obj.fSpriteInfo.w))
+      rect.y = int16(offsetY + row * int(obj.fSpriteInfo.h))
+      rect.w = obj.fSpriteInfo.w
+      rect.h = obj.fSpriteInfo.h
       obj.fSpriteInfo.frames.add(rect)
   # create surface
   freeSurface(obj.surface)
@@ -117,9 +118,9 @@ proc newSprite*(filename: cstring,
                 smooth: cint = 1, # smooth
                ): PSprite =
   new(result, free)
-  init(PImage(result), "", int16(x), int16(y))
+  init(PImage(result), "", x, y)
   result.fSpritemap = newImage(filename)
-  init(result, UInt16(w), UInt16(h), rows, cols, int16(offsetX), int16(offsetY))
+  init(result, uint16(w), uint16(h), rows, cols, offsetX, offsetY)
   init(PImageEx(result), smooth)
   result.changeFrame(0)
 
@@ -136,9 +137,9 @@ proc newSprite*(surface: PSurface,
                 smooth: cint = 1, # smooth
                ): PSprite =
   new(result, free)
-  init(PImage(result), "", int16(x), int16(y))
+  init(PImage(result), "", x, y)
   result.fSpritemap = newImage(surface)
-  init(result, UInt16(w), UInt16(h), rows, cols, int16(offsetX), int16(offsetY))
+  init(result, uint16(w), uint16(h), rows, cols, offsetX, offsetY)
   init(PImageEx(result), smooth)
   result.changeFrame(0)
 
@@ -156,7 +157,7 @@ method `frame=`*(obj: PSprite, value: int) {.inline.} =
 
 
 # usage: frame = [col, row]
-method `frame=`*(obj: PSprite, value: openarray[int]) {.inline.} =
+method `frame=`*(obj: PSprite, value: varargs[int]) {.inline.} =
   if len(value) < 2:
     echo("Warning: not enough params for setting frame.")
     return
@@ -170,8 +171,8 @@ method `frame=`*(obj: PSprite, value: openarray[int]) {.inline.} =
     else:
       echo("Warning: frame index out of range (", value[0], ":", value[1], ").")
 
-method w*(obj: PSprite): Uint16 {.inline.} = return obj.fSpriteInfo.w
-method h*(obj: PSprite): Uint16 {.inline.} = return obj.fSpriteInfo.h
+method w*(obj: PSprite): int {.inline.} = return int(obj.fSpriteInfo.w)
+method h*(obj: PSprite): int {.inline.} = return int(obj.fSpriteInfo.h)
 method cols*(obj: PSprite): int {.inline.} = return obj.fSpriteInfo.cols
 method rows*(obj: PSprite): int {.inline.} = return obj.fSpriteInfo.rows
 method count*(obj: PSprite): int {.inline.} = return obj.fSpriteInfo.frames.len()
@@ -179,7 +180,7 @@ method count*(obj: PSprite): int {.inline.} = return obj.fSpriteInfo.frames.len(
 
 # animation
 method setAnimation*(obj: PSprite,
-                     frames: seq[int], rate: UInt32 = 1,
+                     frames: seq[int], rate: int = 1,
                      loop: bool = false, play: bool = true,
                      action: TAnimationAction = doNothing) =
   if frames.len < 1:
@@ -194,7 +195,7 @@ method setAnimation*(obj: PSprite,
   obj.animAction = action
 
 method setAnimation*(obj: PSprite,
-                     first: int = 0, last: int = -1, rate: UInt32 = 1,
+                     first: int = 0, last: int = -1, rate: int = 1,
                      loop: bool = false, play: bool = true,
                      action: TAnimationAction = doNothing) =
   var frames: seq[int] = @[]

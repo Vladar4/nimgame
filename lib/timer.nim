@@ -6,11 +6,11 @@ type
 
   PTimer* = ref TTimer
   TTimer* = object of TObject
-    last, interval*: int32
+    last, interval*: int
     callback*: TTimerCallbackProc
     
 
-proc newTimer*(interval: int32, callback: TTimerCallbackProc): PTimer =
+proc newTimer*(interval: int, callback: TTimerCallbackProc): PTimer =
   new(result)
   result.interval = interval
   result.callback = callback

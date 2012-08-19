@@ -29,9 +29,9 @@ proc init*(obj: PEntity,
            collider: PCollider = nil,
           ) =
   obj.fX = x
-  obj.fXi = x.round.int16
+  obj.fXi = int16(x.round)
   obj.fY = y
-  obj.fYi = y.round.int16
+  obj.fYi = int16(y.round)
   obj.fLayer = layer
   obj.updateLayer = false
   obj.deleteEntity = false
@@ -65,14 +65,14 @@ method render*(obj: PEntity) {.inline.} =
 method getRect*(obj: PEntity): TRect {.inline.} =
   result.x = obj.fXi + obj.graphic.x
   result.y = obj.fYi + obj.graphic.y
-  result.w = UInt16(obj.graphic.surface.w)
-  result.h = UInt16(obj.graphic.surface.h)
+  result.w = uint16(obj.graphic.surface.w)
+  result.h = uint16(obj.graphic.surface.h)
 
 
 method getCircle*(obj: PEntity): TCircle {.inline.} =
-  result.r = UInt16(min(obj.graphic.surface.w, obj.graphic.surface.h)/2)
-  result.x = obj.fXi + result.r + obj.graphic.x
-  result.y = obj.fYi + result.r + obj.graphic.y
+  result.r = uint(min(obj.graphic.surface.w, obj.graphic.surface.h)/2)
+  result.x = obj.fXi + int(result.r) + obj.graphic.x
+  result.y = obj.fYi + int(result.r) + obj.graphic.y
 
 # x
 method x*(obj: PEntity): float {.inline.} =
@@ -88,7 +88,7 @@ method `x=`*(obj: PEntity, value: int) {.inline.} =
 
 method `x=`*(obj: PEntity, value: float) {.inline.} =
   obj.fX = value
-  obj.fXi = value.round.int16
+  obj.fXi = int16(value.round)
   obj.collider.x = obj.fXi + obj.graphic.x
 
 
@@ -102,11 +102,11 @@ method yi*(obj: PEntity): int {.inline.} =
 method `y=`*(obj: PEntity, value: int) {.inline.} =
   obj.fY = float(value)
   obj.fYi = int16(value)
-  obj.collider.y = obj.fY.round.int16 + obj.graphic.y
+  obj.collider.y = obj.fY.round + obj.graphic.y
 
 method `y=`*(obj: PEntity, value: float) {.inline.} =
   obj.fY = value
-  obj.fYi = value.round.int16
+  obj.fYi = int16(value.round)
   obj.collider.y = obj.fYi + obj.graphic.y
 
 

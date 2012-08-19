@@ -1,23 +1,26 @@
 import
   sdl, sdl_image,
+  unsigned,
   common, screen
 
 type
   PMask* = ref TMask
   TMask* = object of TObject
-    x*, y*: int16
-    w*, h*: UInt16
+    x*, y*: int
+    w*, h*: int
     data*: seq[seq[bool]]
 
 
 proc setMask*(obj: PMask,
               surface: PSurface) =
-  do(lockSurface(surface))
-  let format = surface.format
+  check(lockSurface(surface))
+  let amask = uint32(surface.format.Amask)
+  let ashift = uint32(surface.format.Ashift)
+  let aloss = uint32(surface.format.Aloss)
   let pixels: PPixelArray = cast[PPixelArray](surface.pixels)
   var offset: int
-  var pixel, temp: UInt32
-  var alpha: int16
+  var pixel, temp: uint32
+  var alpha: int
   obj.data = @[]
   for y in 0..surface.h-1:
     obj.data.add(@[])
@@ -25,9 +28,9 @@ proc setMask*(obj: PMask,
     for x in 0..surface.w-1:
       offset = y * surface.w + x
       pixel = pixels[offset]
-      temp = pixel and format.Amask
-      temp = temp shr format.Ashift
-      alpha = int16(temp shl format.Aloss)
+      temp = pixel and amask
+      temp = temp shr ashift
+      alpha = int(temp shl aloss)
       if alpha < 127:
         obj.data[obj.data.high].add(false)
         #write(stdout, " ") # DEBUG: Uncomment to output mask
@@ -37,52 +40,38 @@ proc setMask*(obj: PMask,
   unlockSurface(surface)
 
 
-proc init*(obj: PMask,
-           filename: cstring,
-           x: int16 = 0'i16,
-           y: int16 = 0'i16,
-          ) =
+proc init*(obj: PMask, filename: cstring, x: int = 0, y: int = 0) =
   obj.x = x
   obj.y = y
   if filename != nil:
-    let surface: PSurface = do(imgLoad(filename))
-    obj.w = UInt16(surface.w)
-    obj.h = UInt16(surface.h)
+    let surface: PSurface = check(imgLoad(filename))
+    obj.w = surface.w
+    obj.h = surface.h
     obj.setMask(surface)
     freeSurface(surface)
 
 
-proc init*(obj: PMask,
-           surface: PSurface,
-           x: int16 = 0'i16,
-           y: int16 = 0'i16,
-          ) =
+proc init*(obj: PMask, surface: PSurface, x: int = 0, y: int = 0) =
   obj.x = x
   obj.y = y
-  obj.w = UInt16(surface.w)
-  obj.h = UInt16(surface.h)
+  obj.w = surface.w
+  obj.h = surface.h
   obj.setMask(surface)
 
 
-proc newMask*(filename: cstring,
-              x: int = 0,
-              y: int = 0,
-             ): PMask =
+proc newMask*(filename: cstring, x: int = 0, y: int = 0): PMask =
   new(result)
-  init(result, filename, int16(x), int16(y))
+  init(result, filename, x, y)
 
 
 
-proc newMask*(surface: PSurface,
-              x: int = 0,
-              y: int = 0,
-             ): PMask =
+proc newMask*(surface: PSurface, x: int = 0, y: int = 0): PMask =
   new(result)
-  init(result, surface, int16(x), int16(y))
+  init(result, surface, x, y)
 
 
 method getRect*(obj: PMask): TRect =
-  result.x = obj.x
-  result.y = obj.y
-  result.w = obj.w
-  result.h = obj.h
+  result.x = int16(obj.x)
+  result.y = int16(obj.y)
+  result.w = uint16(obj.w)
+  result.h = uint16(obj.h)

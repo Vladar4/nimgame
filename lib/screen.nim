@@ -4,19 +4,19 @@ import
 
 type
   PPixelArray* = ref TPixelArray
-  TPixelArray* = array[0..524288, UInt32] # 524288 is 2560x2048 (QSXGA) surface size
+  TPixelArray* = array[0..524288, uint32] # 524288 is 2560x2048 (QSXGA) surface size
 
   TScreen* = tuple[surface: PSurface,
-                   width, height, flags: int32, scale: UInt16]
+                   width, height, flags, scale: int]
 
 var
   scrBuffer: PSurface = nil
-  scrScale: int32 = 1
+  scrScale: int = 1
 
 
 # get screen surface
 proc screen*(): PSurface {.inline.} =
-  if scrScale == 1: return do(getVideoSurface())
+  if scrScale == 1: return check(getVideoSurface())
   else: return scrBuffer
 
 
@@ -28,16 +28,20 @@ proc screenScale*(): int {.inline.} =
 # create new surface
 proc newSurface*(width, height: int, alpha: bool = false): PSurface =
   let fmt = screen().format
-  let surface = do(
+  let surface = check(
     createRGBSurface(
-      screen().flags, width, height, fmt.bitsPerPixel,
+      screen().flags, width, height, int(fmt.bitsPerPixel),
       fmt.Rmask, fmt.Gmask, fmt.Bmask, fmt.Amask))
   if alpha:
     result = displayFormatAlpha(surface)
-    do(result.fillRect(nil, mapRGBA(result.format, 0'i8, 0'i8, 0'i8, 0'i8)))
+    check(result.fillRect(nil, mapRGBA(result.format, 0, 0, 0, 0)))
     freeSurface(surface)
   else:
     return surface
+
+
+template newSurface*(width, height: uint16, alpha: bool = false): PSurface =
+  newSurface(int(width), int(height), alpha)
 
 
 # screen buffer
@@ -53,7 +57,7 @@ proc freeScreenBuffer*() =
 proc loadImage*(filename: cstring): PSurface =
   if filename != nil:
     if filename.len > 0:
-      let surface: PSurface = do(imgLoad(filename))
+      let surface: PSurface = check(imgLoad(filename))
       result = displayFormatAlpha(surface)
       freeSurface(surface)
   else:
@@ -62,7 +66,7 @@ proc loadImage*(filename: cstring): PSurface =
 
 # blit surface preserving alpha channel
 proc blitSurfaceAlpha*(src: PSurface, srcrect: PRect, dst: PSurface, dstrect: PRect): int =
-  do(src.setAlpha(0, 255'i8))
+  check(src.setAlpha(0, 255))
   result = blitSurface(src, srcrect, dst, dstRect)
-  do(src.setAlpha(SRCALPHA, 255'i8))
-  do(src.setAlpha(SRCALPHA, 255'i8))
+  check(src.setAlpha(SRCALPHA, 255))
+  check(src.setAlpha(SRCALPHA, 255))

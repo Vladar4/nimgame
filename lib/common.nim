@@ -2,9 +2,9 @@ import
   sdl, sdl_image, sdl_ttf, math
 
 type
-  TPoint* = tuple [x: int16, y: int16]
-  TCircle* = tuple [x: int16, y: int16, r: UInt16]
-  TVector* = tuple[x: float32, y: float32]
+  TPoint* = tuple [x: int, y: int]
+  TCircle* = tuple [x: int, y: int, r: uint]
+  TVector* = tuple[x: float, y: float]
   
 
 # USEREVENT codes
@@ -14,48 +14,48 @@ const UE_UPDATE_INFO*: cint = 2
 
 # distance between two points
 
-proc distance*(a: TPoint, b: TPoint): float32 =
+proc distance*(a: TPoint, b: TPoint): float =
   return sqrt(pow(toFloat(b.x) - toFloat(a.x), 2.0) + pow(toFloat(b.y) - toFloat(a.y), 2.0))
 
-proc distance*(ax, ay: int16, b: TPoint): float32 {.inline.} =
-  return distance((ax, ay), b)
+template distance*(ax, ay: int, b: TPoint): float =
+  distance((ax, ay), b)
 
-proc distance*(a: TPoint, bx, by: int16): float32 {.inline.} =
-  return distance(a, (bx, by))
+template distance*(a: TPoint, bx, by: int): float =
+  distance(a, (bx, by))
 
-proc distance*(ax, ay: int, b: TPoint): float32 {.inline.} =
-  return distance((ax.int16, ay.int16), b)
+template distance*(ax, ay: int, b: TPoint): float =
+  distance((ax, ay), b)
 
-proc distance*(a: TPoint, bx, by: int): float32 {.inline.} =
-  return distance(a, (bx.int16, by.int16))
+template distance*(a: TPoint, bx, by: int): float =
+  distance(a, (bx, by))
 
 
 # angle direction from one to other point
 
-proc direction*(a: TPoint, b: TPoint): float64 =
+proc direction*(a: TPoint, b: TPoint): float =
   let dx = float(a.x - b.x)
   let dy = float(a.y - b.y)
   return -(arctan2(dy, dx) / pi) * 180.0 + 90.0
 
-proc direction*(ax, ay: int16, b: TPoint): float64 {.inline.} =
-  return direction((ax, ay), b)
+template direction*(ax, ay: int, b: TPoint): float =
+  direction((ax, ay), b)
 
-proc direction*(a: TPoint, bx, by: int16): float64 {.inline.} =
-  return direction(a, (bx, by))
+template direction*(a: TPoint, bx, by: int): float =
+  direction(a, (bx, by))
 
-proc direction*(ax, ay: int, b: TPoint): float64 {.inline.} =
-  return direction((ax.int16, ay.int16), b)
+template direction*(ax, ay: int, b: TPoint): float =
+  direction((ax.int, ay.int), b)
 
-proc direction*(a: TPoint, bx, by: int): float64 {.inline.} =
-  return direction(a, (bx.int16, by.int16))
+template direction*(a: TPoint, bx, by: int): float =
+  direction(a, (bx, by))
 
 
 # convert degrees to radians
-template toRad*(a: float64): expr =
+template toRad*(a: float): expr =
   (a * pi / 180.0)
 
 # convert radians to degrees
-template toDeg*(a: float64): expr =
+template toDeg*(a: float): expr =
   (a * 180.0 / pi)
 
 
@@ -65,42 +65,42 @@ proc vector*(angle: float, size: float = 1.0): TVector {.inline.} =
   result.x = - size * cos(toRad(angle - 90.0))
   result.y = size * sin(toRad(angle - 90.0))
 
-proc vectorX*(angle: float, size: float = 1.0): float32 {.inline.} =
+proc vectorX*(angle: float, size: float = 1.0): float {.inline.} =
   return - size * cos(toRad(angle - 90.0))
 
-proc vectorY*(angle: float, size: float = 1.0): float32 {.inline.} =
+proc vectorY*(angle: float, size: float = 1.0): float {.inline.} =
   return size * sin(toRad(angle - 90.0))
 
 
 # vector absolute size
 
-proc absVector*(vector: TVector): float32 {.inline.} =
+proc absVector*(vector: TVector): float {.inline.} =
   return sqrt(vector.x * vector.x + vector.y * vector.y)
 
-proc absVector*(x, y: float): float32 {.inline.} =
+proc absVector*(x, y: float): float {.inline.} =
   return sqrt(x * x + y * y)
 
 
 # create TColor
 proc color*(r: int, g: int, b: int): TColor {.inline.} =
-  result.r =toU8(r)
-  result.g = toU8(g)
-  result.b = toU8(b)
+  result.r = Byte(r)
+  result.g = Byte(g)
+  result.b = Byte(b)
 
 
 # SDL errors handling
 
-proc do*(ret: int32): void =
+proc check*(ret: int): void =
   if ret != 0:
     echo(sdl.getError())
     sdl.quit()
 
-proc do*(ret: TBool): void =
+proc check*(ret: TBool): void =
   if ret == sdlFALSE:
     echo(sdl.getError())
     sdl.quit()
 
-proc do*(ret: PSurface): PSurface =
+proc check*(ret: PSurface): PSurface =
   if ret == nil:
     echo(sdl.getError())
     sdl.quit()
@@ -108,7 +108,7 @@ proc do*(ret: PSurface): PSurface =
 
 
 # SDL TTF errors handling
-proc do*(ret: PFont): PFont =
+proc check*(ret: PFont): PFont =
   if ret == nil:
     echo(sdl.getError())
     sdl.quit()

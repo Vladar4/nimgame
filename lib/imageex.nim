@@ -7,7 +7,7 @@ type
   TImageEx* = object of TImage
     original*: PSurface
     originalPos: TPoint
-    fAngle, fZoomX, fZoomY: float64
+    fAngle, fZoomX, fZoomY: float
     smooth*: cint
 
 
@@ -60,12 +60,12 @@ method updateRotZoom*(obj: PImageEx) =
   if obj.fZoomX == 1.0:
     width = int16(obj.original.w)
   else:
-    width = int16(obj.original.w.float64 * obj.fZoomX)
+    width = int16(obj.original.w.toFloat * obj.fZoomX)
   # set y
   if obj.fZoomY == 1.0:
     height = int16(obj.original.h)
   else:
-    height = int16(obj.original.h.float64 * obj.fZoomY)
+    height = int16(obj.original.h.toFloat * obj.fZoomY)
   # transform
   if obj.surface != nil: freeSurface(obj.surface)
   obj.surface = obj.original.zoomSurface(obj.fZoomX, obj.fZoomY, obj.smooth)
@@ -78,39 +78,39 @@ method updateRotZoom*(obj: PImageEx) =
     freeSurface(tmpSurface)
   # calculate offset
   let angle = obj.fAngle * PI / 180.0
-  obj.x = int16(-((pos.y.float64 * obj.fZoomY - height / 2) * sin(angle) + (pos.x.float64 * obj.fZoomX - width / 2) * cos(angle))) - int16((obj.surface.w - width) / 2 + width / 2)
-  obj.y = int16(-((pos.y.float64 * obj.fZoomY - height / 2) * cos(angle) - (pos.x.float64 * obj.fZoomX - width / 2) * sin(angle))) - int16((obj.surface.h - height) / 2 + height / 2)
+  obj.x = int16(-((pos.y.toFloat * obj.fZoomY - height / 2) * sin(angle) + (pos.x.toFloat * obj.fZoomX - width / 2) * cos(angle))) - int16((obj.surface.w - width) / 2 + width / 2)
+  obj.y = int16(-((pos.y.toFloat * obj.fZoomY - height / 2) * cos(angle) - (pos.x.toFloat * obj.fZoomX - width / 2) * sin(angle))) - int16((obj.surface.h - height) / 2 + height / 2)
 
 # Zooming
 
-method zoomX*(obj: PImageEx): float64 {.inline.} =
+method zoomX*(obj: PImageEx): float {.inline.} =
   return obj.fZoomX
 
-method zoomY*(obj: PImageEx): float64 {.inline.} =
+method zoomY*(obj: PImageEx): float {.inline.} =
   return obj.fZoomY
 
-method `zoom=`*(obj: PImageEx, value: float64) {.inline.} =
+method `zoom=`*(obj: PImageEx, value: float) {.inline.} =
   obj.fZoomX = value
   obj.fZoomY = value
   obj.updateRotZoom()
 
-method `zoomX=`*(obj: PImageEx, value: float64) {.inline.} =
+method `zoomX=`*(obj: PImageEx, value: float) {.inline.} =
   obj.fZoomX = value
   obj.updateRotZoom()
 
-method `zoomY=`*(obj: PImageEx, value: float64) {.inline.} =
+method `zoomY=`*(obj: PImageEx, value: float) {.inline.} =
   obj.fZoomY = value
   obj.updateRotZoom()
 
 # Rotation
 
-method angle*(obj: PImageEx): float64 {.inline.} =
+method angle*(obj: PImageEx): float {.inline.} =
   return obj.fAngle
 
-method `angle=`*(obj: PImageEx, value: float64) {.inline.} =
+method `angle=`*(obj: PImageEx, value: float) {.inline.} =
   var val = value
-  if value > 360.0: val = float64(int(value) mod 360)
-  elif value < 360.0: val = float64(int(value) mod 360)
+  if value > 360.0: val = float(int(value) mod 360)
+  elif value < 360.0: val = float(int(value) mod 360)
   obj.fAngle = val
   obj.updateRotZoom()
 

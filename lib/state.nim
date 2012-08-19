@@ -81,21 +81,23 @@ method updateLayer(obj: PState, index: int): int =
 
 
 method updateEntityList(obj: PState) =
+  var i: int = 0
   # add
   while obj.fAddList.len > 0:
     obj.addToEntityList(obj.fAddList.pop())
   var max = obj.fEntityList.high
   # delete
-  for i in 0..max:
+  i = 0
+  while i <= max:
     if obj.fEntityList[i].deleteEntity or obj.fEntityList[i].graphic.deleteEntity:
       obj.fEntityList[i].deleteEntity = false
       obj.fEntityList[i].graphic.deleteEntity = false
       obj.fEntityList.delete(i)
-      i -= 1
       max -= 1
       continue
+    i += 1
   # layers
-  var i: int = 0
+  i = 0
   while i <= max:
     if obj.fEntityList[i].updateLayer:
       let new_i = obj.updateLayer(i)
@@ -119,7 +121,7 @@ method collideWith*(obj: PState, entity: PEntity, kind: string): PEntity =
 
 
 # entity collide with kinds
-method collideWith*(obj: PState, entity: PEntity, kinds: openarray[string]): PEntity =
+method collideWith*(obj: PState, entity: PEntity, kinds: varargs[string]): PEntity =
   for kind in kinds.items():
     result = obj.collideWith(entity, kind)
     if result != nil:

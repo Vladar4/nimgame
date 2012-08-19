@@ -8,7 +8,7 @@ type
     fRun: bool
     fScreen: TScreen
     fUpdateTimer, fInfoTimer: PTimer
-    fUpdateInterval: int32
+    fUpdateInterval: int
     fInfoText: PText
     state*: PState
     info*: bool
@@ -28,12 +28,12 @@ method free*(obj: PEngine) =
   sdl.quit()
 
 
-proc newEngine*(width: int32 = 640,   # screen width
-                height: int32 = 480,  # screen height
-                flags: int32 = 0,     # init flags
-                scale: int32 = 1,     # screen scale rate
+proc newEngine*(width: int = 640,   # screen width
+                height: int = 480,  # screen height
+                flags: int = 0,     # init flags
+                scale: int = 1,     # screen scale rate
                 title: cstring = "",  # window caption
-                updateInterval: int32 = 20, # interval of update event in ms
+                updateInterval: int = 20, # interval of update event in ms
                 info: bool = false, # show info
                 bgColor: TColor = color(0, 0, 0), # background color
                 audio: bool = true, # use audio system
@@ -47,19 +47,19 @@ proc newEngine*(width: int32 = 640,   # screen width
   result.fScreen.width = width * scale
   result.fScreen.height = height * scale
   result.fScreen.flags = flags
-  result.fScreen.scale = toU16(scale)
+  result.fScreen.scale = scale
   # init
   if audio:
-    do(sdl.init(INIT_VIDEO or INIT_AUDIO))
-    do(openAudio(audioFrequency, toU16(audioFormat),
-                 audioChannels, audioChunkSize))
+    check(sdl.init(INIT_VIDEO or INIT_AUDIO))
+    check(openAudio(audioFrequency, uint16(audioFormat),
+                    audioChannels, audioChunkSize))
   else:
-    do(sdl.init(INIT_VIDEO))  
+    check(sdl.init(INIT_VIDEO))  
   # ttf
-  do(sdl_ttf.init())
+  check(sdl_ttf.init())
   # screen
-  result.fScreen.surface = do(setVideoMode(result.fScreen.width, result.fScreen.height,
-                                           32, flags))
+  result.fScreen.surface = check(setVideoMode(result.fScreen.width, result.fScreen.height,
+                                              32, int32(flags)))
   initScreenBuffer(width, height, scale)
   result.bgColor = mapRGB(result.fScreen.surface.format, bgColor.r, bgColor.g, bgColor.b)
   if title != "": WM_SetCaption(title, nil)
@@ -67,7 +67,7 @@ proc newEngine*(width: int32 = 640,   # screen width
   result.fUpdateInterval = updateInterval
   # Info
   result.info = info
-  result.fInfoText = newText(newBitmapFont("fnt/default8x16.png", 8, 16), x=4, y=2, text=" ")
+  result.fInfoText = newText(newBitmapFont("fnt/default8x16.png", 8, 16), x=4, y=2, " ")
   # randomize
   randomize()
 
@@ -87,25 +87,25 @@ proc scale(obj: PEngine) =
   let scr = screen()
   let pixels: PPixelArray = cast[PPixelArray](scr.pixels)
   var rect: TRect
-  rect.w = obj.fScreen.scale
-  rect.h = obj.fScreen.scale
+  rect.w = uint16(obj.fScreen.scale)
+  rect.h = uint16(obj.fScreen.scale)
   var offset: int = 0
   # scaling
-  do(lockSurface(scr))
+  check(lockSurface(scr))
   rect.y = 0'i16
   for y in 0..scr.h-1:
     rect.x = 0'i16
     for x in 0..scr.w-1:
-      do(obj.fScreen.surface.fillRect(addr(rect), pixels[offset]))
+      check(obj.fScreen.surface.fillRect(addr(rect), int32(pixels[offset])))
       offset += 1
-      rect.x = rect.x + obj.fScreen.scale
-    rect.y = rect.y + obj.fScreen.scale
+      rect.x = int16(rect.x + obj.fScreen.scale)
+    rect.y = int16(rect.y + obj.fScreen.scale)
   unlockSurface(scr)
 
 
 # flip screen
 proc flip*(obj: PEngine) {.inline.} =
-  do(flip(obj.fScreen.surface))
+  check(flip(obj.fScreen.surface))
 
 
 proc onUpdateTimer() =
@@ -115,7 +115,7 @@ proc onUpdateTimer() =
   EvUser(eventp).code = UE_UPDATE_TIMER
   EvUser(eventp).data1 = nil
   EvUser(eventp).data2 = nil
-  do(pushEvent(addr(event)))
+  check(pushEvent(addr(event)))
 
 
 proc onInfoTimer() =
@@ -127,7 +127,7 @@ proc onInfoTimer() =
   EvUser(eventp).code = UE_UPDATE_INFO
   EvUser(eventp).data1 = nil
   EvUser(eventp).data2 = nil
-  do(pushEvent(addr(event)))
+  check(pushEvent(addr(event)))
 
 
 # main cycle
@@ -165,10 +165,10 @@ proc start*(obj: PEngine) =
         addKeyEvent(EvKeyboard(eventp).keysym.sym, up)
       
       of MOUSEBUTTONDOWN:
-        addButtonEvent(EvMouseButton(eventp).button, down)
+        addButtonEvent(EvMouseButton(eventp).button.int, down)
       
       of MOUSEBUTTONUP:
-        addButtonEvent(EvMouseButton(eventp).button, up)
+        addButtonEvent(EvMouseButton(eventp).button.int, up)
 
       of USEREVENT:
         case EvUser(eventp).code:
@@ -185,14 +185,19 @@ proc start*(obj: PEngine) =
       resetButtonEvents()
     
     # render
-    do(screen().fillRect(nil, obj.bgColor))
+    check(screen().fillRect(nil, obj.bgColor))
     obj.state.render()
     if infoUpd:
+      
       infoUpd = false
-      obj.fInfoText.text = [
-        "FPS: " & repr(lastFPS) & "    Entities: " & repr(obj.state.count),
-        "Mem.: " & repr(getTotalMem()) & " total (" & repr(getOccupiedMem()) & " occupied, " & repr(getFreeMem()) & " free)"
-        ]
+      let entities = repr(obj.state.count)
+      let l1 = "FPS: " & repr(lastFPS) & "    Entities: " & entities
+      let l2 = "Mem.: " & repr(getTotalMem()) & " total (" & repr(getOccupiedMem()) & " occupied, " & repr(getFreeMem()) & " free)"
+      obj.fInfoText.setText(l1, l2)
+      #"FPS: " & repr(lastFPS) & "    Entities: " & repr(obj.state.count),
+      #"Mem.: " & repr(getTotalMem()) & " total (" & repr(getOccupiedMem()) & " occupied, " & repr(getFreeMem()) & " free)")
+      #obj.fInfoText.add("FPS: " & repr(lastFPS) & "    Entities: " & repr(obj.state.count))
+      #obj.fInfoText.add("Mem.: " & repr(getTotalMem()) & " total (" & repr(getOccupiedMem()) & " occupied, " & repr(getFreeMem()) & " free)")
     # blit info
     if obj.info: obj.fInfoText.blit()
     FPSCounter = FPSCounter + 1

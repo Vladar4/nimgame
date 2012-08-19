@@ -23,7 +23,7 @@ method render(obj: PText) {.inline.} =
 
 proc init*(obj: PText,
            font: PFontObject,
-           text: openarray[string],
+           text: varargs[string],
           ) =
   obj.fFont = font
   if text.len == 0:
@@ -43,7 +43,7 @@ proc free*(obj: PText) =
 proc newText*(font: PFontObject, # font
               x: int = 0, # x draw offset
               y: int = 0, # y draw offset
-              text: openarray[string] = @["text"], # text to show
+              text: varargs[string] = @["text"], # text to show
              ): PText =
   new(result, free)
   init(PImage(result), "", int16(x), int16(y))
@@ -56,12 +56,22 @@ method text*(obj: PText): seq[string] {.inline.} =
   return obj.fText
 
 
-method `text=`*(obj: PText, value: openarray[string]) =
+method `text=`*(obj: PText, value: varargs[string]) =
   if value.len == 0:
     obj.fText = @[" "]
   else:
     obj.fText.setLen(0)
-    obj.fText.add(value)
+    for s in value.items:
+      obj.fText.add(s)
+  obj.render()
+
+method setText*(obj: PText, text: varargs[string]) =
+  obj.fText.setLen(0)
+  if text.len == 0:
+    obj.fText.add(" ")
+  else:
+    for line in text.items:
+      obj.fText.add(line)
   obj.render()
 
 

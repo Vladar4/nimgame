@@ -16,12 +16,12 @@ type
 
 proc init*(obj: PImage,
            filename: cstring,
-           x: int16 = 0'i16,
-           y: int16 = 0'i16,
+           x: int = 0,
+           y: int = 0,
           ) =
   # set position
-  obj.x = x
-  obj.y = y
+  obj.x = int16(x)
+  obj.y = int16(y)
   obj.visible = true
   obj.deleteEntity = false
   obj.surface = loadImage(filename)
@@ -29,12 +29,12 @@ proc init*(obj: PImage,
 
 proc init*(obj: PImage,
            surface: PSurface,
-           x: int16 = 0'i16,
-           y: int16 = 0'i16,
+           x: int = 0,
+           y: int = 0,
           ) =
   # set position
-  obj.x = x
-  obj.y = y
+  obj.x = int16(x)
+  obj.y = int16(y)
   obj.visible = true
   obj.deleteEntity = false
   obj.surface = surface
@@ -50,7 +50,7 @@ proc newImage*(filename: cstring,
                y: int = 0,  # y draw offset
               ): PImage =
   new(result, free)
-  init(result, filename, int16(x), int16(y))
+  init(result, filename, x, y)
 
 
 proc newImage*(surface: PSurface,
@@ -58,7 +58,7 @@ proc newImage*(surface: PSurface,
                y: int = 0,  # y draw offset
               ): PImage =
   new(result, free)
-  init(result, surface, int16(x), int16(y))
+  init(result, surface, x, y)
 
 
 # blit
@@ -68,7 +68,7 @@ method blit*(obj: PImage, x = 0'i16, y = 0'i16) =
   var dstRect: TRect
   dstRect.x = x + obj.x
   dstRect.y = y + obj.y
-  do(blitSurface(obj.surface, nil, screen(), addr(dstRect)))
+  check(blitSurface(obj.surface, nil, screen(), addr(dstRect)))
 
 
 # update
@@ -81,8 +81,8 @@ method update*(obj: PImage) {.inline.} =
 method getRect*(obj: PImage): TRect =
   result.x = obj.x
   result.y = obj.y
-  result.w = UInt16(obj.surface.w)
-  result.h = UInt16(obj.surface.h)
+  result.w = uint16(obj.surface.w)
+  result.h = uint16(obj.surface.h)
 
 
 # center offset

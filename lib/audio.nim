@@ -21,7 +21,7 @@ proc load*(obj: var PChunk, filename: string) {.inline.} =
 
 proc play*(obj: PChunk, channel: int = -1, loops: int = 0) {.inline.} =
   if obj != nil:
-    if playChannel(channel, obj, loops) < 0:
+    if playChannel(cint(channel), obj, cint(loops)) < 0:
       echo(sdl.getError())
 
 # Music
@@ -40,5 +40,5 @@ proc load*(obj: var PMusic, filename: string) {.inline.} =
 
 proc play*(obj: PMusic, loops: int = 0) {.inline.} =
   if obj != nil:
-    do(playMusic(obj, loops))
+    check(playMusic(obj, cint(loops)))
 
