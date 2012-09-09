@@ -79,6 +79,11 @@ method line*(obj: PText, index: int = 0): string {.inline.} =
   return obj.fText[index]
 
 
+method append*(obj: PText, line: int = 0, text: string) =
+  obj.fText[line].add(text)
+  obj.render()
+
+
 method font*(obj: PText): PFontObject {.inline.} =
   return obj.fFont
 

@@ -2,7 +2,7 @@ import sdl
 
 type
 
-  TTimerCallbackProc = proc()
+  TTimerCallbackProc = proc() {.closure.}
 
   PTimer* = ref TTimer
   TTimer* = object of TObject

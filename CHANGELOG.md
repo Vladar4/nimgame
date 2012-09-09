@@ -6,6 +6,7 @@ v0.3 (in process)
 * Audio:
     + sound
     + music
+    + playlists
 
 v0.2
 ====

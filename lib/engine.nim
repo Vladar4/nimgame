@@ -1,5 +1,5 @@
 import
-  sdl, sdl_ttf, sdl_gfx, math,
+  sdl, sdl_ttf, sdl_gfx, sdl_mixer, math,
   common, screen, audio, state, timer, input, image, text, font
 
 type
@@ -24,7 +24,7 @@ method free*(obj: PEngine) =
   echo("Shutdown")
   if obj.state != nil: obj.state.free()
   freeScreenBuffer()
-  audio.closeAudio()
+  sdl_mixer.closeAudio()
   sdl.quit()
 
 
@@ -51,23 +51,26 @@ proc newEngine*(width: int = 640,   # screen width
   # init
   if audio:
     check(sdl.init(INIT_VIDEO or INIT_AUDIO))
-    check(openAudio(audioFrequency, uint16(audioFormat),
-                    audioChannels, audioChunkSize))
+    check(sdl_mixer.openAudio(audioFrequency, uint16(audioFormat),
+                              audioChannels, audioChunkSize))
   else:
-    check(sdl.init(INIT_VIDEO))  
+    check(sdl.init(INIT_VIDEO))
   # ttf
   check(sdl_ttf.init())
   # screen
-  result.fScreen.surface = check(setVideoMode(result.fScreen.width, result.fScreen.height,
+  result.fScreen.surface = check(setVideoMode(result.fScreen.width,
+                                              result.fScreen.height,
                                               32, int32(flags)))
   initScreenBuffer(width, height, scale)
-  result.bgColor = mapRGB(result.fScreen.surface.format, bgColor.r, bgColor.g, bgColor.b)
+  result.bgColor = mapRGB(result.fScreen.surface.format,
+                          bgColor.r, bgColor.g, bgColor.b)
   if title != "": WM_SetCaption(title, nil)
   # Update
   result.fUpdateInterval = updateInterval
   # Info
   result.info = info
-  result.fInfoText = newText(newBitmapFont("fnt/default8x16.png", 8, 16), x=4, y=2, " ")
+  result.fInfoText = newText(newBitmapFont("fnt/default8x16.png", 8, 16),
+                                           x=4, y=2, " ")
   # randomize
   randomize()
 
