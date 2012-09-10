@@ -135,7 +135,7 @@ proc groupChannel*(channel, tag: int): bool =
   if sdl_mixer.groupChannel(cint(channel), cint(tag)) != 1:
     echo(sdl.getError())
     return false
-  else: return true
+  return true
 
 
 proc groupChannels*(fromChannel, toChannel, tag: int): int {.inline.} =
@@ -168,6 +168,62 @@ proc haltGroup*(tag: int) {.inline.} =
   discard sdl_mixer.haltGroup(cint(tag))
 
 
+# Effects
+
+proc registerEffect(channel: int, func: TEffectFunc,
+                    done: TEffectDone, arg: Pointer): bool =
+  if sdl_mixer.registerEffect(cint(channel), func, done, arg) == 0:
+    echo(sdl.getError())
+    return false
+  return true
+
+
+proc unregisterEffect(channel: int, func: TEffectFunc): bool =
+  if sdl_mixer.unregisterEffect(cint(channel), func) == 0:
+    echo(sdl.getError())
+    return false
+  return true
+
+
+proc unregisterAllEffects(channel: int): bool =
+  if sdl_mixer.unregisterAllEffects(cint(channel)) == 0:
+    echo(sdl.getError())
+    return false
+  return true
+
+
+proc setPostMix(func: TMixFunction, arg: Pointer) {.inline.} =
+  sdl_mixer.setPostMix(func, arg)
+
+
+proc setPanning(channel: int, left, right: byte): bool =
+  if sdl_mixer.setPanning(cint(channel), left, right) == 0:
+    echo(sdl.getError())
+    return false
+  return true
+
+
+proc setDistance(channel: int, distance: byte): bool =
+  if sdl_mixer.setDistance(cint(channel), distance) == 0:
+    echo(sdl.getError())
+    return false
+  return true
+
+
+proc setPosition(channel: int, angle: int, distance: byte): bool =
+  if sdl_mixer.setPosition(cint(channel), int16(angle), distance) == 0:
+    echo(sdl.getError())
+    return false
+  return true
+
+
+proc setReverseStereo(channel: int, flip: int): bool =
+  if sdl_mixer.setReverseStereo(cint(channel), cint(flip)) == 0:
+    echo(sdl.getError())
+    return false
+  return true
+
+
 # Music
 
 proc free*(obj: var PMusic) {.inline.} =
@@ -196,8 +252,11 @@ proc play*(obj: PMusic, loops: int = 0, fadein: int = 0) =
       echo(sdl.getError())
 
 
-proc setMusicCMD(cmd: string) {.inline.} =
-  if sdl_mixer.setMusicCMD(cmd) != 0: echo(sdl.getError())
+proc setMusicCMD(cmd: string): bool {.inline.} =
+  if sdl_mixer.setMusicCMD(cmd) != 0:
+    echo(sdl.getError())
+    return false
+  return true
 
 
 proc hookMusic*(callback: TMixFunction, arg: Pointer) {.inline.} =
