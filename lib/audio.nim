@@ -380,8 +380,28 @@ method loadFromPath*(obj: PPlaylist, path: string) =
     obj.tracks.add((file: f, name: splitFile(f).name))
 
 
-method loadFromFile*(obj: PPlaylist, path: string) =
-  nil
+method loadFromFile*(obj: PPlaylist, filename: string) =
+  if obj.tracks.len != 0:
+    obj.tracks.setLen(0)
+  if not existsFile(filename):
+    echo "Error: playlist file \"", filename, "\" doesn't exist."
+    return
+  var f: TFile
+  if not open(f, filename):
+    echo("Can't open playlist file \"", filename, "\".")
+    return
+  if f == nil:
+    echo("f is nil")
+    return
+  var s: TaintedString
+  while true:
+    try:
+      s = readLine(f)
+      echo s
+      obj.tracks.add((file: s, name: splitFile(s).name))
+    except:
+      break
+  close(f)
 
 
 proc init*(obj: PPlaylist,
@@ -409,7 +429,7 @@ method play*(obj: PPlaylist, track: string = nil) =
         index = i
   # check for existance
   if index < 0:
-    echo "Invalid track name"
+    echo "Invalid track name: ", track
   else:
     # load and play track
     obj.fCurrentTrackNum = index
