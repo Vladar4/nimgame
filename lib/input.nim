@@ -73,7 +73,7 @@ template isButtonDown*(btn: int): bool =
 
 # check if was MOUSEBUTTONUP event of this button since last update
 template isButtonUp*(btn: int): bool =
-  isKeyEvent(btn, up)
+  isButtonEvent(btn, up)
 
 
 # get mouse position

@@ -65,7 +65,8 @@ proc loadImage*(filename: cstring): PSurface =
 
 
 # blit surface preserving alpha channel
-proc blitSurfaceAlpha*(src: PSurface, srcrect: PRect, dst: PSurface, dstrect: PRect): int =
+proc blitSurfaceAlpha*(src: PSurface, srcrect: PRect,
+                       dst: PSurface, dstrect: PRect): int =
   check(src.setAlpha(0, 255))
   result = blitSurface(src, srcrect, dst, dstRect)
   check(src.setAlpha(SRCALPHA, 255))

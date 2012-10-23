@@ -1,8 +1,11 @@
 v0.3 (in process)
 =================
+* Documentation
 * Graphics:
     + screen scaling
     + multi-line text
+* GUI:
+    + button
 * Audio:
     + sound
     + music

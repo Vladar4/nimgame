@@ -5,6 +5,8 @@ import
 
 type
 
+  TColliderType* = enum CTPoint, CTBox, CTCircle, CTMask
+
   # Base class (virtual)
   PCollider* = ref TCollider
   TCollider* = object of TOBject
@@ -112,6 +114,8 @@ method y*(obj: PCollider): int {.inline.} = nil
 method `y=`*(obj: PCollider, value: int) {.inline.} = nil
 
 method collide*(a: PCollider, b: PCollider): bool = nil
+method collide*(a: PCollider, b: TPoint): bool = nil
+method collide*(a: TPoint, b: PCollider): bool = nil
 
 
 # Point
@@ -164,6 +168,16 @@ method collide*(a: PPointCollider, b: PPointCollider): bool =
   if (a.x == b.x) and (a.y == b.y):
     return true
   return false
+
+
+method collide*(a: PPointCollider, b: TPoint): bool =
+  if (a.x == b.x) and (a.y == b.y):
+    return true
+  return false
+
+
+method collide*(a: TPoint, b: PPointCollider): bool {.inline.} =
+  return collide(b, a)
 
 
 # Box - Box
@@ -226,44 +240,78 @@ method collide*(a: PMaskCollider, b: PMaskCollider): bool =
   return false
   
 
-# Point - Box
-method collide*(a: PPointCollider, b: PBoxCollider): bool =
-  if (a.x < b.left) or (a.x >= b.right): return false
-  if (a.y < b.top) or (a.y >= b.bottom): return false
+# Box - Point
+method collide*(a: PBoxCollider, b: PPointCollider): bool =
+  if (b.x < a.left) or (b.x >= a.right): return false
+  if (b.y < a.top) or (b.y >= a.bottom): return false
   return true
 
 
-# Box - Point
-method collide*(a: PBoxCollider, b: PPointCollider): bool {.inline.} =
+method collide*(a: PBoxCollider, b: TPoint): bool =
+  if (b.x < a.left) or (b.x >= a.right): return false
+  if (b.y < a.top) or (b.y >= a.bottom): return false
+  return true
+
+
+# Point - Box
+method collide*(a: PPointCollider, b: PBoxCollider): bool {.inline.} =
   return collide(b, a)
 
-
-# Point - Circle
-method collide*(a: PPointCollider, b: PCircleCollider): bool =
-  if distance((a.x, a.y), (b.centerX, b.centerY)).toInt > b.radius: return false
-  return true
+method collide*(a: TPoint, b: PBoxCollider): bool {.inline.} =
+  return collide(b, a)
 
 
 # Circle - Point
-method collide*(a: PCircleCollider, b: PPointCollider): bool {.inline.} =
+method collide*(a: PCircleCollider, b: PPointCollider): bool =
+  if distance((b.x, b.y), (a.centerX, a.centerY)).toInt > a.radius: return false
+  return true
+
+
+method collide*(a: PCircleCollider, b: TPoint): bool =
+  if distance((b.x, b.y), (a.centerX, a.centerY)).toInt > a.radius: return false
+  return true
+
+
+# Point - Circle
+method collide*(a: PPointCollider, b: PCircleCollider): bool {.inline.} =
   return collide(b, a)
 
 
-# Point - Mask
-method collide*(a: PPointCollider, b: PMaskCollider): bool =
-  var boxB: TRect
-  boxB = b.mask.getRect()
-  boxB.x = int16(boxB.x + b.x)
-  boxB.y = int16(boxB.y + b.y)
-  if not collide(a, newBoxCollider(boxB)):
+method collide*(a: TPoint, b: PCircleCollider): bool {.inline.} =
+  return collide(b, a)
+
+
+# Mask - Point
+method collide*(a: PMaskCollider, b: PPointCollider): bool =
+  var boxA: TRect
+  boxA = a.mask.getRect()
+  boxA.x = int16(boxA.x + a.x)
+  boxA.y = int16(boxA.y + a.y)
+  if not collide(newBoxCollider(boxA), b):
     return false
-  if b.mask.data[a.y - boxB.y][a.x - boxB.x]:
+  if a.mask.data[b.y - boxA.y][b.x - boxA.x]:
     return true
   return false
 
 
-# Mask - Point
-method collide*(a: PMaskCollider, b: PPointCollider): bool {.inline.} =
+method collide*(a: PMaskCollider, b: TPoint): bool =
+  var boxA: TRect
+  boxA = a.mask.getRect()
+  boxA.x = int16(boxA.x + a.x)
+  boxA.y = int16(boxA.y + a.y)
+  if not collide(newBoxCollider(boxA), b):
+    return false
+  if a.mask.data[b.y - boxA.y][b.x - boxA.x]:
+    return true
+  return false
+
+
+# Point - Mask
+method collide*(a: PPointCollider, b: PMaskCollider): bool {.inline.} =
+  return collide(b, a)
+
+
+method collide*(a: TPoint, b: PMaskCollider): bool {.inline.} =
   return collide(b, a)
 
 
