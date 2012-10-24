@@ -2,6 +2,7 @@ import
   sdl, sdl_image, sdl_ttf, math
 
 type
+  TCallback* = proc(obj: PObject) {.closure.}
   TPoint* = tuple [x: int, y: int]
   TCircle* = tuple [x: int, y: int, r: uint]
   TVector* = tuple[x: float, y: float]

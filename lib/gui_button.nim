@@ -1,9 +1,11 @@
 import
-  entity, sprite, input, collider, mask
+  entity, sprite, input, collider, mask, common
 
 type
   PGUIButton* = ref TGUIButton
   TGUIButton* = object of TEntity
+    cmd*: TCallback
+    cmdObj*: PObject
     fWasHovered, fWasPressed: bool
 
 
@@ -13,6 +15,7 @@ proc free*(obj: PGUIButton) =
 
 proc newGUIButton*(graphic: PSprite,
                    x: float = 0.0, y: float = 0.0,
+                   cmd: TCallback, cmdObj: PObject = nil,
                    colliderType: TColliderType = CTBox): PGUIButton =
   new(result, free)
   init(PEntity(result), graphic, x, y)
@@ -29,6 +32,8 @@ proc newGUIButton*(graphic: PSprite,
                                       result.xi, result.yi)
   else: nil
   # set variables
+  result.cmd = cmd
+  result.cmdObj = cmdObj
   result.fWasHovered = false
   result.fWasPressed = false
 
@@ -63,6 +68,7 @@ proc updateButton*(obj: PGUIButton) =
       obj.fWasPressed = true # button pressed
     elif isButtonUp(1):
       obj.fWasPressed = false # button released
+      obj.cmd(obj.cmdObj)
     obj.fWasHovered = true
   else: # mouse not over button
     if obj.fWasPressed and isButtonUp(1): # button released
