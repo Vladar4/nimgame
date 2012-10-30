@@ -6,6 +6,7 @@ type
   TGUIButton* = object of TEntity
     cmd*: TCallback
     cmdObj*: PObject
+    lockable*, locked*: bool
     fWasHovered, fWasPressed: bool
 
 
@@ -16,6 +17,7 @@ proc free*(obj: PGUIButton) =
 proc newGUIButton*(graphic: PSprite,
                    x: float = 0.0, y: float = 0.0,
                    cmd: TCallback, cmdObj: PObject = nil,
+                   lockable: bool = false, locked: bool = false,
                    colliderType: TColliderType = CTBox): PGUIButton =
   new(result, free)
   init(PEntity(result), graphic, x, y)
@@ -34,6 +36,8 @@ proc newGUIButton*(graphic: PSprite,
   # set variables
   result.cmd = cmd
   result.cmdObj = cmdObj
+  result.lockable = lockable
+  result.locked = locked
   result.fWasHovered = false
   result.fWasPressed = false
 
@@ -45,20 +49,36 @@ proc newGUIButton*(graphic: PSprite,
 # 3 - hover pressed
 proc updateFrame(obj: PGUIButton) =
   let spr = PSprite(obj.graphic)
-  if obj.fWasHovered:
-    if obj.fWasPressed:
-      if spr.count > 3: spr.frame = 3
-      elif spr.count > 1: spr.frame = 1
-      else: spr.frame = 0
-    else:
-      if spr.count > 2: spr.frame = 2
-      else: spr.frame = 0
-  else:
-    if obj.fWasPressed:
-      if spr.count > 1: spr.frame = 1
-      else: spr.frame = 0
-    else:
-      spr.frame = 0
+  if obj.lockable and obj.locked: # locled button
+    if obj.fWasHovered:
+      if obj.fWasPressed: # hovered and pressed
+        if spr.count > 2: spr.frame = 2
+        else: spr.frame = 0
+      else: # hovered
+        if spr.count > 3: spr.frame = 3
+        elif spr.count > 1: spr.frame = 1
+        else: spr.frame = 0
+    else: # not hovered
+      if obj.fWasPressed:
+        spr.frame = 0
+      else:
+        if spr.count > 1: spr.frame = 1
+        else: spr.frame = 0
+  else: # unlocked button
+    if obj.fWasHovered:
+      if obj.fWasPressed: # hovered and pressed
+        if spr.count > 3: spr.frame = 3
+        elif spr.count > 1: spr.frame = 1
+        else: spr.frame = 0
+      else: # hovered
+        if spr.count > 2: spr.frame = 2
+        else: spr.frame = 0
+    else: # not hovered
+      if obj.fWasPressed:
+        if spr.count > 1: spr.frame = 1
+        else: spr.frame = 0
+      else:
+        spr.frame = 0
 
 
 proc updateButton*(obj: PGUIButton) =
@@ -68,7 +88,9 @@ proc updateButton*(obj: PGUIButton) =
       obj.fWasPressed = true # button pressed
     elif isButtonUp(1):
       obj.fWasPressed = false # button released
-      obj.cmd(obj.cmdObj)
+      if obj.lockable:
+        obj.locked = not obj.locked
+      obj.cmd(obj.cmdObj, obj)
     obj.fWasHovered = true
   else: # mouse not over button
     if obj.fWasPressed and isButtonUp(1): # button released
