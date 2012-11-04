@@ -402,14 +402,13 @@ method loadFromFile*(obj: PPlaylist, filename: string) =
   if obj.tracks.len != 0:
     obj.tracks.setLen(0)
   if not existsFile(filename):
-    echo "Error: playlist file \"", filename, "\" doesn't exist."
+    echo("Error: playlist file \"", filename, "\" doesn't exist.")
     return
   var f: TFile
   if not open(f, filename):
-    echo("Can't open playlist file \"", filename, "\".")
+    echo("Error: Can't open playlist file \"", filename, "\".")
     return
   if f == nil:
-    echo("f is nil")
     return
   var s: TaintedString
   while true:
@@ -446,9 +445,14 @@ method indexNext(obj: PPlaylist): int =
 
 
 method play*(obj: PPlaylist, index: int = -1) =
-  var idx: int = 0
+  var idx: int
   if index < 0:
     idx = obj.indexNext()
+  elif index > obj.tracks.high:
+    idx = obj.tracks.high
+  else:
+    idx = index
+  echo "index = ", idx
   obj.fCurrentTrackNum = idx
   obj.fCurrentTitle = obj.tracks[idx].name
   obj.fCurrentMusic.load(obj.tracks[idx].file)
@@ -475,8 +479,7 @@ method playTrack*(obj: PPlaylist, track: string = nil) =
 
 
 method next*(obj: PPlaylist) =
-  let index = obj.indexNext()
-  obj.play(index)
+  obj.play(-1)
 
 
 proc nextCallback(obj: PObject, sender: PObject) =
