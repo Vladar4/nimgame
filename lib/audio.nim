@@ -346,6 +346,24 @@ proc getMusicFading*(): TFading {.inline.} =
   return sdl_mixer.fadingMusic()
 
 
+# Callback
+
+
+var musicFinishedCallbackProc: TCallback
+var musicFinishedCallbackObject: PObject
+
+
+proc musicFinishedCallback() =
+  musicFinishedCallbackProc(musicFinishedCallbackObject, nil)
+
+
+proc setMusicFinishedCallback*(callback: TCallback = nil,
+                               callbackObject: PObject = nil) =
+  musicFinishedCallbackProc = callback
+  musicFinishedCallbackObject = callbackObject
+  hookMusicFinished(pointer(musicFinishedCallback))
+
+
 # Playlist
 
 type
@@ -418,11 +436,33 @@ proc init*(obj: PPlaylist,
   obj.fCurrentTitle = " "
 
 
-method play*(obj: PPlaylist, track: string = nil) =
+method indexNext(obj: PPlaylist): int =
+  if obj.shuffle:
+    return random(obj.tracks.len)
+  else:
+    if obj.fCurrentTrackNum < obj.tracks.high and obj.fCurrentTrackNum >= 0:
+      return obj.fCurrentTrackNum + 1
+  return 0
+
+
+method play*(obj: PPlaylist, index: int = -1) =
+  var idx: int = 0
+  if index < 0:
+    idx = obj.indexNext()
+  obj.fCurrentTrackNum = idx
+  obj.fCurrentTitle = obj.tracks[idx].name
+  obj.fCurrentMusic.load(obj.tracks[idx].file)
+  if obj.repeat:
+    obj.fCurrentMusic.play(-1)
+  else:
+    obj.fCurrentMusic.play()
+
+
+method playTrack*(obj: PPlaylist, track: string = nil) =
   # get track index
   var index: int = -1
   if track == nil:
-    index = random(obj.tracks.len)
+    index = obj.indexNext()
   else:
     for i in 0..obj.tracks.high:
       if track == obj.tracks[i].name:
@@ -431,14 +471,16 @@ method play*(obj: PPlaylist, track: string = nil) =
   if index < 0:
     echo "Invalid track name: ", track
   else:
-    # load and play track
-    obj.fCurrentTrackNum = index
-    obj.fCurrentTitle = obj.tracks[index].name
-    obj.fCurrentMusic.load(obj.tracks[index].file)
-    if obj.repeat:
-      obj.fCurrentMusic.play(-1)
-    else:
-      obj.fCurrentMusic.play()
+    obj.play(index)
+
+
+method next*(obj: PPlaylist) =
+  let index = obj.indexNext()
+  obj.play(index)
+
+
+proc nextCallback(obj: PObject, sender: PObject) =
+  next(PPlaylist(obj))
 
 
 method free*(obj: PPlaylist) =
@@ -448,7 +490,10 @@ method free*(obj: PPlaylist) =
 proc newPlaylist*(shuffle: bool = true,
                   repeat: bool = false,
                   next: bool = true,
+                  defaultPlaylist: bool = true
                  ): PPlaylist =
   new(result, free)
   init(result, shuffle, repeat, next)
+  if defaultPlaylist:
+    setMusicFinishedCallback(nextCallback, result)
 
