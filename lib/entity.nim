@@ -132,3 +132,4 @@ proc updateEntity*(obj: PEntity) =
 
 method update*(obj: PEntity) {.inline.} =
   obj.updateEntity()
+

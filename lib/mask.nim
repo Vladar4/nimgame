@@ -75,3 +75,4 @@ method getRect*(obj: PMask): TRect =
   result.y = int16(obj.y)
   result.w = uint16(obj.w)
   result.h = uint16(obj.h)
+

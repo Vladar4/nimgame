@@ -114,3 +114,4 @@ proc check*(ret: PFont): PFont =
     echo(sdl.getError())
     sdl.quit()
   return ret
+

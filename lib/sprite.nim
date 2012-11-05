@@ -237,3 +237,4 @@ proc updateSprite*(obj: PSprite) =
 
 method update*(obj: PSprite) {.inline.} =
   obj.updateSprite()
+

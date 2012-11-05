@@ -220,3 +220,4 @@ proc render*(obj: PFontObject, text: varargs[string]): PSurface =
     check(blitSurfaceAlpha(tmpLine, nil, result, addr(dstRect)))
     freeSurface(tmpLine)
     dstRect.y = dstRect.y + height
+

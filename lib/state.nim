@@ -158,3 +158,4 @@ proc updateState*(obj: PState) =
 
 method update*(obj: PState) {.inline.} =
   obj.updateState()
+

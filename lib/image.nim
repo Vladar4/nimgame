@@ -105,3 +105,4 @@ method show*(obj: PImage) {.inline.} =
 
 method hide*(obj: PImage) {.inline.} =
   obj.visible = false
+

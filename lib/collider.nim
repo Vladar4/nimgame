@@ -420,3 +420,4 @@ method collide*(a: PBoxCollider, b: PMaskCollider): bool =
 # Mask - Box
 method collide*(a: PMaskCollider, b: PBoxCollider): bool {.inline.} =
   return collide(b, a)
+

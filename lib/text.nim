@@ -96,3 +96,4 @@ method add*(obj: PText, value: string) =
 method insert*(obj: PText, value: string, i: int = 0) =
   obj.fText.insert(value, i)
   obj.render()
+

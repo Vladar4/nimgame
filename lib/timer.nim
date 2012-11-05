@@ -22,3 +22,4 @@ method update*(obj: PTimer) =
   if ticks - obj.last >= obj.interval:
     obj.last = ticks
     obj.callback()
+

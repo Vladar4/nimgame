@@ -205,5 +205,6 @@ proc start*(obj: PEngine) =
     if obj.info: obj.fInfoText.blit()
     FPSCounter = FPSCounter + 1
     # flip screen
-    if obj.fScreen.scale > 1: obj.scale()      
+    if obj.fScreen.scale > 1: obj.scale()
     obj.flip()
+    

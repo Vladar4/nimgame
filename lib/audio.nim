@@ -373,6 +373,7 @@ type
     fCurrentMusic*: PMusic
     fCurrentTrackNum*: int
     fCurrentTitle*: string
+    fFinished*: bool
     shuffle*, repeat*, next*, playing*, paused*: bool
 
 
@@ -433,6 +434,7 @@ proc init*(obj: PPlaylist,
   obj.fCurrentMusic = nil
   obj.fCurrentTrackNum = -1
   obj.fCurrentTitle = " "
+  obj.fFinished = false
 
 
 method indexNext(obj: PPlaylist): int =
@@ -452,7 +454,6 @@ method play*(obj: PPlaylist, index: int = -1) =
     idx = obj.tracks.high
   else:
     idx = index
-  echo "index = ", idx
   obj.fCurrentTrackNum = idx
   obj.fCurrentTitle = obj.tracks[idx].name
   obj.fCurrentMusic.load(obj.tracks[idx].file)
@@ -460,6 +461,10 @@ method play*(obj: PPlaylist, index: int = -1) =
     obj.fCurrentMusic.play(-1)
   else:
     obj.fCurrentMusic.play()
+
+
+method playNext*(obj: PPlaylist) {.inline.} =
+  if obj.next: obj.play(-1)
 
 
 method playTrack*(obj: PPlaylist, track: string = nil) =
@@ -478,12 +483,14 @@ method playTrack*(obj: PPlaylist, track: string = nil) =
     obj.play(index)
 
 
-method next*(obj: PPlaylist) =
-  obj.play(-1)
-
-
 proc nextCallback(obj: PObject, sender: PObject) =
-  next(PPlaylist(obj))
+  PPlaylist(obj).fFinished = true
+
+
+method update*(obj: PPlaylist) =
+  if obj.fFinished:
+    obj.fFinished = false
+    obj.playNext()
 
 
 method free*(obj: PPlaylist) =

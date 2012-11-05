@@ -97,3 +97,4 @@ proc mouseRelativePos*(): TPoint {.inline.} =
   else:
     result.x = int16(x / screenScale())
     result.y = int16(y / screenScale())
+
