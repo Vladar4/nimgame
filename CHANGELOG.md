@@ -6,6 +6,7 @@ v0.3 (in process)
     + multi-line text
 * GUI:
     + button
+    + text button
 * Audio:
     + sound
     + music
