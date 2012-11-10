@@ -46,6 +46,11 @@ method blitFrame*(obj: PSprite, frame: int, dstSurface: PSurface,
                          addr(dstRect)))
 
 
+method blitFrame*(obj: PSprite, frame: int, dstSurface: PSurface,
+                  x: int = 0, y: int = 0) {.inline.} =
+  blitFrame(obj, frame, dstSurface, int16(x), int16(y))
+
+
 method changeFrame(obj: PSprite, frame: int) =
   obj.fFrame = frame
   var dstRect: TRect

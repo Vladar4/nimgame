@@ -35,8 +35,6 @@ proc init*(obj: PText,
 
 
 proc free*(obj: PText) =
-  obj.fFont.free()
-  obj.fFont = nil
   PImage(obj).free()
 
 

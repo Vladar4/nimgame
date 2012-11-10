@@ -14,32 +14,40 @@ proc free*(obj: PGUIButton) =
   PEntity(obj).free()
 
 
+proc init*(obj: PGUIButton,
+           cmd: TCallback, cmdObj: PObject = nil,
+           lockable: bool = false, locked: bool = false,
+           colliderType: TColliderType = CTBox) =
+  # set collider
+  case colliderType:
+  of CTPoint:
+    obj.collider = newPointCollider(obj.xi, obj.yi)
+  of CTBox:
+    obj.collider = newBoxCollider(obj.getRect())
+  of CTCircle:
+    obj.collider = newCircleCollider(obj.getCircle())
+  of CTMask:
+    obj.collider = newMaskCollider(newMask(obj.graphic.surface),
+                                      obj.xi, obj.yi)
+  else: nil
+  # set variables
+  obj.cmd = cmd
+  obj.cmdObj = cmdObj
+  obj.lockable = lockable
+  obj.locked = locked
+  obj.fWasHovered = false
+  obj.fWasPressed = false
+
+
+
 proc newGUIButton*(graphic: PSprite,
                    x: float = 0.0, y: float = 0.0,
-                   cmd: TCallback, cmdObj: PObject = nil,
+                   cmd: TCallback = nil, cmdObj: PObject = nil,
                    lockable: bool = false, locked: bool = false,
                    colliderType: TColliderType = CTBox): PGUIButton =
   new(result, free)
   init(PEntity(result), graphic, x, y)
-  # set collider
-  case colliderType:
-  of CTPoint:
-    result.collider = newPointCollider(result.xi, result.yi)
-  of CTBox:
-    result.collider = newBoxCollider(result.getRect())
-  of CTCircle:
-    result.collider = newCircleCollider(result.getCircle())
-  of CTMask:
-    result.collider = newMaskCollider(newMask(result.graphic.surface),
-                                      result.xi, result.yi)
-  else: nil
-  # set variables
-  result.cmd = cmd
-  result.cmdObj = cmdObj
-  result.lockable = lockable
-  result.locked = locked
-  result.fWasHovered = false
-  result.fWasPressed = false
+  init(result, cmd, cmdObj, lockable, locked, colliderType)
 
 
 # Button frames in sprite must be in this order:
@@ -81,7 +89,7 @@ proc updateFrame(obj: PGUIButton) =
         spr.frame = 0
 
 
-proc updateButton*(obj: PGUIButton) =
+proc updateGUIButton*(obj: PGUIButton) =
   obj.updateEntity()
   if obj.collider.collide(mousePos()): # mouse over button
     if isButtonDown(1):
@@ -90,7 +98,8 @@ proc updateButton*(obj: PGUIButton) =
       obj.fWasPressed = false # button released
       if obj.lockable:
         obj.locked = not obj.locked
-      obj.cmd(obj.cmdObj, obj)
+      if obj.cmd != nil:
+        obj.cmd(obj.cmdObj, obj)
     obj.fWasHovered = true
   else: # mouse not over button
     if obj.fWasPressed and isButtonUp(1): # button released
@@ -100,5 +109,5 @@ proc updateButton*(obj: PGUIButton) =
 
 
 method update*(obj: PGUIButton) {.inline.} =
-  obj.updateButton()
+  obj.updateGUIButton()
 

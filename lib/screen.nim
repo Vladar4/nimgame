@@ -70,5 +70,4 @@ proc blitSurfaceAlpha*(src: PSurface, srcrect: PRect,
   check(src.setAlpha(0, 255))
   result = blitSurface(src, srcrect, dst, dstRect)
   check(src.setAlpha(SRCALPHA, 255))
-  check(src.setAlpha(SRCALPHA, 255))
 

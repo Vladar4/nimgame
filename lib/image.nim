@@ -63,12 +63,25 @@ proc newImage*(surface: PSurface,
 
 # blit
 
-method blit*(obj: PImage, x = 0'i16, y = 0'i16) =
+method blit*(obj: PImage, x: int16 = 0'i16, y: int16 = 0'i16) =
   if not obj.visible: return
   var dstRect: TRect
   dstRect.x = x + obj.x
   dstRect.y = y + obj.y
   check(blitSurface(obj.surface, nil, screen(), addr(dstRect)))
+
+
+method blit*(obj: PImage, dstSurface: PSurface,
+             x: int16 = 0'i16, y: int16 = 0'i16) =
+  var dstRect: TRect
+  dstRect.x = x + obj.x
+  dstRect.y = y + obj.y
+  check(blitSurface(obj.surface, nil, dstSurface, addr(dstRect)))
+
+
+method blit*(obj: PImage, dstSurface: PSurface,
+             x: int = 0, y: int = 0) {.inline.} =
+  blit(obj, dstSurface, int16(x), int16(y))
 
 
 # update
