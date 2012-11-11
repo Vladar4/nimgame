@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Nimgame v0.3</title>
+<title>Module gui_button</title>
 <style type="text/css">
 
 span.DecNumber {color: blue}
@@ -238,13 +238,38 @@ a.reference:hover {color: #E00000;background-color: #ffff00;display: margin;
 </head>
 <body>
 <div class="document" id="documentId">
-<h1 class="title">Nimgame v0.3</h1>
+<h1 class="title">Module gui_button</h1>
 <div class="navigation" id="navigation">
 <ul class="simple">
 <li>
   <a class="reference" href="#6" id="56">Imports</a>
   <ul class="simple">
     
+  </ul>
+</li>
+<li>
+  <a class="reference" href="#7" id="57">Types</a>
+  <ul class="simple">
+      <li><a class="reference" href="#101"><wbr />PGUIButton</a></li>
+  <li><a class="reference" href="#102"><wbr />TGUIButton</a></li>
+
+  </ul>
+</li>
+<li>
+  <a class="reference" href="#12" id="62">Procs</a>
+  <ul class="simple">
+      <li><a class="reference" href="#103"><wbr />free</a></li>
+  <li><a class="reference" href="#104"><wbr />init</a></li>
+  <li><a class="reference" href="#105"><wbr />new<wbr />GUIButton</a></li>
+  <li><a class="reference" href="#106"><wbr />update<wbr />GUIButton</a></li>
+
+  </ul>
+</li>
+<li>
+  <a class="reference" href="#13" id="63">Methods</a>
+  <ul class="simple">
+      <li><a class="reference" href="#107"><wbr />update</a></li>
+
   </ul>
 </li>
 
@@ -255,44 +280,78 @@ a.reference:hover {color: #E00000;background-color: #ffff00;display: margin;
 <div class="section" id="6">
 <h1><a class="toc-backref" href="#56">Imports</a></h1>
 <dl class="item">
-  <a class="reference external" href="audio.html">audio</a>
-  — sound, music and playlists.<br/>
-  <a class="reference external" href="collider.html">collider</a>
-  — colliders.<br/>
-  <a class="reference external" href="common.html">common</a>
-  — common types and functions collection.<br/>
-  <a class="reference external" href="engine.html">engine</a>
-  — game engine class.<br/>
-  <a class="reference external" href="entity.html">entity</a>
-  — base game entity class.<br/>
-  <a class="reference external" href="font.html">font</a>
-  — TTF and bitmap fonts classes.<br/>
-  <a class="reference external" href="gui_button.html">gui_button</a>
-  — GUI Button class.<br/>
-  <a class="reference external" href="gui_textbutton.html">gui_textbutton</a>
-  — GUI TextButton class.<br/>
-  <a class="reference external" href="image.html">image</a>
-  — base graphic class.<br/>
-  <a class="reference external" href="imageex.html">imageex</a>
-  — graphic class with transformations (zoom and rotate) support.<br/>
-  <a class="reference external" href="input.html">input</a>
-  — user input types and functions.<br/>
-  <a class="reference external" href="mask.html">mask</a>
-  — mask class (mostly used by colliders).<br/>
-  <a class="reference external" href="screen.html">screen</a>
-  — common graphic types and functions.<br/>
-  <a class="reference external" href="sprite.html">sprite</a>
-  — graphic class with frames and animations support.<br/>
-  <a class="reference external" href="state.html">state</a>
-  — base game state class.<br/>
-  <a class="reference external" href="text.html">text</a>
-  — graphic class for text output.<br/>
-  <a class="reference external" href="timer.html">timer</a>
-  — timer class.<br/>
+<a class="reference external" href="entity.html">entity</a>, <a class="reference external" href="sprite.html">sprite</a>, <a class="reference external" href="input.html">input</a>, <a class="reference external" href="collider.html">collider</a>, <a class="reference external" href="mask.html">mask</a>, <a class="reference external" href="common.html">common</a>
+</dl></div>
+<div class="section" id="7">
+<h1><a class="toc-backref" href="#57">Types</a></h1>
+<dl class="item">
+<dt id="101"><pre><span class="Identifier">PGUIButton</span> <span class="Other">=</span> <span class="Keyword">ref</span> <span class="Identifier">TGUIButton</span></pre></dt>
+<dd>
+
+</dd>
+<dt id="102"><pre><span class="Identifier">TGUIButton</span> <span class="Other">=</span> <span class="Keyword">object</span> <span class="Keyword">of</span> <span class="Identifier">TEntity</span>
+  <span class="Identifier">cmd</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">TCallback</span>
+  <span class="Identifier">cmdObj</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">PObject</span>
+  <span class="Identifier">lockable</span><span class="Operator">*</span><span class="Other">,</span> <span class="Identifier">locked</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">bool</span>
+  <span class="Identifier">fWasHovered</span><span class="Other">,</span> <span class="Identifier">fWasPressed</span><span class="Other">:</span> <span class="Identifier">bool</span>
+</pre></dt>
+<dd>
+
+</dd>
+
+</dl></div>
+<div class="section" id="12">
+<h1><a class="toc-backref" href="#62">Procs</a></h1>
+<dl class="item">
+<dt id="103"><pre><span class="Keyword">proc</span> <span class="Identifier">free</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PGUIButton</span><span class="Other">)</span></pre></dt>
+<dd>
+
+</dd>
+<dt id="104"><pre><span class="Keyword">proc</span> <span class="Identifier">init</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PGUIButton</span><span class="Other">;</span> <span class="Identifier">cmd</span><span class="Other">:</span> <span class="Identifier">TCallback</span><span class="Other">;</span> <span class="Identifier">cmdObj</span><span class="Other">:</span> <span class="Identifier">PObject</span> <span class="Other">=</span> <span class="Keyword">nil</span><span class="Other">;</span> 
+          <span class="Identifier">lockable</span><span class="Other">:</span> <span class="Identifier">bool</span> <span class="Other">=</span> <span class="Identifier">false</span><span class="Other">;</span> <span class="Identifier">locked</span><span class="Other">:</span> <span class="Identifier">bool</span> <span class="Other">=</span> <span class="Identifier">false</span><span class="Other">;</span> 
+          <span class="Identifier">colliderType</span><span class="Other">:</span> <span class="Identifier">TColliderType</span> <span class="Other">=</span> <span class="Identifier">CTBox</span><span class="Other">)</span></pre></dt>
+<dd>
+
+</dd>
+<dt id="105"><pre><span class="Keyword">proc</span> <span class="Identifier">newGUIButton</span><span class="Other">(</span><span class="Identifier">graphic</span><span class="Other">:</span> <span class="Identifier">PSprite</span><span class="Other">;</span> <span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">float</span> <span class="Other">=</span> <span class="FloatNumber">0.0000000000000000e+00</span><span class="Other">;</span> 
+                  <span class="Identifier">y</span><span class="Other">:</span> <span class="Identifier">float</span> <span class="Other">=</span> <span class="FloatNumber">0.0000000000000000e+00</span><span class="Other">;</span> <span class="Identifier">cmd</span><span class="Other">:</span> <span class="Identifier">TCallback</span> <span class="Other">=</span> <span class="Keyword">nil</span><span class="Other">;</span> 
+                  <span class="Identifier">cmdObj</span><span class="Other">:</span> <span class="Identifier">PObject</span> <span class="Other">=</span> <span class="Keyword">nil</span><span class="Other">;</span> <span class="Identifier">lockable</span><span class="Other">:</span> <span class="Identifier">bool</span> <span class="Other">=</span> <span class="Identifier">false</span><span class="Other">;</span> 
+                  <span class="Identifier">locked</span><span class="Other">:</span> <span class="Identifier">bool</span> <span class="Other">=</span> <span class="Identifier">false</span><span class="Other">;</span> <span class="Identifier">colliderType</span><span class="Other">:</span> <span class="Identifier">TColliderType</span> <span class="Other">=</span> <span class="Identifier">CTBox</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">PGUIButton</span></pre></dt>
+<dd>
+<p><tt class="docutils literal"><span class="pre">graphic</span></tt>: sprite with button frames.</p>
+<p><tt class="docutils literal"><span class="pre">x</span></tt>, <tt class="docutils literal"><span class="pre">y</span></tt>: button coordinates.</p>
+<p><tt class="docutils literal"><span class="pre">cmd</span></tt>: command callback (to call when button is pressed).</p>
+<p><tt class="docutils literal"><span class="pre">cmdObj</span></tt>: callback target object.</p>
+<p><tt class="docutils literal"><span class="pre">lockable</span></tt>: <strong>true</strong> if button is lockable.</p>
+<p><tt class="docutils literal"><span class="pre">locked</span></tt>: <strong>true</strong> to lock button by default (only if lockable is <strong>true</strong>)</p>
+<p><tt class="docutils literal"><span class="pre">colliderType</span></tt>: collider type (CTPoint, CTBox, CTCircle, CTMask)</p>
+<p><strong>Note</strong>: button frames in sprite must be in this order:</p>
+<ul class="simple"><li>0 - default</li>
+<li>1 - pressed</li>
+<li>2 - hover</li>
+<li>3 - hover pressed</li>
+</ul>
+
+</dd>
+<dt id="106"><pre><span class="Keyword">proc</span> <span class="Identifier">updateGUIButton</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PGUIButton</span><span class="Other">)</span></pre></dt>
+<dd>
+
+</dd>
+
+</dl></div>
+<div class="section" id="13">
+<h1><a class="toc-backref" href="#63">Methods</a></h1>
+<dl class="item">
+<dt id="107"><pre><span class="Keyword">method</span> <span class="Identifier">update</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PGUIButton</span><span class="Other">)</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
+<dd>
+
+</dd>
+
 </dl></div>
 
 </div>
 
+<small>Generated: 2012-11-11 20:09:27 UTC</small>
 </div>
 </body>
 </html>

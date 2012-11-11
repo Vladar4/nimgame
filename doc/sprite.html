@@ -353,6 +353,12 @@ a.reference:hover {color: #E00000;background-color: #ffff00;display: margin;
                <span class="Identifier">OffsetY</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">;</span> 
                <span class="Identifier">smooth</span><span class="Other">:</span> <span class="Identifier">cint</span> <span class="Other">=</span> <span class="DecNumber">1</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">PSprite</span></pre></dt>
 <dd>
+<p><tt class="docutils literal"><span class="pre">filename</span></tt>: image file to load from.</p>
+<p><tt class="docutils literal"><span class="pre">x</span></tt>, <tt class="docutils literal"><span class="pre">y</span></tt>: draw offset.</p>
+<p><tt class="docutils literal"><span class="pre">w</span></tt>, <tt class="docutils literal"><span class="pre">h</span></tt>: single frame size.</p>
+<p><tt class="docutils literal"><span class="pre">rows</span></tt>, <tt class="docutils literal"><span class="pre">cols</span></tt>: frame grid dimensions.</p>
+<p><tt class="docutils literal"><span class="pre">offsetX</span></tt>, <tt class="docutils literal"><span class="pre">offsetY</span></tt>: frame grid offset.</p>
+<p><tt class="docutils literal"><span class="pre">smooth</span></tt>: use smooth in transformations.</p>
 
 </dd>
 <dt id="111"><pre><span class="Keyword">proc</span> <span class="Identifier">newSprite</span><span class="Other">(</span><span class="Identifier">surface</span><span class="Other">:</span> <span class="Identifier">PSurface</span><span class="Other">;</span> <span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">;</span> 
@@ -378,12 +384,12 @@ a.reference:hover {color: #E00000;background-color: #ffff00;display: margin;
 <dl class="item">
 <dt id="105"><pre><span class="Keyword">method</span> <span class="Identifier">maskedFill</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PSprite</span><span class="Other">;</span> <span class="Identifier">color</span><span class="Other">:</span> <span class="Identifier">TColor</span><span class="Other">)</span></pre></dt>
 <dd>
-
+Fill sprite map with given <tt class="docutils literal"><span class="pre">color</span></tt> but save alpha channel info.
 </dd>
 <dt id="106"><pre><span class="Keyword">method</span> <span class="Identifier">blitFrame</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PSprite</span><span class="Other">;</span> <span class="Identifier">frame</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">dstSurface</span><span class="Other">:</span> <span class="Identifier">PSurface</span><span class="Other">;</span> 
                  <span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">int16</span> <span class="Other">=</span> <span class="DecNumber">0'i16</span><span class="Other">;</span> <span class="Identifier">y</span><span class="Other">:</span> <span class="Identifier">int16</span> <span class="Other">=</span> <span class="DecNumber">0'i16</span><span class="Other">)</span></pre></dt>
 <dd>
-
+Blit single <tt class="docutils literal"><span class="pre">frame</span></tt> to the given <tt class="docutils literal"><span class="pre">dstSurface</span></tt> without changing current frame.
 </dd>
 <dt id="107"><pre><span class="Keyword">method</span> <span class="Identifier">blitFrame</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PSprite</span><span class="Other">;</span> <span class="Identifier">frame</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">dstSurface</span><span class="Other">:</span> <span class="Identifier">PSurface</span><span class="Other">;</span> <span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">;</span> 
                  <span class="Identifier">y</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">)</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
@@ -400,7 +406,7 @@ a.reference:hover {color: #E00000;background-color: #ffff00;display: margin;
 </dd>
 <dt id="114"><pre><span class="Keyword">method</span> <span class="Identifier">frame=</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PSprite</span><span class="Other">;</span> <span class="Identifier">value</span><span class="Other">:</span> <span class="Identifier">varargs</span><span class="Other">[</span><span class="Identifier">int</span><span class="Other">]</span><span class="Other">)</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
 <dd>
-
+Usage: <tt class="docutils literal"><span class="pre">frame = [col, row]</span></tt>
 </dd>
 <dt id="115"><pre><span class="Keyword">method</span> <span class="Identifier">w</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PSprite</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
 <dd>
@@ -426,12 +432,22 @@ a.reference:hover {color: #E00000;background-color: #ffff00;display: margin;
                     <span class="Identifier">loop</span><span class="Other">:</span> <span class="Identifier">bool</span> <span class="Other">=</span> <span class="Identifier">false</span><span class="Other">;</span> <span class="Identifier">play</span><span class="Other">:</span> <span class="Identifier">bool</span> <span class="Other">=</span> <span class="Identifier">true</span><span class="Other">;</span> 
                     <span class="Identifier">action</span><span class="Other">:</span> <span class="Identifier">TAnimationAction</span> <span class="Other">=</span> <span class="Identifier">doNothing</span><span class="Other">)</span></pre></dt>
 <dd>
+<p><tt class="docutils literal"><span class="pre">frames</span></tt>: animation sequence frames.</p>
+<p><tt class="docutils literal"><span class="pre">rate</span></tt>: animation rate (change frame every <tt class="docutils literal"><span class="pre">rate</span></tt> ticks).</p>
+<p><tt class="docutils literal"><span class="pre">loop</span></tt>: <strong>true</strong> to looped animation.</p>
+<p><tt class="docutils literal"><span class="pre">play</span></tt>: <strong>true</strong> to play animation now.</p>
+<p><tt class="docutils literal"><span class="pre">action</span></tt>: action to do when animation is finished.</p>
 
 </dd>
 <dt id="121"><pre><span class="Keyword">method</span> <span class="Identifier">setAnimation</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PSprite</span><span class="Other">;</span> <span class="Identifier">first</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">;</span> <span class="Identifier">last</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="Operator">-</span> <span class="DecNumber">1</span><span class="Other">;</span> 
                     <span class="Identifier">rate</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">1</span><span class="Other">;</span> <span class="Identifier">loop</span><span class="Other">:</span> <span class="Identifier">bool</span> <span class="Other">=</span> <span class="Identifier">false</span><span class="Other">;</span> <span class="Identifier">play</span><span class="Other">:</span> <span class="Identifier">bool</span> <span class="Other">=</span> <span class="Identifier">true</span><span class="Other">;</span> 
                     <span class="Identifier">action</span><span class="Other">:</span> <span class="Identifier">TAnimationAction</span> <span class="Other">=</span> <span class="Identifier">doNothing</span><span class="Other">)</span></pre></dt>
 <dd>
+<p><tt class="docutils literal"><span class="pre">first</span></tt>, <tt class="docutils literal"><span class="pre">last</span></tt>: animation frames range.</p>
+<p><tt class="docutils literal"><span class="pre">rate</span></tt>: animation rate (change frame every <tt class="docutils literal"><span class="pre">rate</span></tt> ticks).</p>
+<p><tt class="docutils literal"><span class="pre">loop</span></tt>: <strong>true</strong> to looped animation.</p>
+<p><tt class="docutils literal"><span class="pre">play</span></tt>: <strong>true</strong> to play animation now.</p>
+<p><tt class="docutils literal"><span class="pre">action</span></tt>: action to do when animation is finished.</p>
 
 </dd>
 <dt id="123"><pre><span class="Keyword">method</span> <span class="Identifier">update</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PSprite</span><span class="Other">)</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
@@ -443,7 +459,7 @@ a.reference:hover {color: #E00000;background-color: #ffff00;display: margin;
 
 </div>
 
-<small>Generated: 2012-11-10 16:16:03 UTC</small>
+<small>Generated: 2012-11-11 20:09:27 UTC</small>
 </div>
 </body>
 </html>

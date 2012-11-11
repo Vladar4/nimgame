@@ -293,7 +293,7 @@ a.reference:hover {color: #E00000;background-color: #ffff00;display: margin;
   <li><a class="reference" href="#133"><wbr />play</a></li>
   <li><a class="reference" href="#134"><wbr />hook<wbr />Music</a></li>
   <li><a class="reference" href="#135"><wbr />music<wbr />Volume</a></li>
-  <li><a class="reference" href="#136"><wbr />volume=</a></li>
+  <li><a class="reference" href="#136"><wbr />music<wbr />Volume=</a></li>
   <li><a class="reference" href="#137"><wbr />pause<wbr />Music</a></li>
   <li><a class="reference" href="#138"><wbr />resume<wbr />Music</a></li>
   <li><a class="reference" href="#139"><wbr />toggle<wbr />Music<wbr />Pause</a></li>
@@ -316,7 +316,7 @@ a.reference:hover {color: #E00000;background-color: #ffff00;display: margin;
   <a class="reference" href="#13" id="63">Methods</a>
   <ul class="simple">
       <li><a class="reference" href="#152"><wbr />current<wbr />Music</a></li>
-  <li><a class="reference" href="#153"><wbr />current<wbr />Track<wbr />Num</a></li>
+  <li><a class="reference" href="#153"><wbr />current<wbr />Track<wbr />Index</a></li>
   <li><a class="reference" href="#154"><wbr />current<wbr />Title</a></li>
   <li><a class="reference" href="#155"><wbr />load<wbr />From<wbr />Path</a></li>
   <li><a class="reference" href="#156"><wbr />load<wbr />From<wbr />File</a></li>
@@ -346,11 +346,11 @@ a.reference:hover {color: #E00000;background-color: #ffff00;display: margin;
 
 </dd>
 <dt id="151"><pre><span class="Identifier">TPlaylist</span> <span class="Other">=</span> <span class="Keyword">object</span> <span class="Keyword">of</span> <span class="Identifier">TObject</span>
-  <span class="Identifier">tracks</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Keyword">tuple</span><span class="Other">[</span><span class="Identifier">file</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">,</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">]</span><span class="Other">]</span>
-  <span class="Identifier">fCurrentMusic</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">PMusic</span>
-  <span class="Identifier">fCurrentTrackNum</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">int</span>
-  <span class="Identifier">fCurrentTitle</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">string</span>
-  <span class="Identifier">fFinished</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">bool</span>
+  <span class="Identifier">tracks</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Keyword">tuple</span><span class="Other">[</span><span class="Identifier">file</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">,</span> <span class="Identifier">title</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">]</span><span class="Other">]</span>
+  <span class="Identifier">fCurrentMusic</span><span class="Other">:</span> <span class="Identifier">PMusic</span>
+  <span class="Identifier">fCurrentTrackIndex</span><span class="Other">:</span> <span class="Identifier">int</span>
+  <span class="Identifier">fCurrentTitle</span><span class="Other">:</span> <span class="Identifier">string</span>
+  <span class="Identifier">fFinished</span><span class="Other">:</span> <span class="Identifier">bool</span>
   <span class="Identifier">shuffle</span><span class="Operator">*</span><span class="Other">,</span> <span class="Identifier">repeat</span><span class="Operator">*</span><span class="Other">,</span> <span class="Identifier">next</span><span class="Operator">*</span><span class="Other">,</span> <span class="Identifier">playing</span><span class="Operator">*</span><span class="Other">,</span> <span class="Identifier">paused</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">bool</span>
 </pre></dt>
 <dd>
@@ -361,130 +361,188 @@ a.reference:hover {color: #E00000;background-color: #ffff00;display: margin;
 <div class="section" id="12">
 <h1><a class="toc-backref" href="#62">Procs</a></h1>
 <dl class="item">
-<dt id="101"><pre><span class="Keyword">proc</span> <span class="Identifier">setChannels</span><span class="Other">(</span><span class="Identifier">num</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
+<dt id="101"><pre><span class="Keyword">proc</span> <span class="Identifier">setChannels</span><span class="Other">(</span><span class="Identifier">num</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
 <dd>
+<p>Allocate <tt class="docutils literal"><span class="pre">num</span></tt> of channels.</p>
+<p><strong>Return</strong> number of channels allocated.</p>
 
 </dd>
 <dt id="102"><pre><span class="Keyword">proc</span> <span class="Identifier">setAudioVolume</span><span class="Other">(</span><span class="Identifier">volume</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">channel</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="Operator">-</span> <span class="DecNumber">1</span><span class="Other">)</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
 <dd>
+<p>Set <tt class="docutils literal"><span class="pre">volume</span></tt> of <tt class="docutils literal"><span class="pre">channel</span></tt> (0..128).</p>
+<p><tt class="docutils literal"><span class="pre">channel</span></tt> = -1 for all channels.</p>
 
 </dd>
 <dt id="103"><pre><span class="Keyword">proc</span> <span class="Identifier">getAudioVolume</span><span class="Other">(</span><span class="Identifier">channel</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="Operator">-</span> <span class="DecNumber">1</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
 <dd>
+<p>Get volume of <tt class="docutils literal"><span class="pre">channel</span></tt> (0..128).</p>
+<p><tt class="docutils literal"><span class="pre">channel</span></tt> = -1 to get average volume of all channels.</p>
 
 </dd>
 <dt id="104"><pre><span class="Keyword">proc</span> <span class="Identifier">getChunk</span><span class="Other">(</span><span class="Identifier">channel</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">PChunk</span></pre></dt>
 <dd>
+<p>Get chunk playing on <tt class="docutils literal"><span class="pre">channel</span></tt>.</p>
+<p><strong>Nil</strong> is returned if the <tt class="docutils literal"><span class="pre">channel</span></tt> is not allocated, or if <tt class="docutils literal"><span class="pre">channel</span></tt> has not played any samples yet. </p>
 
 </dd>
 <dt id="105"><pre><span class="Keyword">proc</span> <span class="Identifier">free</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">PChunk</span><span class="Other">)</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
 <dd>
-
+Free chunk.
 </dd>
 <dt id="106"><pre><span class="Keyword">proc</span> <span class="Identifier">load</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">PChunk</span><span class="Other">;</span> <span class="Identifier">filename</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
 <dd>
-
+Load sample from file to given chunk (or <strong>nil</strong> on errors).
 </dd>
 <dt id="107"><pre><span class="Keyword">proc</span> <span class="Identifier">play</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PChunk</span><span class="Other">;</span> <span class="Identifier">channel</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="Operator">-</span> <span class="DecNumber">1</span><span class="Other">;</span> <span class="Identifier">loops</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">;</span> <span class="Identifier">timed</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">;</span> 
           <span class="Identifier">fadein</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">)</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
 <dd>
+<p>Play chunk.</p>
+<p><tt class="docutils literal"><span class="pre">loops</span></tt>: number of loops.</p>
+<p><tt class="docutils literal"><span class="pre">timed</span></tt>: millisecond limit to play sample, at most.</p>
+<p><tt class="docutils literal"><span class="pre">fadein</span></tt>: milliseconds of time for fade-in effect.</p>
 
 </dd>
 <dt id="108"><pre><span class="Keyword">proc</span> <span class="Identifier">channelFinished</span><span class="Other">(</span><span class="Identifier">callback</span><span class="Other">:</span> <span class="Identifier">TChannel_finished</span><span class="Other">)</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
 <dd>
+<p>Set <tt class="docutils literal"><span class="pre">callback</span></tt> to call when any channel finishes playback.</p>
+<p><strong>Note</strong>: NEVER call sld_mixer functions, nor sdl.lockAudio from a <tt class="docutils literal"><span class="pre">callback</span></tt> function.</p>
 
 </dd>
 <dt id="109"><pre><span class="Keyword">proc</span> <span class="Identifier">pauseChannel</span><span class="Other">(</span><span class="Identifier">channel</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="Operator">-</span> <span class="DecNumber">1</span><span class="Other">)</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
 <dd>
+<p>Pause <tt class="docutils literal"><span class="pre">channel</span></tt>.</p>
+<p><tt class="docutils literal"><span class="pre">channel</span></tt> = -1 to pause all channels.</p>
 
 </dd>
 <dt id="110"><pre><span class="Keyword">proc</span> <span class="Identifier">resumeChannel</span><span class="Other">(</span><span class="Identifier">channel</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="Operator">-</span> <span class="DecNumber">1</span><span class="Other">)</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
 <dd>
+<p>Resume playing of <tt class="docutils literal"><span class="pre">channel</span></tt>.</p>
+<p><tt class="docutils literal"><span class="pre">channel</span></tt> = -1 to resume playing of all channels.</p>
 
 </dd>
 <dt id="111"><pre><span class="Keyword">proc</span> <span class="Identifier">toggleChannelPause</span><span class="Other">(</span><span class="Identifier">channel</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="Operator">-</span> <span class="DecNumber">1</span><span class="Other">)</span></pre></dt>
 <dd>
-
+Pause channel when playing or resume playing when paused.
 </dd>
 <dt id="112"><pre><span class="Keyword">proc</span> <span class="Identifier">channelPaused</span><span class="Other">(</span><span class="Identifier">channel</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="Operator">-</span> <span class="DecNumber">1</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span></pre></dt>
 <dd>
+<p><strong>Return</strong> <strong>true</strong> if channel is paused and <strong>false</strong> if not.</p>
+<p><tt class="docutils literal"><span class="pre">channel</span></tt> = -1 to check if any of channels is paused.</p>
 
 </dd>
 <dt id="113"><pre><span class="Keyword">proc</span> <span class="Identifier">pausedChannelsCount</span><span class="Other">(</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
 <dd>
-
+Get number of paused channels.
 </dd>
 <dt id="114"><pre><span class="Keyword">proc</span> <span class="Identifier">haltChannel</span><span class="Other">(</span><span class="Identifier">channel</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="Operator">-</span> <span class="DecNumber">1</span><span class="Other">)</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
 <dd>
+<p>Halt channel.</p>
+<p><tt class="docutils literal"><span class="pre">channel</span></tt> = -1 to halt all channels.</p>
 
 </dd>
-<dt id="115"><pre><span class="Keyword">proc</span> <span class="Identifier">expireChannel</span><span class="Other">(</span><span class="Identifier">channel</span><span class="Other">,</span> <span class="Identifier">ticks</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
+<dt id="115"><pre><span class="Keyword">proc</span> <span class="Identifier">expireChannel</span><span class="Other">(</span><span class="Identifier">channel</span><span class="Other">,</span> <span class="Identifier">ms</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
 <dd>
+<p>Halt channel playback after <tt class="docutils literal"><span class="pre">ms</span></tt> milliseconds.</p>
+<p><tt class="docutils literal"><span class="pre">channel</span></tt> = -1 to halt all channels.</p>
+<p><em>Return</em> number of channels set to expire.</p>
 
 </dd>
 <dt id="116"><pre><span class="Keyword">proc</span> <span class="Identifier">fadeOutChannel</span><span class="Other">(</span><span class="Identifier">channel</span><span class="Other">,</span> <span class="Identifier">ms</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
 <dd>
+<p>Gradually fade out <tt class="docutils literal"><span class="pre">channel</span></tt> over <tt class="docutils literal"><span class="pre">ms</span></tt> milliseconds starting from now.</p>
+<p><tt class="docutils literal"><span class="pre">channel</span></tt> = -1 to fade out all channels.</p>
+<p><strong>Return</strong> number of channells set to fade out.</p>
 
 </dd>
 <dt id="117"><pre><span class="Keyword">proc</span> <span class="Identifier">getChannelFading</span><span class="Other">(</span><span class="Identifier">channel</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">TFading</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
 <dd>
+Get fadind status from <tt class="docutils literal"><span class="pre">channel</span></tt>:<ul class="simple"><li><tt class="docutils literal"><span class="pre">MIX_NO_FADING</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">MIX_FADING_OUT</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">MIX_FADING_IN</span></tt></li>
+</ul>
+<p><strong>Note</strong>: -1 is not valid, adn will probably crash the program.</p>
 
 </dd>
 <dt id="118"><pre><span class="Keyword">proc</span> <span class="Identifier">channelPlaying</span><span class="Other">(</span><span class="Identifier">channel</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="Operator">-</span> <span class="DecNumber">1</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span></pre></dt>
 <dd>
+<p>Check if <tt class="docutils literal"><span class="pre">channel</span></tt> playing or not.</p>
+<p><tt class="docutils literal"><span class="pre">channel</span></tt> = -1 to check if any channel is playing.</p>
 
 </dd>
 <dt id="119"><pre><span class="Keyword">proc</span> <span class="Identifier">playingChannelsCount</span><span class="Other">(</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
 <dd>
-
+Get number of playing channels.
 </dd>
 <dt id="120"><pre><span class="Keyword">proc</span> <span class="Identifier">volume</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PChunk</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
 <dd>
-
+Get volume of the chunk (0..128).
 </dd>
 <dt id="121"><pre><span class="Keyword">proc</span> <span class="Identifier">volume=</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PChunk</span><span class="Other">;</span> <span class="Identifier">value</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
 <dd>
-
+Set volume of the chunk (0..128).
 </dd>
 <dt id="122"><pre><span class="Keyword">proc</span> <span class="Identifier">reserveChannels</span><span class="Other">(</span><span class="Identifier">num</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
 <dd>
+<p>Reserve <tt class="docutils literal"><span class="pre">num</span></tt> channels from being used when playing samples when passing in -1 as a channel number to playback functions.</p>
+<p>The channels are reserved starting from <tt class="docutils literal"><span class="pre">0</span></tt> to <tt class="docutils literal"><span class="pre">num-1</span></tt>.</p>
+<p>Passing in <tt class="docutils literal"><span class="pre">0</span></tt> will unreserve all channels.</p>
+<p>Normally sdl_mixer starts without any channels reserved.</p>
+<p><strong>Return</strong> number of channels reserved.</p>
 
 </dd>
 <dt id="123"><pre><span class="Keyword">proc</span> <span class="Identifier">groupChannel</span><span class="Other">(</span><span class="Identifier">channel</span><span class="Other">,</span> <span class="Identifier">tag</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span></pre></dt>
 <dd>
+<p>Add <tt class="docutils literal"><span class="pre">channel</span></tt> to group <tt class="docutils literal"><span class="pre">tag</span></tt>, or reset it's group to the default group tag (-1).</p>
+<p><strong>Return</strong> <strong>true</strong> on success or <strong>false</strong> when the channel specified is invalid.</p>
 
 </dd>
 <dt id="124"><pre><span class="Keyword">proc</span> <span class="Identifier">groupChannels</span><span class="Other">(</span><span class="Identifier">fromChannel</span><span class="Other">,</span> <span class="Identifier">toChannel</span><span class="Other">,</span> <span class="Identifier">tag</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
 <dd>
+<p>Add channels starting at <tt class="docutils literal"><span class="pre">from</span></tt> up through <tt class="docutils literal"><span class="pre">to</span></tt> to group <tt class="docutils literal"><span class="pre">tag</span></tt>, or reset it's group to the default group tag (-1).</p>
+<p><strong>Return</strong> number of tagged channels.</p>
 
 </dd>
 <dt id="125"><pre><span class="Keyword">proc</span> <span class="Identifier">groupCount</span><span class="Other">(</span><span class="Identifier">tag</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
 <dd>
+<p><strong>Return</strong> number of channels in group <tt class="docutils literal"><span class="pre">tag</span></tt>.</p>
+<p><tt class="docutils literal"><span class="pre">tag</span></tt> = -1 to count ALL channels.</p>
 
 </dd>
 <dt id="126"><pre><span class="Keyword">proc</span> <span class="Identifier">groupAvailable</span><span class="Other">(</span><span class="Identifier">tag</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
 <dd>
+<p>Find the first available (not playing) channel in group <tt class="docutils literal"><span class="pre">tag</span></tt>.</p>
+<p><tt class="docutils literal"><span class="pre">tag</span></tt> = -1 to search ALL channels.</p>
+<p><strong>Return</strong> channel found on success, or -1 when no channels in the group are available.</p>
 
 </dd>
 <dt id="127"><pre><span class="Keyword">proc</span> <span class="Identifier">groupOldest</span><span class="Other">(</span><span class="Identifier">tag</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
 <dd>
+<p>Find the oldest actively playing channel in group <tt class="docutils literal"><span class="pre">tag</span></tt>.</p>
+<p><tt class="docutils literal"><span class="pre">tag</span></tt> = -1 to search ALL channels.</p>
+<p><strong>Return</strong> channel found on success, or -1 when no channels in the group are playing or the group is empty.</p>
 
 </dd>
 <dt id="128"><pre><span class="Keyword">proc</span> <span class="Identifier">groupNewer</span><span class="Other">(</span><span class="Identifier">tag</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
 <dd>
+<p>Find the newest, most recently started, actively playing channel in group <tt class="docutils literal"><span class="pre">tag</span></tt>.</p>
+<p><tt class="docutils literal"><span class="pre">tag</span></tt> = -1 to search ALL channels.</p>
+<p><strong>Return</strong> channel found on success, or -1 when no channels in the group are playing or the group is empty.</p>
 
 </dd>
 <dt id="129"><pre><span class="Keyword">proc</span> <span class="Identifier">fadeOutGroup</span><span class="Other">(</span><span class="Identifier">tag</span><span class="Other">,</span> <span class="Identifier">ms</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
 <dd>
+<p>Gradually fade out channels in group <tt class="docutils literal"><span class="pre">tag</span></tt> over <tt class="docutils literal"><span class="pre">ms</span></tt> milliseconds starting from now.</p>
+<p><em>Note</em>: -1 will NOT fade all channels out. Use fadeOutChannel(-1) for that instead.</p>
+<p><strong>Return</strong> number of channels to fade out.</p>
 
 </dd>
 <dt id="130"><pre><span class="Keyword">proc</span> <span class="Identifier">haltGroup</span><span class="Other">(</span><span class="Identifier">tag</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
 <dd>
-
+Halt playback on all channels in group <tt class="docutils literal"><span class="pre">tag</span></tt>.
 </dd>
 <dt id="131"><pre><span class="Keyword">proc</span> <span class="Identifier">free</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">PMusic</span><span class="Other">)</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
 <dd>
-
+Free loaded music.
 </dd>
 <dt id="132"><pre><span class="Keyword">proc</span> <span class="Identifier">load</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">PMusic</span><span class="Other">;</span> <span class="Identifier">filename</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
 <dd>
@@ -492,71 +550,93 @@ a.reference:hover {color: #E00000;background-color: #ffff00;display: margin;
 </dd>
 <dt id="133"><pre><span class="Keyword">proc</span> <span class="Identifier">play</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PMusic</span><span class="Other">;</span> <span class="Identifier">loops</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">;</span> <span class="Identifier">fadein</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">)</span></pre></dt>
 <dd>
-
+Play loaded music. <tt class="docutils literal"><span class="pre">loops</span></tt>: number of loops. <tt class="docutils literal"><span class="pre">fadein</span></tt>: milliseconds of time for fade-in effect.
 </dd>
-<dt id="134"><pre><span class="Keyword">proc</span> <span class="Identifier">hookMusic</span><span class="Other">(</span><span class="Identifier">callback</span><span class="Other">:</span> <span class="Identifier">TMixFunction</span><span class="Other">;</span> <span class="Identifier">arg</span><span class="Other">:</span> <span class="Identifier">pointer</span><span class="Other">)</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
+<dt id="134"><pre><span class="Keyword">proc</span> <span class="Identifier">hookMusic</span><span class="Other">(</span><span class="Identifier">func</span><span class="Other">:</span> <span class="Identifier">TMixFunction</span><span class="Other">;</span> <span class="Identifier">arg</span><span class="Other">:</span> <span class="Identifier">pointer</span><span class="Other">)</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
 <dd>
+<p>Setup a custom music player function.</p>
+<p><tt class="docutils literal"><span class="pre">func</span></tt>: function pointer to a music player mixer function.</p>
+<p><tt class="docutils literal"><span class="pre">arg</span></tt>: pointer passed as <tt class="docutils literal"><span class="pre">func</span></tt>'s <tt class="docutils literal"><span class="pre">udata</span></tt> parameter.</p>
+<p>See SDL_mixer documentation for details.</p>
 
 </dd>
 <dt id="135"><pre><span class="Keyword">proc</span> <span class="Identifier">musicVolume</span><span class="Other">(</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
 <dd>
-
+Get music volume (0..128).
 </dd>
-<dt id="136"><pre><span class="Keyword">proc</span> <span class="Identifier">volume=</span><span class="Other">(</span><span class="Identifier">value</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
+<dt id="136"><pre><span class="Keyword">proc</span> <span class="Identifier">musicVolume=</span><span class="Other">(</span><span class="Identifier">value</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
 <dd>
-
+Set music volume (0..128)
 </dd>
 <dt id="137"><pre><span class="Keyword">proc</span> <span class="Identifier">pauseMusic</span><span class="Other">(</span><span class="Other">)</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
 <dd>
-
+Pause music playback.
 </dd>
 <dt id="138"><pre><span class="Keyword">proc</span> <span class="Identifier">resumeMusic</span><span class="Other">(</span><span class="Other">)</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
 <dd>
-
+Resume music playback. 
 </dd>
 <dt id="139"><pre><span class="Keyword">proc</span> <span class="Identifier">toggleMusicPause</span><span class="Other">(</span><span class="Other">)</span></pre></dt>
 <dd>
-
+Pause music when playing or resume playing when paused.
 </dd>
 <dt id="140"><pre><span class="Keyword">proc</span> <span class="Identifier">rewindMusic</span><span class="Other">(</span><span class="Other">)</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
 <dd>
+<p>Rewind music to the start.</p>
+<p><strong>Note</strong>: only works for MOD, OGG, MP3, Native MIDI.</p>
 
 </dd>
-<dt id="141"><pre><span class="Keyword">proc</span> <span class="Identifier">setMusicPos</span><span class="Other">(</span><span class="Identifier">pos</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span></pre></dt>
+<dt id="141"><pre><span class="Keyword">proc</span> <span class="Identifier">setMusicPos</span><span class="Other">(</span><span class="Identifier">position</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span></pre></dt>
 <dd>
+<p>Set <tt class="docutils literal"><span class="pre">position</span></tt> to play from.</p>
+<p><strong>Note</strong>: only works for:</p>
+<ul class="simple"><li><strong>MOD</strong>: <tt class="docutils literal"><span class="pre">position</span></tt> is cast to <tt class="docutils literal"><span class="pre">Uint16</span></tt> and used for a pattern number in the module.</li>
+<li><strong>OGG</strong>: jumps to <tt class="docutils literal"><span class="pre">position</span></tt> seconds from the <strong><em>beginning</em></strong> of the song.</li>
+<li><strong>MP3</strong>: jumps to <tt class="docutils literal"><span class="pre">position</span></tt> seconds from the <strong><em>current position</em></strong> in the stream. Negative values do nothing.</li>
+</ul>
+<p><strong>Return</strong> <strong>true</strong> on success, or <strong>false</strong> if the codec doesn't support this function.</p>
 
 </dd>
 <dt id="142"><pre><span class="Keyword">proc</span> <span class="Identifier">haltMusic</span><span class="Other">(</span><span class="Other">)</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
 <dd>
-
+Halt music playback.
 </dd>
 <dt id="143"><pre><span class="Keyword">proc</span> <span class="Identifier">fadeOutMusic</span><span class="Other">(</span><span class="Identifier">ms</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
 <dd>
-
+Gradually fade out music over <tt class="docutils literal"><span class="pre">ms</span></tt> milliseconds starting from now.
 </dd>
 <dt id="144"><pre><span class="Keyword">proc</span> <span class="Identifier">getMusicType</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PMusic</span> <span class="Other">=</span> <span class="Keyword">nil</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">TMusicType</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
 <dd>
-
+Get file format encoding of the music as <tt class="docutils literal"><span class="pre">TMusicType</span></tt>. <strong>Nil</strong> for currently playing music type.
 </dd>
 <dt id="145"><pre><span class="Keyword">proc</span> <span class="Identifier">getMusicTypeStr</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PMusic</span> <span class="Other">=</span> <span class="Keyword">nil</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span></pre></dt>
 <dd>
-
+Get file format encoding of the music as <tt class="docutils literal"><span class="pre">string</span></tt>. <strong>Nil</strong> for currently playing music type.
 </dd>
 <dt id="146"><pre><span class="Keyword">proc</span> <span class="Identifier">musicPlaying</span><span class="Other">(</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span></pre></dt>
 <dd>
-
+Check if music playing or not.
 </dd>
 <dt id="147"><pre><span class="Keyword">proc</span> <span class="Identifier">musicPaused</span><span class="Other">(</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span></pre></dt>
 <dd>
-
+Check if music paused or not.
 </dd>
 <dt id="148"><pre><span class="Keyword">proc</span> <span class="Identifier">getMusicFading</span><span class="Other">(</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">TFading</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
 <dd>
+Get fadind status of music:<ul class="simple"><li><tt class="docutils literal"><span class="pre">MIX_NO_FADING</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">MIX_FADING_OUT</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">MIX_FADING_IN</span></tt></li>
+</ul>
 
 </dd>
 <dt id="149"><pre><span class="Keyword">proc</span> <span class="Identifier">setMusicFinishedCallback</span><span class="Other">(</span><span class="Identifier">callback</span><span class="Other">:</span> <span class="Identifier">TCallback</span> <span class="Other">=</span> <span class="Keyword">nil</span><span class="Other">;</span> 
                               <span class="Identifier">callbackObject</span><span class="Other">:</span> <span class="Identifier">PObject</span> <span class="Other">=</span> <span class="Keyword">nil</span><span class="Other">)</span></pre></dt>
 <dd>
+<p>Setup a callback to be called when music playback is halted.</p>
+<p>This proc is frontend to hookMusicFinished.</p>
+<p><tt class="docutils literal"><span class="pre">callback</span></tt>: callback function.</p>
+<p><tt class="docutils literal"><span class="pre">callbackObject</span></tt>: object to call.</p>
+<p><strong>Note</strong>: NEVER call sld_mixer functions, nor sdl.lockAudio from a <tt class="docutils literal"><span class="pre">callback</span></tt> function.</p>
 
 </dd>
 <dt id="157"><pre><span class="Keyword">proc</span> <span class="Identifier">init</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PPlaylist</span><span class="Other">;</span> <span class="Identifier">shuffle</span><span class="Other">,</span> <span class="Identifier">repeat</span><span class="Other">,</span> <span class="Identifier">next</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">)</span></pre></dt>
@@ -566,6 +646,9 @@ a.reference:hover {color: #E00000;background-color: #ffff00;display: margin;
 <dt id="163"><pre><span class="Keyword">proc</span> <span class="Identifier">newPlaylist</span><span class="Other">(</span><span class="Identifier">shuffle</span><span class="Other">:</span> <span class="Identifier">bool</span> <span class="Other">=</span> <span class="Identifier">true</span><span class="Other">;</span> <span class="Identifier">repeat</span><span class="Other">:</span> <span class="Identifier">bool</span> <span class="Other">=</span> <span class="Identifier">false</span><span class="Other">;</span> <span class="Identifier">next</span><span class="Other">:</span> <span class="Identifier">bool</span> <span class="Other">=</span> <span class="Identifier">true</span><span class="Other">;</span> 
                  <span class="Identifier">defaultPlaylist</span><span class="Other">:</span> <span class="Identifier">bool</span> <span class="Other">=</span> <span class="Identifier">true</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">PPlaylist</span></pre></dt>
 <dd>
+<p><tt class="docutils literal"><span class="pre">shuffle</span></tt>: set random selection of the next track.</p>
+<p><tt class="docutils literal"><span class="pre">next</span></tt>: set auto-play next track.</p>
+<p><tt class="docutils literal"><span class="pre">defaultPlaylist</span></tt>: setup callback to play next track.</p>
 
 </dd>
 
@@ -575,34 +658,38 @@ a.reference:hover {color: #E00000;background-color: #ffff00;display: margin;
 <dl class="item">
 <dt id="152"><pre><span class="Keyword">method</span> <span class="Identifier">currentMusic</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PPlaylist</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">PMusic</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
 <dd>
-
+Get reference to the currently playing music.
 </dd>
-<dt id="153"><pre><span class="Keyword">method</span> <span class="Identifier">currentTrackNum</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PPlaylist</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
+<dt id="153"><pre><span class="Keyword">method</span> <span class="Identifier">currentTrackIndex</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PPlaylist</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
 <dd>
-
+Get current track index in <tt class="docutils literal"><span class="pre">tracks</span></tt> list.
 </dd>
 <dt id="154"><pre><span class="Keyword">method</span> <span class="Identifier">currentTitle</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PPlaylist</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
 <dd>
-
+Get title of the current music.
 </dd>
 <dt id="155"><pre><span class="Keyword">method</span> <span class="Identifier">loadFromPath</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PPlaylist</span><span class="Other">;</span> <span class="Identifier">path</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span></pre></dt>
 <dd>
-
+Load tracks from given path (directory).
 </dd>
 <dt id="156"><pre><span class="Keyword">method</span> <span class="Identifier">loadFromFile</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PPlaylist</span><span class="Other">;</span> <span class="Identifier">filename</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span></pre></dt>
 <dd>
-
+Load track from list in given file.
 </dd>
 <dt id="158"><pre><span class="Keyword">method</span> <span class="Identifier">play</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PPlaylist</span><span class="Other">;</span> <span class="Identifier">index</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="Operator">-</span> <span class="DecNumber">1</span><span class="Other">)</span></pre></dt>
 <dd>
+<p>Play specific track.</p>
+<p><tt class="docutils literal"><span class="pre">index</span></tt> = -1 to play next track (<tt class="docutils literal"><span class="pre">indexNext</span></tt>).</p>
 
 </dd>
 <dt id="159"><pre><span class="Keyword">method</span> <span class="Identifier">playNext</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PPlaylist</span><span class="Other">)</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
 <dd>
-
+Play next track.
 </dd>
-<dt id="160"><pre><span class="Keyword">method</span> <span class="Identifier">playTrack</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PPlaylist</span><span class="Other">;</span> <span class="Identifier">track</span><span class="Other">:</span> <span class="Identifier">string</span> <span class="Other">=</span> <span class="Keyword">nil</span><span class="Other">)</span></pre></dt>
+<dt id="160"><pre><span class="Keyword">method</span> <span class="Identifier">playTrack</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PPlaylist</span><span class="Other">;</span> <span class="Identifier">title</span><span class="Other">:</span> <span class="Identifier">string</span> <span class="Other">=</span> <span class="Keyword">nil</span><span class="Other">)</span></pre></dt>
 <dd>
+<p>Play track with given <tt class="docutils literal"><span class="pre">title</span></tt>.</p>
+<p><tt class="docutils literal"><span class="pre">title</span></tt> = <strong>nil</strong> to play next track (<tt class="docutils literal"><span class="pre">indexNext</span></tt>).</p>
 
 </dd>
 <dt id="161"><pre><span class="Keyword">method</span> <span class="Identifier">update</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PPlaylist</span><span class="Other">)</span></pre></dt>
@@ -618,7 +705,7 @@ a.reference:hover {color: #E00000;background-color: #ffff00;display: margin;
 
 </div>
 
-<small>Generated: 2012-11-10 16:16:03 UTC</small>
+<small>Generated: 2012-11-11 20:09:27 UTC</small>
 </div>
 </body>
 </html>

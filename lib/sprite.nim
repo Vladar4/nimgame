@@ -24,17 +24,18 @@ type
     animAction*: TAnimationAction
 
 
-# Fill sprite map with given color but save alpha channel
 method maskedFill*(obj: PSprite, color: TColor) =
+  ## Fill sprite map with given ``color`` but save alpha channel info.
   let colorize = newSurface(obj.fSpritemap.surface.w, obj.fSpritemap.surface.h, true)
   check(colorize.fillRect(nil, mapRGBA(colorize.format, color.r, color.g, color.b, 255)))
   check(colorize.blitSurface(nil, obj.fSpritemap.surface, nil))
   freeSurface(colorize)
 
 
-# Blit single frame to the given surface without changing current frame
 method blitFrame*(obj: PSprite, frame: int, dstSurface: PSurface,
                   x: int16 = 0'i16, y: int16 = 0'i16) =
+  ## Blit single ``frame`` to the given ``dstSurface``
+  ## without changing current frame.
   var dstRect: TRect
   dstRect.x = x
   dstRect.y = y
@@ -122,6 +123,17 @@ proc newSprite*(filename: cstring,
                 OffsetY: int = 0, # y frame grid offset
                 smooth: cint = 1, # smooth
                ): PSprite =
+  ## ``filename``: image file to load from.
+  ##
+  ## ``x``, ``y``: draw offset.
+  ##
+  ## ``w``, ``h``: single frame size.
+  ##
+  ## ``rows``, ``cols``: frame grid dimensions.
+  ##
+  ## ``offsetX``, ``offsetY``: frame grid offset.
+  ##
+  ## ``smooth``: use smooth in transformations.
   new(result, free)
   init(PImage(result), "", x, y)
   result.fSpritemap = newImage(filename)
@@ -161,8 +173,8 @@ method `frame=`*(obj: PSprite, value: int) {.inline.} =
       echo("Warning: frame index out of range (", value, ").")
 
 
-# usage: frame = [col, row]
 method `frame=`*(obj: PSprite, value: varargs[int]) {.inline.} =
+  ## Usage: ``frame = [col, row]``
   if len(value) < 2:
     echo("Warning: not enough params for setting frame.")
     return
@@ -188,6 +200,15 @@ method setAnimation*(obj: PSprite,
                      frames: seq[int], rate: int = 1,
                      loop: bool = false, play: bool = true,
                      action: TAnimationAction = doNothing) =
+  ## ``frames``: animation sequence frames.
+  ##
+  ## ``rate``: animation rate (change frame every ``rate`` ticks).
+  ##
+  ## ``loop``: **true** to looped animation.
+  ##
+  ## ``play``: **true** to play animation now.
+  ##
+  ## ``action``: action to do when animation is finished.
   if frames.len < 1:
     obj.frame = 0
     return
@@ -203,6 +224,15 @@ method setAnimation*(obj: PSprite,
                      first: int = 0, last: int = -1, rate: int = 1,
                      loop: bool = false, play: bool = true,
                      action: TAnimationAction = doNothing) =
+  ## ``first``, ``last``: animation frames range.
+  ##  
+  ## ``rate``: animation rate (change frame every ``rate`` ticks).
+  ##
+  ## ``loop``: **true** to looped animation.
+  ##
+  ## ``play``: **true** to play animation now.
+  ##
+  ## ``action``: action to do when animation is finished.
   var frames: seq[int] = @[]
   if last < 0:
     for i in first..obj.fSpriteInfo.frames.high:

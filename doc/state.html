@@ -337,35 +337,35 @@ a.reference:hover {color: #E00000;background-color: #ffff00;display: margin;
 </dd>
 <dt id="106"><pre><span class="Keyword">method</span> <span class="Identifier">add</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PState</span><span class="Other">;</span> <span class="Identifier">entity</span><span class="Other">:</span> <span class="Identifier">PEntity</span><span class="Other">)</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
 <dd>
-
+Add <tt class="docutils literal"><span class="pre">entity</span></tt> to state.
 </dd>
 <dt id="107"><pre><span class="Keyword">method</span> <span class="Identifier">del</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PState</span><span class="Other">;</span> <span class="Identifier">entity</span><span class="Other">:</span> <span class="Identifier">PEntity</span><span class="Other">)</span></pre></dt>
 <dd>
-
+Delete <tt class="docutils literal"><span class="pre">entity</span></tt> from state.
 </dd>
 <dt id="108"><pre><span class="Keyword">method</span> <span class="Identifier">clear</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PState</span><span class="Other">)</span></pre></dt>
 <dd>
-
+Delete ALL entities from state.
 </dd>
 <dt id="109"><pre><span class="Keyword">method</span> <span class="Identifier">count</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PState</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
 <dd>
-
+Get number of entities in state.
 </dd>
 <dt id="110"><pre><span class="Keyword">method</span> <span class="Identifier">findKind</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PState</span><span class="Other">;</span> <span class="Identifier">kind</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">PEntity</span><span class="Other">]</span></pre></dt>
 <dd>
-
+Return sequence of entities of given <tt class="docutils literal"><span class="pre">kind</span></tt>.
 </dd>
 <dt id="111"><pre><span class="Keyword">method</span> <span class="Identifier">collideWith</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PState</span><span class="Other">;</span> <span class="Identifier">entity</span><span class="Other">:</span> <span class="Identifier">PEntity</span><span class="Other">;</span> <span class="Identifier">kind</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">PEntity</span></pre></dt>
 <dd>
-
+<strong>Return</strong> entity of <tt class="docutils literal"><span class="pre">kind</span></tt> which collide with given <tt class="docutils literal"><span class="pre">entity</span></tt>.
 </dd>
 <dt id="112"><pre><span class="Keyword">method</span> <span class="Identifier">collideWith</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PState</span><span class="Other">;</span> <span class="Identifier">entity</span><span class="Other">:</span> <span class="Identifier">PEntity</span><span class="Other">;</span> <span class="Identifier">kinds</span><span class="Other">:</span> <span class="Identifier">varargs</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">PEntity</span></pre></dt>
 <dd>
-
+<strong>Return</strong> entity of one of a <tt class="docutils literal"><span class="pre">kinds</span></tt> which collide with given <tt class="docutils literal"><span class="pre">entity</span></tt>.
 </dd>
 <dt id="113"><pre><span class="Keyword">method</span> <span class="Identifier">collideList</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PState</span><span class="Other">;</span> <span class="Identifier">kind1</span><span class="Other">,</span> <span class="Identifier">kind2</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Keyword">tuple</span><span class="Other">[</span><span class="Identifier">a</span><span class="Other">,</span> <span class="Identifier">b</span><span class="Other">:</span> <span class="Identifier">PEntity</span><span class="Other">]</span><span class="Other">]</span></pre></dt>
 <dd>
-
+<strong>Return</strong> sequence of pairs (<tt class="docutils literal"><span class="pre">tuple[a, b: PEntity]</span></tt>) of collided entities (<tt class="docutils literal"><span class="pre">kind1</span></tt> collide with <tt class="docutils literal"><span class="pre">kind2</span></tt>).
 </dd>
 <dt id="115"><pre><span class="Keyword">method</span> <span class="Identifier">render</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PState</span><span class="Other">)</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
 <dd>
@@ -380,7 +380,7 @@ a.reference:hover {color: #E00000;background-color: #ffff00;display: margin;
 
 </div>
 
-<small>Generated: 2012-11-10 16:16:03 UTC</small>
+<small>Generated: 2012-11-11 20:09:27 UTC</small>
 </div>
 </body>
 </html>

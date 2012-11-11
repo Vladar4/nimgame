@@ -1,6 +1,5 @@
 import
-  sdl,
-  unsigned,
+  sdl, unsigned,
   common, mask
 
 type

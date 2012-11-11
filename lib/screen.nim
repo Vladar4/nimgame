@@ -14,19 +14,21 @@ var
   scrScale: int = 1
 
 
-# get screen surface
 proc screen*(): PSurface {.inline.} =
+  ## Get screen surface.
   if scrScale == 1: return check(getVideoSurface())
   else: return scrBuffer
 
 
-# get screen scale
 proc screenScale*(): int {.inline.} =
+  ## Get screen scale rate.
   return scrScale
 
 
-# create new surface
 proc newSurface*(width, height: int, alpha: bool = false): PSurface =
+  ## Create new surface with given ``width`` and ``height``.
+  ##
+  ## ``alpha`` = **true** to use alpha channel.
   let fmt = screen().format
   let surface = check(
     createRGBSurface(
@@ -44,7 +46,6 @@ template newSurface*(width, height: uint16, alpha: bool = false): PSurface =
   newSurface(int(width), int(height), alpha)
 
 
-# screen buffer
 proc initScreenBuffer*(w, h, scale: int) =
   if scale > 1: scrBuffer = newSurface(w, h)
   scrScale = scale
@@ -53,8 +54,8 @@ proc freeScreenBuffer*() =
   if scrBuffer != nil: freeSurface(scrBuffer)
 
 
-# Load image to the new surface
 proc loadImage*(filename: cstring): PSurface =
+  ## Load image from file to the new surface.
   if filename != nil:
     if filename.len > 0:
       let surface: PSurface = check(imgLoad(filename))
@@ -64,9 +65,9 @@ proc loadImage*(filename: cstring): PSurface =
     return nil
 
 
-# blit surface preserving alpha channel
 proc blitSurfaceAlpha*(src: PSurface, srcrect: PRect,
                        dst: PSurface, dstrect: PRect): int =
+  ## Blit surface preserving alpha channel.
   check(src.setAlpha(0, 255))
   result = blitSurface(src, srcrect, dst, dstRect)
   check(src.setAlpha(SRCALPHA, 255))

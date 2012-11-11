@@ -36,13 +36,40 @@ proc newEngine*(width: int = 640,   # screen width
                 updateInterval: int = 20, # interval of update event in ms
                 info: bool = false, # show info
                 infobg: bool = true, # info on black background
-                bgColor: TColor = color(0, 0, 0), # background color
+                bgColor: TColor = color(0, 0, 0), # screen background color
                 audio: bool = true, # use audio system
                 audioFrequency: cint = DEFAULT_FREQUENCY,
                 audioFormat: int = DEFAULT_FORMAT,
                 audioChannels: cint = DEFAULT_CHANNELS,
                 audioChunkSize: cint = 1024
                ): PEngine =
+  ## ``width``: screen width.
+  ## 
+  ## ``height``: screen height.
+  ##
+  ## ``flags``: init flags.
+  ##
+  ## ``scale``: screen scale rate (1 for no-scaling).
+  ##
+  ## ``title``: window caption.
+  ##
+  ## ``updateInterval``: interval of update event in ms.
+  ##
+  ## ``info``: **true** to show info panel.
+  ##
+  ## ``infobg``: **true** to show info on black background.
+  ##
+  ## ``bgColor``: screen background color.
+  ##
+  ## ``audio``: **true** to use audio system.
+  ##
+  ## ``audioFrequency``: audio sampling frequency in samples per second (Hz).
+  ##
+  ## ``audioFromat``: audio sample format.
+  ##
+  ## ``audioChannels``: number of sound channels (2 for stereo, 1 for mono).
+  ##
+  ## ``audioChunkSize``: bytes used per sample.
   new(result, free)
   # screen setup
   result.fScreen.width = width * scale
@@ -84,6 +111,7 @@ method stop*(obj: PEngine) {.inline.} = obj.fRun = false
 
 # switch info view
 proc switchInfo*(obj: PEngine) {.inline.} =
+  ## Turn on/off info panel.
   obj.info = not obj.info
 
 
@@ -137,6 +165,7 @@ proc onInfoTimer() =
 
 # main cycle
 proc start*(obj: PEngine) =
+  ## Start main cycle.
   var event: TEvent
   obj.fRun = true
   # update timer

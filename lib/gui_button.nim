@@ -45,16 +45,31 @@ proc newGUIButton*(graphic: PSprite,
                    cmd: TCallback = nil, cmdObj: PObject = nil,
                    lockable: bool = false, locked: bool = false,
                    colliderType: TColliderType = CTBox): PGUIButton =
+  ## ``graphic``: sprite with button frames.
+  ##
+  ## ``x``, ``y``: button coordinates.
+  ##
+  ## ``cmd``: command callback (to call when button is pressed).
+  ##
+  ## ``cmdObj``: callback target object.
+  ##
+  ## ``lockable``: **true** if button is lockable.
+  ##
+  ## ``locked``: **true** to lock button by default
+  ## (only if lockable is **true**)
+  ##
+  ## ``colliderType``: collider type (CTPoint, CTBox, CTCircle, CTMask)
+  ##
+  ## **Note**: button frames in sprite must be in this order:
+  ## * 0 - default
+  ## * 1 - pressed
+  ## * 2 - hover
+  ## * 3 - hover pressed
   new(result, free)
   init(PEntity(result), graphic, x, y)
   init(result, cmd, cmdObj, lockable, locked, colliderType)
 
 
-# Button frames in sprite must be in this order:
-# 0 - default
-# 1 - pressed
-# 2 - hover
-# 3 - hover pressed
 proc updateFrame(obj: PGUIButton) =
   let spr = PSprite(obj.graphic)
   if obj.lockable and obj.locked: # locled button

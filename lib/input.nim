@@ -3,9 +3,9 @@ import
   common, screen
 
 type
-  TKeyEventKind* = enum down, up
-  TKeyEvent* = tuple[key: TKey, event: TKeyEventKind]
-  TButtonEvent* = tuple[button: int, event: TKeyEventKind]
+  TKeyEventKind* = enum down, up ## keyboard key event kind
+  TKeyEvent* = tuple[key: TKey, event: TKeyEventKind] ## keyboard key event
+  TButtonEvent* = tuple[button: int, event: TKeyEventKind] ## mouse button event
 
 let keystate: PKeyStateArr = cast[PKeyStateArr](getKeyState(nil))
 var keyevents: seq[TKeyEvent] = @[]
@@ -45,39 +45,41 @@ proc isButtonEvent*(btn: int, event: TKeyEventKind): bool =
   return false
 
 
-# check if key is pressed now
 proc keyPressed*(key: TKey): bool {.inline.} =
+  ## Check if ``key`` is pressed now.
   if keystate[int(key)].int == 1: return true
   else: return false
 
 
-# check if was KEYDOWN event of this key since last update
 template isKeyDown*(key: TKey): bool =
+  ## Check if was ``KEYDOWN`` event of this ``key`` since last update.
   isKeyEvent(key, down)
 
 
-# check if was KEYUP event of this key since last update
 template isKeyUp*(key: TKey): bool =
+  ## Check if was ``KEYUP`` event of this ``key`` since last update.
   isKeyEvent(key, up)
 
 
-# check if mouse button is pressed now
 proc buttonPressed*(btn: int): bool {.inline.} =
+  ## Check if mouse button ``btn`` is pressed now.
   return buttonispressed[btn]
 
 
-# check if was MOUSEBUTTONDOWN event of this button since last update
 template isButtonDown*(btn: int): bool =
+  ## Check if was ``MOUSEBUTTONDOWN`` event of mouse button ``btn``
+  ## since last update.
   isButtonEvent(btn, down)
 
 
-# check if was MOUSEBUTTONUP event of this button since last update
 template isButtonUp*(btn: int): bool =
+  ## Check if was ``MOUSEBUTTONUP`` event of mouse button ``btn``
+  ## since last update.
   isButtonEvent(btn, up)
 
 
-# get mouse position
 proc mousePos*(): TPoint {.inline.} =
+  ## Get mouse position.
   var x, y: int
   discard getMouseState(x, y)
   if screenScale() == 1:
@@ -87,8 +89,9 @@ proc mousePos*(): TPoint {.inline.} =
     result.x = int16(x / screenScale())
     result.y = int16(y / screenScale())
 
-# get relative mouse position
+
 proc mouseRelativePos*(): TPoint {.inline.} =
+  ## Get relative mouse position.
   var x, y: int
   discard getRelativeMouseState(x, y)
   if screenScale() == 1:

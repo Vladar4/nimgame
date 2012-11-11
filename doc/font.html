@@ -330,13 +330,13 @@ a.reference:hover {color: #E00000;background-color: #ffff00;display: margin;
 <dt id="105"><pre><span class="Identifier">TTTFFont</span> <span class="Other">=</span> <span class="Keyword">object</span> <span class="Keyword">of</span> <span class="Identifier">TFontObject</span>
   <span class="Identifier">fFont</span><span class="Other">:</span> <span class="Identifier">PFont</span>
   <span class="Identifier">size</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">int</span>
-  <span class="Identifier">color</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">TColor</span>
-  <span class="Identifier">background</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">TColor</span>
-  <span class="Identifier">mode</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">TTTFRenderMode</span>
-  <span class="Identifier">utf8</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">bool</span>
-</pre></dt>
+  <span class="Identifier">color</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">TColor</span>              <span class="Comment">## font color</span>
+  <span class="Identifier">background</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">TColor</span>         <span class="Comment">## background color (only for shaded render mode).</span>
+  <span class="Identifier">mode</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">TTTFRenderMode</span>       <span class="Comment">## TTF render mode (solid, shaded, blended)</span>
+  <span class="Identifier">utf8</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">bool</span>                 <span class="Comment">## use UTF-8</span>
+  </pre></dt>
 <dd>
-
+font size
 </dd>
 <dt id="106"><pre><span class="Identifier">PBitmapFont</span> <span class="Other">=</span> <span class="Keyword">ref</span> <span class="Identifier">TBitmapFont</span></pre></dt>
 <dd>
@@ -373,6 +373,12 @@ a.reference:hover {color: #E00000;background-color: #ffff00;display: margin;
                 <span class="Identifier">mode</span><span class="Other">:</span> <span class="Identifier">TTTFRenderMode</span> <span class="Other">=</span> <span class="Identifier">solid</span><span class="Other">;</span> 
                 <span class="Identifier">utf8</span><span class="Other">:</span> <span class="Identifier">bool</span> <span class="Other">=</span> <span class="Identifier">true</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">PTTFFont</span></pre></dt>
 <dd>
+<p><tt class="docutils literal"><span class="pre">filename</span></tt>: ttf file to load from.</p>
+<p><tt class="docutils literal"><span class="pre">size</span></tt>: font size.</p>
+<p><tt class="docutils literal"><span class="pre">color</span></tt>: font color.</p>
+<p><tt class="docutils literal"><span class="pre">background</span></tt>: background color (only for <tt class="docutils literal"><span class="pre">shaded</span></tt> render mode).</p>
+<p><tt class="docutils literal"><span class="pre">mode</span></tt>: TTF render mode (solid, shaded, blended).</p>
+<p><tt class="docutils literal"><span class="pre">utf8</span></tt>: <strong>true</strong> to use UTF-8.</p>
 
 </dd>
 <dt id="123"><pre><span class="Keyword">proc</span> <span class="Identifier">init</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PBitmapFont</span><span class="Other">;</span> <span class="Identifier">filename</span><span class="Other">:</span> <span class="Identifier">cstring</span><span class="Other">;</span> <span class="Identifier">w</span><span class="Other">,</span> <span class="Identifier">h</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span></pre></dt>
@@ -398,6 +404,9 @@ a.reference:hover {color: #E00000;background-color: #ffff00;display: margin;
 <dt id="128"><pre><span class="Keyword">proc</span> <span class="Identifier">newBitmapFont</span><span class="Other">(</span><span class="Identifier">filename</span><span class="Other">:</span> <span class="Identifier">cstring</span><span class="Other">;</span> 
                    <span class="Identifier">w</span><span class="Other">,</span> <span class="Identifier">h</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">PBitmapFont</span></pre></dt>
 <dd>
+<p><tt class="docutils literal"><span class="pre">filename</span></tt>: image (charmap) to load from.</p>
+<p><tt class="docutils literal"><span class="pre">w</span></tt>: width of single char in pixels.</p>
+<p><tt class="docutils literal"><span class="pre">h</span></tt>: height of single char in pixels.</p>
 
 </dd>
 <dt id="129"><pre><span class="Keyword">proc</span> <span class="Identifier">newBitmapFont</span><span class="Other">(</span><span class="Identifier">surface</span><span class="Other">:</span> <span class="Identifier">PSurface</span><span class="Other">;</span> 
@@ -409,6 +418,10 @@ a.reference:hover {color: #E00000;background-color: #ffff00;display: margin;
                    <span class="Identifier">w</span><span class="Other">,</span> <span class="Identifier">h</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> 
                    <span class="Identifier">color</span><span class="Other">:</span> <span class="Identifier">TColor</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">PBitmapFont</span></pre></dt>
 <dd>
+<p><tt class="docutils literal"><span class="pre">filename</span></tt>: image (charmap) to load from.</p>
+<p><tt class="docutils literal"><span class="pre">w</span></tt>: width of single char in pixels.</p>
+<p><tt class="docutils literal"><span class="pre">h</span></tt>: height of single char in pixels.</p>
+<p><tt class="docutils literal"><span class="pre">color</span></tt>: font color.</p>
 
 </dd>
 <dt id="131"><pre><span class="Keyword">proc</span> <span class="Identifier">newBitmapFont</span><span class="Other">(</span><span class="Identifier">surface</span><span class="Other">:</span> <span class="Identifier">PSurface</span><span class="Other">;</span> 
@@ -419,7 +432,7 @@ a.reference:hover {color: #E00000;background-color: #ffff00;display: margin;
 </dd>
 <dt id="132"><pre><span class="Keyword">proc</span> <span class="Identifier">render</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PFontObject</span><span class="Other">;</span> <span class="Identifier">text</span><span class="Other">:</span> <span class="Identifier">varargs</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">PSurface</span></pre></dt>
 <dd>
-
+Render multiple lines of text.
 </dd>
 
 </dl></div>
@@ -479,7 +492,7 @@ a.reference:hover {color: #E00000;background-color: #ffff00;display: margin;
 
 </div>
 
-<small>Generated: 2012-11-10 16:16:03 UTC</small>
+<small>Generated: 2012-11-11 20:09:27 UTC</small>
 </div>
 </body>
 </html>

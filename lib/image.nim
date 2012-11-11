@@ -41,14 +41,14 @@ proc init*(obj: PImage,
 
 
 method free*(obj: PImage) =
-  # ERROR
-  #freeSurface(obj.surface)
-
+  nil
 
 proc newImage*(filename: cstring,
                x: int = 0,  # x draw offset
                y: int = 0,  # y draw offset
               ): PImage =
+  ## ``filename``: image file to load from.
+  ## ``x``, ``y``: draw offset.
   new(result, free)
   init(result, filename, x, y)
 

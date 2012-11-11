@@ -14,11 +14,11 @@ type
   PTTFFont* = ref TTTFFont
   TTTFFont* = object of TFontObject
     fFont: PFont
-    size*: int
-    color*: TColor
-    background*: TColor
-    mode*: TTTFRenderMode
-    utf8*: bool
+    size*: int            ## font size
+    color*: TColor        ## font color
+    background*: TColor   ## background color (only for shaded render mode).
+    mode*: TTTFRenderMode ## TTF render mode (solid, shaded, blended)
+    utf8*: bool           ## use UTF-8
   
   # Bitmap
   PBitmapFont* = ref TBitmapFont
@@ -92,10 +92,21 @@ proc free*(obj: PTTFFont) =
 proc newTTFFont*(filename: cstring, # font filename
                  size: cint = 16, # font size
                  color: TColor = color(255, 255, 255), # font color
-                 background: TColor = color(0, 0, 0), # background color (only for shaded render mode)
-                 mode: TTTFRenderMode = solid, # TTF render mode (see sdl_ttf documentation)
-                 utf8: bool = true, # use UTF8
+                 background: TColor = color(0, 0, 0), # background color
+                 mode: TTTFRenderMode = solid, # TTF render mode
+                 utf8: bool = true, # use UTF-8
                 ): PTTFFont =
+  ## ``filename``: ttf file to load from.
+  ##
+  ## ``size``: font size.
+  ##
+  ## ``color``: font color.
+  ##
+  ## ``background``: background color (only for ``shaded`` render mode).
+  ##
+  ## ``mode``: TTF render mode (solid, shaded, blended).
+  ##
+  ## ``utf8``: **true** to use UTF-8.
   new(result, free)
   init(result, filename, size, color, background, mode, utf8)
 
@@ -174,6 +185,11 @@ proc free*(obj: PBitmapFont) =
 proc newBitmapFont*(filename: cstring, # font filename
                     w, h: int,         # char dimensions
                    ): PBitmapFont =
+  ## ``filename``: image (charmap) to load from.
+  ##
+  ## ``w``: width of single char in pixels.
+  ##
+  ## ``h``: height of single char in pixels.
   new(result, free)
   init(result, filename, w, h)
 
@@ -189,6 +205,13 @@ proc newBitmapFont*(filename: cstring, # font filename
                     w, h: int,         # char dimensions
                     color: TColor,     # font color
                    ): PBitmapFont =
+  ## ``filename``: image (charmap) to load from.
+  ##
+  ## ``w``: width of single char in pixels.
+  ##
+  ## ``h``: height of single char in pixels.
+  ##
+  ## ``color``: font color.
   new(result, free)
   init(result, filename, w, h, color)
 
@@ -203,6 +226,8 @@ proc newBitmapFont*(surface: PSurface, # font surface
 
 # multi-line render
 proc render*(obj: PFontObject, text: varargs[string]): PSurface =
+  ## Render multiple lines of text.
+
   # get max width
   var curw: int = 0
   var maxw: int = 0

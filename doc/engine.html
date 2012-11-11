@@ -341,11 +341,25 @@ a.reference:hover {color: #E00000;background-color: #ffff00;display: margin;
                <span class="Identifier">audioChannels</span><span class="Other">:</span> <span class="Identifier">cint</span> <span class="Other">=</span> <span class="Identifier">DEFAULT_CHANNELS</span><span class="Other">;</span> 
                <span class="Identifier">audioChunkSize</span><span class="Other">:</span> <span class="Identifier">cint</span> <span class="Other">=</span> <span class="DecNumber">1024</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">PEngine</span></pre></dt>
 <dd>
+<p><tt class="docutils literal"><span class="pre">width</span></tt>: screen width.</p>
+<p><tt class="docutils literal"><span class="pre">height</span></tt>: screen height.</p>
+<p><tt class="docutils literal"><span class="pre">flags</span></tt>: init flags.</p>
+<p><tt class="docutils literal"><span class="pre">scale</span></tt>: screen scale rate (1 for no-scaling).</p>
+<p><tt class="docutils literal"><span class="pre">title</span></tt>: window caption.</p>
+<p><tt class="docutils literal"><span class="pre">updateInterval</span></tt>: interval of update event in ms.</p>
+<p><tt class="docutils literal"><span class="pre">info</span></tt>: <strong>true</strong> to show info panel.</p>
+<p><tt class="docutils literal"><span class="pre">infobg</span></tt>: <strong>true</strong> to show info on black background.</p>
+<p><tt class="docutils literal"><span class="pre">bgColor</span></tt>: screen background color.</p>
+<p><tt class="docutils literal"><span class="pre">audio</span></tt>: <strong>true</strong> to use audio system.</p>
+<p><tt class="docutils literal"><span class="pre">audioFrequency</span></tt>: audio sampling frequency in samples per second (Hz).</p>
+<p><tt class="docutils literal"><span class="pre">audioFromat</span></tt>: audio sample format.</p>
+<p><tt class="docutils literal"><span class="pre">audioChannels</span></tt>: number of sound channels (2 for stereo, 1 for mono).</p>
+<p><tt class="docutils literal"><span class="pre">audioChunkSize</span></tt>: bytes used per sample.</p>
 
 </dd>
 <dt id="109"><pre><span class="Keyword">proc</span> <span class="Identifier">switchInfo</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PEngine</span><span class="Other">)</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
 <dd>
-
+Turn on/off info panel.
 </dd>
 <dt id="110"><pre><span class="Keyword">proc</span> <span class="Identifier">flip</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PEngine</span><span class="Other">)</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
 <dd>
@@ -353,7 +367,7 @@ a.reference:hover {color: #E00000;background-color: #ffff00;display: margin;
 </dd>
 <dt id="111"><pre><span class="Keyword">proc</span> <span class="Identifier">start</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PEngine</span><span class="Other">)</span></pre></dt>
 <dd>
-
+Start main cycle.
 </dd>
 
 </dl></div>
@@ -381,7 +395,7 @@ a.reference:hover {color: #E00000;background-color: #ffff00;display: margin;
 
 </div>
 
-<small>Generated: 2012-11-10 16:16:03 UTC</small>
+<small>Generated: 2012-11-11 20:09:27 UTC</small>
 </div>
 </body>
 </html>

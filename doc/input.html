@@ -298,15 +298,15 @@ a.reference:hover {color: #E00000;background-color: #ffff00;display: margin;
 <dt id="101"><pre><span class="Identifier">TKeyEventKind</span> <span class="Other">=</span> <span class="Keyword">enum</span> 
   <span class="Identifier">down</span><span class="Other">,</span> <span class="Identifier">up</span></pre></dt>
 <dd>
-
+keyboard key event kind
 </dd>
 <dt id="102"><pre><span class="Identifier">TKeyEvent</span> <span class="Other">=</span> <span class="Keyword">tuple</span><span class="Other">[</span><span class="Identifier">key</span><span class="Other">:</span> <span class="Identifier">TKey</span><span class="Other">,</span> <span class="Identifier">event</span><span class="Other">:</span> <span class="Identifier">TKeyEventKind</span><span class="Other">]</span></pre></dt>
 <dd>
-
+keyboard key event
 </dd>
 <dt id="103"><pre><span class="Identifier">TButtonEvent</span> <span class="Other">=</span> <span class="Keyword">tuple</span><span class="Other">[</span><span class="Identifier">button</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">,</span> <span class="Identifier">event</span><span class="Other">:</span> <span class="Identifier">TKeyEventKind</span><span class="Other">]</span></pre></dt>
 <dd>
-
+mouse button event
 </dd>
 
 </dl></div>
@@ -339,19 +339,19 @@ a.reference:hover {color: #E00000;background-color: #ffff00;display: margin;
 </dd>
 <dt id="110"><pre><span class="Keyword">proc</span> <span class="Identifier">keyPressed</span><span class="Other">(</span><span class="Identifier">key</span><span class="Other">:</span> <span class="Identifier">TKey</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
 <dd>
-
+Check if <tt class="docutils literal"><span class="pre">key</span></tt> is pressed now.
 </dd>
 <dt id="113"><pre><span class="Keyword">proc</span> <span class="Identifier">buttonPressed</span><span class="Other">(</span><span class="Identifier">btn</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
 <dd>
-
+Check if mouse button <tt class="docutils literal"><span class="pre">btn</span></tt> is pressed now.
 </dd>
 <dt id="116"><pre><span class="Keyword">proc</span> <span class="Identifier">mousePos</span><span class="Other">(</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">TPoint</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
 <dd>
-
+Get mouse position.
 </dd>
 <dt id="117"><pre><span class="Keyword">proc</span> <span class="Identifier">mouseRelativePos</span><span class="Other">(</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">TPoint</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
 <dd>
-
+Get relative mouse position.
 </dd>
 
 </dl></div>
@@ -379,7 +379,7 @@ a.reference:hover {color: #E00000;background-color: #ffff00;display: margin;
 
 </div>
 
-<small>Generated: 2012-11-10 16:16:03 UTC</small>
+<small>Generated: 2012-11-11 20:09:27 UTC</small>
 </div>
 </body>
 </html>

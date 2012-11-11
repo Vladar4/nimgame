@@ -25,32 +25,32 @@ proc newState*(): PState =
 
 # Manage entities
 
-# add entity to state
 method add*(obj: PState, entity: PEntity) {.inline.} =
+  ## Add ``entity`` to state.
   obj.fAddList.add(entity)
 
 
-# delete entity from state
 method del*(obj: PState, entity: PEntity) =
+  ## Delete ``entity`` from state.
   let index = obj.fEntityList.find(entity)
   if index <= 0:
     return
   obj.fEntityList.delete(index)
 
 
-# delete all entities from state
 method clear*(obj: PState) =
+  ## Delete ALL entities from state.
   while len(obj.fEntityList) > 0:
     obj.fEntityList.del(obj.fEntityList.high)
 
 
-# return count of entities in state
 method count*(obj: PState): int {.inline.} =
+  ## Get number of entities in state.
   return obj.fEntityList.len
 
 
-# return sequence of entities of given kind
 method findKind*(obj: PState, kind: string): seq[PEntity] =
+  ## Return sequence of entities of given ``kind``.
   result = @[]
   for i in 0..obj.fEntityList.high:
     if obj.fEntityList[i].kind == kind:
@@ -107,8 +107,9 @@ method updateEntityList(obj: PState) =
 
 # Collisions
 
-# entity collide with kind
 method collideWith*(obj: PState, entity: PEntity, kind: string): PEntity =
+  ## **Return** entity of ``kind``
+  ## which collide with given ``entity``.
   let index = obj.fEntityList.find(entity)
   if index < 0 or entity.collider == nil:
     return nil
@@ -122,15 +123,17 @@ method collideWith*(obj: PState, entity: PEntity, kind: string): PEntity =
 
 # entity collide with kinds
 method collideWith*(obj: PState, entity: PEntity, kinds: varargs[string]): PEntity =
+  ## **Return** entity of one of a ``kinds``
+  ## which collide with given ``entity``.
   for kind in kinds.items():
     result = obj.collideWith(entity, kind)
     if result != nil:
       return result
 
 
-# one kind collide with other
-# return sequence of pairs (tuple[a, b: PEntity]) of collided entities
 method collideList*(obj: PState, kind1, kind2: string): seq[tuple[a, b: PEntity]] =
+  ## **Return** sequence of pairs (``tuple[a, b: PEntity]``)
+  ## of collided entities (``kind1`` collide with ``kind2``).
   result = @[]
   for i in 0..obj.fEntityList.high:
     if obj.fEntityList[i].kind == kind1 and obj.fEntityList[i].collider != nil:

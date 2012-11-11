@@ -68,6 +68,38 @@ proc newGUITextButton*(graphic: PSprite, font: PFontObject, text: string,
                        cmd: TCallback = nil, cmdObj: PObject = nil,
                        lockable: bool = false, locked: bool = false,
                        colliderType: TColliderType = CTBox): PGUITextButton =
+  ## ``graphic``: sprite with button frames.
+  ##
+  ## ``font``: font object to write text with.
+  ##
+  ## ``text``: string of text to write on button.
+  ##
+  ## ``x``, ``y``: button coordinates.
+  ##
+  ## ``cmd``: command callback (to call when button is pressed).
+  ##
+  ## ``cmdObj``: callback target object.
+  ##
+  ## ``lockable``: **true** if button is lockable.
+  ##
+  ## ``locked``: **true** to lock button by default
+  ## (only if lockable is **true**)
+  ##
+  ## ``colliderType``: collider type (CTPoint, CTBox, CTCircle, CTMask)
+  ##
+  ## **Note**: textbutton frames in sprite must be in this order:
+  ## * 0 - default (left part)
+  ## * 1 - default (middle part)
+  ## * 2 - default (right part)
+  ## * 3 - pressed (left part)
+  ## * 4 - pressed (middle part)
+  ## * 5 - pressed (right part)
+  ## * 6 - hover (left part)
+  ## * 7 - hover (middle part)
+  ## * 8 - hover (right part)
+  ## * 9 - hover pressed (left part)
+  ## * 10 - hover pressed (middle part)
+  ## * 11 - hover pressed (right part)
   new(result, free)
   init(PEntity(result), nil, x, y)
   init(result, graphic, font, text)
@@ -75,10 +107,12 @@ proc newGUITextButton*(graphic: PSprite, font: PFontObject, text: string,
 
 
 method text*(obj: PGUITextButton): string {.inline.} =
+  ## Get text written on button.
   return obj.fText.text[0]
 
 
 method `text=`*(obj: PGUITextButton, value: string) {.inline.} =
+  ## Set text to write on button.
   obj.fText.setText(value)
   obj.fText.centerOffset()
   obj.createSurface(obj.fSprite)

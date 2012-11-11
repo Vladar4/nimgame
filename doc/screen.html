@@ -308,14 +308,16 @@ a.reference:hover {color: #E00000;background-color: #ffff00;display: margin;
 <dl class="item">
 <dt id="104"><pre><span class="Keyword">proc</span> <span class="Identifier">screen</span><span class="Other">(</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">PSurface</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
 <dd>
-
+Get screen surface.
 </dd>
 <dt id="105"><pre><span class="Keyword">proc</span> <span class="Identifier">screenScale</span><span class="Other">(</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
 <dd>
-
+Get screen scale rate.
 </dd>
 <dt id="106"><pre><span class="Keyword">proc</span> <span class="Identifier">newSurface</span><span class="Other">(</span><span class="Identifier">width</span><span class="Other">,</span> <span class="Identifier">height</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">alpha</span><span class="Other">:</span> <span class="Identifier">bool</span> <span class="Other">=</span> <span class="Identifier">false</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">PSurface</span></pre></dt>
 <dd>
+<p>Create new surface with given <tt class="docutils literal"><span class="pre">width</span></tt> and <tt class="docutils literal"><span class="pre">height</span></tt>.</p>
+<p><tt class="docutils literal"><span class="pre">alpha</span></tt> = <strong>true</strong> to use alpha channel.</p>
 
 </dd>
 <dt id="108"><pre><span class="Keyword">proc</span> <span class="Identifier">initScreenBuffer</span><span class="Other">(</span><span class="Identifier">w</span><span class="Other">,</span> <span class="Identifier">h</span><span class="Other">,</span> <span class="Identifier">scale</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span></pre></dt>
@@ -328,12 +330,12 @@ a.reference:hover {color: #E00000;background-color: #ffff00;display: margin;
 </dd>
 <dt id="110"><pre><span class="Keyword">proc</span> <span class="Identifier">loadImage</span><span class="Other">(</span><span class="Identifier">filename</span><span class="Other">:</span> <span class="Identifier">cstring</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">PSurface</span></pre></dt>
 <dd>
-
+Load image from file to the new surface.
 </dd>
 <dt id="111"><pre><span class="Keyword">proc</span> <span class="Identifier">blitSurfaceAlpha</span><span class="Other">(</span><span class="Identifier">src</span><span class="Other">:</span> <span class="Identifier">PSurface</span><span class="Other">;</span> <span class="Identifier">srcrect</span><span class="Other">:</span> <span class="Identifier">PRect</span><span class="Other">;</span> <span class="Identifier">dst</span><span class="Other">:</span> <span class="Identifier">PSurface</span><span class="Other">;</span> 
                       <span class="Identifier">dstrect</span><span class="Other">:</span> <span class="Identifier">PRect</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span></pre></dt>
 <dd>
-
+Blit surface preserving alpha channel.
 </dd>
 
 </dl></div>
@@ -349,7 +351,7 @@ a.reference:hover {color: #E00000;background-color: #ffff00;display: margin;
 
 </div>
 
-<small>Generated: 2012-11-10 16:16:03 UTC</small>
+<small>Generated: 2012-11-11 20:09:27 UTC</small>
 </div>
 </body>
 </html>

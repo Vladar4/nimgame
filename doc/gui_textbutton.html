@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Module timer</title>
+<title>Module gui_textbutton</title>
 <style type="text/css">
 
 span.DecNumber {color: blue}
@@ -238,7 +238,7 @@ a.reference:hover {color: #E00000;background-color: #ffff00;display: margin;
 </head>
 <body>
 <div class="document" id="documentId">
-<h1 class="title">Module timer</h1>
+<h1 class="title">Module gui_textbutton</h1>
 <div class="navigation" id="navigation">
 <ul class="simple">
 <li>
@@ -250,22 +250,27 @@ a.reference:hover {color: #E00000;background-color: #ffff00;display: margin;
 <li>
   <a class="reference" href="#7" id="57">Types</a>
   <ul class="simple">
-      <li><a class="reference" href="#101"><wbr />PTimer</a></li>
-  <li><a class="reference" href="#102"><wbr />TTimer</a></li>
+      <li><a class="reference" href="#101"><wbr />PGUIText<wbr />Button</a></li>
+  <li><a class="reference" href="#102"><wbr />TGUIText<wbr />Button</a></li>
 
   </ul>
 </li>
 <li>
   <a class="reference" href="#12" id="62">Procs</a>
   <ul class="simple">
-      <li><a class="reference" href="#103"><wbr />new<wbr />Timer</a></li>
+      <li><a class="reference" href="#103"><wbr />init</a></li>
+  <li><a class="reference" href="#104"><wbr />free</a></li>
+  <li><a class="reference" href="#105"><wbr />new<wbr />GUIText<wbr />Button</a></li>
+  <li><a class="reference" href="#108"><wbr />update<wbr />GUIText<wbr />Button</a></li>
 
   </ul>
 </li>
 <li>
   <a class="reference" href="#13" id="63">Methods</a>
   <ul class="simple">
-      <li><a class="reference" href="#104"><wbr />update</a></li>
+      <li><a class="reference" href="#106"><wbr />text</a></li>
+  <li><a class="reference" href="#107"><wbr />text=</a></li>
+  <li><a class="reference" href="#109"><wbr />update</a></li>
 
   </ul>
 </li>
@@ -277,18 +282,19 @@ a.reference:hover {color: #E00000;background-color: #ffff00;display: margin;
 <div class="section" id="6">
 <h1><a class="toc-backref" href="#56">Imports</a></h1>
 <dl class="item">
-<a class="reference external" href="sdl.html">sdl</a>
+<a class="reference external" href="sdl.html">sdl</a>, <a class="reference external" href="entity.html">entity</a>, <a class="reference external" href="image.html">image</a>, <a class="reference external" href="sprite.html">sprite</a>, <a class="reference external" href="collider.html">collider</a>, <a class="reference external" href="text.html">text</a>, <a class="reference external" href="font.html">font</a>, <a class="reference external" href="common.html">common</a>, <a class="reference external" href="screen.html">screen</a>, <a class="reference external" href="gui_button.html">gui_button</a>
 </dl></div>
 <div class="section" id="7">
 <h1><a class="toc-backref" href="#57">Types</a></h1>
 <dl class="item">
-<dt id="101"><pre><span class="Identifier">PTimer</span> <span class="Other">=</span> <span class="Keyword">ref</span> <span class="Identifier">TTimer</span></pre></dt>
+<dt id="101"><pre><span class="Identifier">PGUITextButton</span> <span class="Other">=</span> <span class="Keyword">ref</span> <span class="Identifier">TGUITextButton</span></pre></dt>
 <dd>
 
 </dd>
-<dt id="102"><pre><span class="Identifier">TTimer</span> <span class="Other">=</span> <span class="Keyword">object</span> <span class="Keyword">of</span> <span class="Identifier">TObject</span>
-  <span class="Identifier">last</span><span class="Other">,</span> <span class="Identifier">interval</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">int</span>
-  <span class="Identifier">callback</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">TTimerCallbackProc</span>
+<dt id="102"><pre><span class="Identifier">TGUITextButton</span> <span class="Other">=</span> <span class="Keyword">object</span> <span class="Keyword">of</span> <span class="Identifier">TGUIButton</span>
+  <span class="Identifier">fSprite</span><span class="Other">:</span> <span class="Identifier">PSprite</span>
+  <span class="Identifier">fSurface</span><span class="Other">:</span> <span class="Identifier">PSurface</span>
+  <span class="Identifier">fText</span><span class="Other">:</span> <span class="Identifier">PText</span>
 </pre></dt>
 <dd>
 
@@ -298,7 +304,46 @@ a.reference:hover {color: #E00000;background-color: #ffff00;display: margin;
 <div class="section" id="12">
 <h1><a class="toc-backref" href="#62">Procs</a></h1>
 <dl class="item">
-<dt id="103"><pre><span class="Keyword">proc</span> <span class="Identifier">newTimer</span><span class="Other">(</span><span class="Identifier">interval</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">callback</span><span class="Other">:</span> <span class="Identifier">TTimerCallbackProc</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">PTimer</span></pre></dt>
+<dt id="103"><pre><span class="Keyword">proc</span> <span class="Identifier">init</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PGUITextButton</span><span class="Other">;</span> <span class="Identifier">graphic</span><span class="Other">:</span> <span class="Identifier">PSprite</span><span class="Other">;</span> <span class="Identifier">font</span><span class="Other">:</span> <span class="Identifier">PFontObject</span><span class="Other">;</span> <span class="Identifier">text</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span></pre></dt>
+<dd>
+
+</dd>
+<dt id="104"><pre><span class="Keyword">proc</span> <span class="Identifier">free</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PGUITextButton</span><span class="Other">)</span></pre></dt>
+<dd>
+
+</dd>
+<dt id="105"><pre><span class="Keyword">proc</span> <span class="Identifier">newGUITextButton</span><span class="Other">(</span><span class="Identifier">graphic</span><span class="Other">:</span> <span class="Identifier">PSprite</span><span class="Other">;</span> <span class="Identifier">font</span><span class="Other">:</span> <span class="Identifier">PFontObject</span><span class="Other">;</span> <span class="Identifier">text</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> 
+                      <span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">float</span> <span class="Other">=</span> <span class="FloatNumber">0.0000000000000000e+00</span><span class="Other">;</span> 
+                      <span class="Identifier">y</span><span class="Other">:</span> <span class="Identifier">float</span> <span class="Other">=</span> <span class="FloatNumber">0.0000000000000000e+00</span><span class="Other">;</span> <span class="Identifier">cmd</span><span class="Other">:</span> <span class="Identifier">TCallback</span> <span class="Other">=</span> <span class="Keyword">nil</span><span class="Other">;</span> 
+                      <span class="Identifier">cmdObj</span><span class="Other">:</span> <span class="Identifier">PObject</span> <span class="Other">=</span> <span class="Keyword">nil</span><span class="Other">;</span> <span class="Identifier">lockable</span><span class="Other">:</span> <span class="Identifier">bool</span> <span class="Other">=</span> <span class="Identifier">false</span><span class="Other">;</span> 
+                      <span class="Identifier">locked</span><span class="Other">:</span> <span class="Identifier">bool</span> <span class="Other">=</span> <span class="Identifier">false</span><span class="Other">;</span> <span class="Identifier">colliderType</span><span class="Other">:</span> <span class="Identifier">TColliderType</span> <span class="Other">=</span> <span class="Identifier">CTBox</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">PGUITextButton</span></pre></dt>
+<dd>
+<p><tt class="docutils literal"><span class="pre">graphic</span></tt>: sprite with button frames.</p>
+<p><tt class="docutils literal"><span class="pre">font</span></tt>: font object to write text with.</p>
+<p><tt class="docutils literal"><span class="pre">text</span></tt>: string of text to write on button.</p>
+<p><tt class="docutils literal"><span class="pre">x</span></tt>, <tt class="docutils literal"><span class="pre">y</span></tt>: button coordinates.</p>
+<p><tt class="docutils literal"><span class="pre">cmd</span></tt>: command callback (to call when button is pressed).</p>
+<p><tt class="docutils literal"><span class="pre">cmdObj</span></tt>: callback target object.</p>
+<p><tt class="docutils literal"><span class="pre">lockable</span></tt>: <strong>true</strong> if button is lockable.</p>
+<p><tt class="docutils literal"><span class="pre">locked</span></tt>: <strong>true</strong> to lock button by default (only if lockable is <strong>true</strong>)</p>
+<p><tt class="docutils literal"><span class="pre">colliderType</span></tt>: collider type (CTPoint, CTBox, CTCircle, CTMask)</p>
+<p><strong>Note</strong>: textbutton frames in sprite must be in this order:</p>
+<ul class="simple"><li>0 - default (left part)</li>
+<li>1 - default (middle part)</li>
+<li>2 - default (right part)</li>
+<li>3 - pressed (left part)</li>
+<li>4 - pressed (middle part)</li>
+<li>5 - pressed (right part)</li>
+<li>6 - hover (left part)</li>
+<li>7 - hover (middle part)</li>
+<li>8 - hover (right part)</li>
+<li>9 - hover pressed (left part)</li>
+<li>10 - hover pressed (middle part)</li>
+<li>11 - hover pressed (right part)</li>
+</ul>
+
+</dd>
+<dt id="108"><pre><span class="Keyword">proc</span> <span class="Identifier">updateGUITextButton</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PGUITextButton</span><span class="Other">)</span></pre></dt>
 <dd>
 
 </dd>
@@ -307,7 +352,15 @@ a.reference:hover {color: #E00000;background-color: #ffff00;display: margin;
 <div class="section" id="13">
 <h1><a class="toc-backref" href="#63">Methods</a></h1>
 <dl class="item">
-<dt id="104"><pre><span class="Keyword">method</span> <span class="Identifier">update</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PTimer</span><span class="Other">)</span></pre></dt>
+<dt id="106"><pre><span class="Keyword">method</span> <span class="Identifier">text</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PGUITextButton</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
+<dd>
+Get text written on button.
+</dd>
+<dt id="107"><pre><span class="Keyword">method</span> <span class="Identifier">text=</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PGUITextButton</span><span class="Other">;</span> <span class="Identifier">value</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
+<dd>
+Set text to write on button.
+</dd>
+<dt id="109"><pre><span class="Keyword">method</span> <span class="Identifier">update</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PGUITextButton</span><span class="Other">)</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
 <dd>
 
 </dd>

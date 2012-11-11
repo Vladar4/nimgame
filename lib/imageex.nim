@@ -36,6 +36,11 @@ proc newImageEx*(filename: cstring,
                  y: int = 0,  # y draw offset
                  smooth: cint = 1,  # smooth
                 ): PImageEx =
+  ## ``filename``: image file to load from.
+  ##
+  ## ``x``, ``y``: draw offset.
+  ##
+  ## ``smooth``: use smooth in transformations.
   new(result, free)
   init(PImage(result), filename, int16(x), int16(y))
   init(result, smooth)

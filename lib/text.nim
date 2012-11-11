@@ -41,8 +41,13 @@ proc free*(obj: PText) =
 proc newText*(font: PFontObject, # font
               x: int = 0, # x draw offset
               y: int = 0, # y draw offset
-              text: varargs[string] = @["text"], # text to show
+              text: varargs[string] = @["text"], # text
              ): PText =
+  ## ``font``: font object to write text with.
+  ##
+  ## ``x``, ``y``: draw offset.
+  ##
+  ## ``text``: text lines.
   new(result, free)
   init(PImage(result), "", int16(x), int16(y))
   init(result, font, text)
@@ -51,10 +56,12 @@ proc newText*(font: PFontObject, # font
 # get/set methods
 
 method text*(obj: PText): seq[string] {.inline.} =
+  ## Get text lines.
   return obj.fText
 
 
 method `text=`*(obj: PText, value: varargs[string]) =
+  ## Set text lines.
   if value.len == 0:
     obj.fText = @[" "]
   else:
@@ -64,6 +71,7 @@ method `text=`*(obj: PText, value: varargs[string]) =
   obj.render()
 
 method setText*(obj: PText, text: varargs[string]) =
+  ## Set text lines.
   obj.fText.setLen(0)
   if text.len == 0:
     obj.fText.add(" ")
@@ -73,25 +81,32 @@ method setText*(obj: PText, text: varargs[string]) =
   obj.render()
 
 
-method line*(obj: PText, index: int = 0): string {.inline.} =
-  return obj.fText[index]
+method line*(obj: PText, line: int = 0): string {.inline.} =
+  ## Get specific ``line`` of text.
+  return obj.fText[line]
 
 
-method append*(obj: PText, line: int = 0, text: string) =
-  obj.fText[line].add(text)
+method append*(obj: PText, line: int = 0, value: string) =
+  ## Append to specific ``line`` of text.
+  obj.fText[line].add(value)
   obj.render()
 
 
 method font*(obj: PText): PFontObject {.inline.} =
+  ## Get text font object.
   return obj.fFont
 
 
 method add*(obj: PText, value: string) =
+  ## Add new line.
   obj.fText.add(value)
   obj.render()
 
 
 method insert*(obj: PText, value: string, i: int = 0) =
+  ## Insert new line in text.
+  ##
+  ## ``i``: index of inserted line.
   obj.fText.insert(value, i)
   obj.render()
 
