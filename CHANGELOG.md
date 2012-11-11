@@ -1,4 +1,4 @@
-v0.3 (in process)
+v0.3
 =================
 * Nimrod v0.9.0 support
 * Documentation
@@ -43,3 +43,4 @@ v0.1
 * Input:
     * key states
     * key events
+
