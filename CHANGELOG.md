@@ -1,5 +1,6 @@
 v0.3 (in process)
 =================
+* Nimrod v0.9.0 support
 * Documentation
 * Graphics:
     + screen scaling

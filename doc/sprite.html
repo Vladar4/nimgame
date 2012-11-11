@@ -260,11 +260,11 @@ a.reference:hover {color: #E00000;background-color: #ffff00;display: margin;
 <li>
   <a class="reference" href="#12" id="62">Procs</a>
   <ul class="simple">
-      <li><a class="reference" href="#107"><wbr />init</a></li>
-  <li><a class="reference" href="#108"><wbr />free</a></li>
-  <li><a class="reference" href="#109"><wbr />new<wbr />Sprite</a></li>
+      <li><a class="reference" href="#108"><wbr />init</a></li>
+  <li><a class="reference" href="#109"><wbr />free</a></li>
   <li><a class="reference" href="#110"><wbr />new<wbr />Sprite</a></li>
-  <li><a class="reference" href="#121"><wbr />update<wbr />Sprite</a></li>
+  <li><a class="reference" href="#111"><wbr />new<wbr />Sprite</a></li>
+  <li><a class="reference" href="#122"><wbr />update<wbr />Sprite</a></li>
 
   </ul>
 </li>
@@ -273,17 +273,18 @@ a.reference:hover {color: #E00000;background-color: #ffff00;display: margin;
   <ul class="simple">
       <li><a class="reference" href="#105"><wbr />masked<wbr />Fill</a></li>
   <li><a class="reference" href="#106"><wbr />blit<wbr />Frame</a></li>
-  <li><a class="reference" href="#111"><wbr />frame</a></li>
-  <li><a class="reference" href="#112"><wbr />frame=</a></li>
+  <li><a class="reference" href="#107"><wbr />blit<wbr />Frame</a></li>
+  <li><a class="reference" href="#112"><wbr />frame</a></li>
   <li><a class="reference" href="#113"><wbr />frame=</a></li>
-  <li><a class="reference" href="#114"><wbr />w</a></li>
-  <li><a class="reference" href="#115"><wbr />h</a></li>
-  <li><a class="reference" href="#116"><wbr />cols</a></li>
-  <li><a class="reference" href="#117"><wbr />rows</a></li>
-  <li><a class="reference" href="#118"><wbr />count</a></li>
-  <li><a class="reference" href="#119"><wbr />set<wbr />Animation</a></li>
+  <li><a class="reference" href="#114"><wbr />frame=</a></li>
+  <li><a class="reference" href="#115"><wbr />w</a></li>
+  <li><a class="reference" href="#116"><wbr />h</a></li>
+  <li><a class="reference" href="#117"><wbr />cols</a></li>
+  <li><a class="reference" href="#118"><wbr />rows</a></li>
+  <li><a class="reference" href="#119"><wbr />count</a></li>
   <li><a class="reference" href="#120"><wbr />set<wbr />Animation</a></li>
-  <li><a class="reference" href="#122"><wbr />update</a></li>
+  <li><a class="reference" href="#121"><wbr />set<wbr />Animation</a></li>
+  <li><a class="reference" href="#123"><wbr />update</a></li>
 
   </ul>
 </li>
@@ -333,16 +334,16 @@ a.reference:hover {color: #E00000;background-color: #ffff00;display: margin;
 <div class="section" id="12">
 <h1><a class="toc-backref" href="#62">Procs</a></h1>
 <dl class="item">
-<dt id="107"><pre><span class="Keyword">proc</span> <span class="Identifier">init</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PSprite</span><span class="Other">;</span> <span class="Identifier">w</span><span class="Other">:</span> <span class="Identifier">uint16</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">;</span> <span class="Identifier">h</span><span class="Other">:</span> <span class="Identifier">uint16</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">;</span> <span class="Identifier">rows</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">;</span> 
+<dt id="108"><pre><span class="Keyword">proc</span> <span class="Identifier">init</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PSprite</span><span class="Other">;</span> <span class="Identifier">w</span><span class="Other">:</span> <span class="Identifier">uint16</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">;</span> <span class="Identifier">h</span><span class="Other">:</span> <span class="Identifier">uint16</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">;</span> <span class="Identifier">rows</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">;</span> 
           <span class="Identifier">cols</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">;</span> <span class="Identifier">offsetX</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">;</span> <span class="Identifier">offsetY</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">)</span></pre></dt>
 <dd>
 
 </dd>
-<dt id="108"><pre><span class="Keyword">proc</span> <span class="Identifier">free</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PSprite</span><span class="Other">)</span></pre></dt>
+<dt id="109"><pre><span class="Keyword">proc</span> <span class="Identifier">free</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PSprite</span><span class="Other">)</span></pre></dt>
 <dd>
 
 </dd>
-<dt id="109"><pre><span class="Keyword">proc</span> <span class="Identifier">newSprite</span><span class="Other">(</span><span class="Identifier">filename</span><span class="Other">:</span> <span class="Identifier">cstring</span><span class="Other">;</span> <span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">;</span> 
+<dt id="110"><pre><span class="Keyword">proc</span> <span class="Identifier">newSprite</span><span class="Other">(</span><span class="Identifier">filename</span><span class="Other">:</span> <span class="Identifier">cstring</span><span class="Other">;</span> <span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">;</span> 
                <span class="Identifier">y</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">;</span> 
                <span class="Identifier">w</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">;</span> 
                <span class="Identifier">h</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">;</span> 
@@ -354,7 +355,7 @@ a.reference:hover {color: #E00000;background-color: #ffff00;display: margin;
 <dd>
 
 </dd>
-<dt id="110"><pre><span class="Keyword">proc</span> <span class="Identifier">newSprite</span><span class="Other">(</span><span class="Identifier">surface</span><span class="Other">:</span> <span class="Identifier">PSurface</span><span class="Other">;</span> <span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">;</span> 
+<dt id="111"><pre><span class="Keyword">proc</span> <span class="Identifier">newSprite</span><span class="Other">(</span><span class="Identifier">surface</span><span class="Other">:</span> <span class="Identifier">PSurface</span><span class="Other">;</span> <span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">;</span> 
                <span class="Identifier">y</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">;</span> 
                <span class="Identifier">w</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">;</span> 
                <span class="Identifier">h</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">;</span> 
@@ -366,7 +367,7 @@ a.reference:hover {color: #E00000;background-color: #ffff00;display: margin;
 <dd>
 
 </dd>
-<dt id="121"><pre><span class="Keyword">proc</span> <span class="Identifier">updateSprite</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PSprite</span><span class="Other">)</span></pre></dt>
+<dt id="122"><pre><span class="Keyword">proc</span> <span class="Identifier">updateSprite</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PSprite</span><span class="Other">)</span></pre></dt>
 <dd>
 
 </dd>
@@ -384,51 +385,56 @@ a.reference:hover {color: #E00000;background-color: #ffff00;display: margin;
 <dd>
 
 </dd>
-<dt id="111"><pre><span class="Keyword">method</span> <span class="Identifier">frame</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PSprite</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
+<dt id="107"><pre><span class="Keyword">method</span> <span class="Identifier">blitFrame</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PSprite</span><span class="Other">;</span> <span class="Identifier">frame</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">dstSurface</span><span class="Other">:</span> <span class="Identifier">PSurface</span><span class="Other">;</span> <span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">;</span> 
+                 <span class="Identifier">y</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">)</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
 <dd>
 
 </dd>
-<dt id="112"><pre><span class="Keyword">method</span> <span class="Identifier">frame=</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PSprite</span><span class="Other">;</span> <span class="Identifier">value</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
+<dt id="112"><pre><span class="Keyword">method</span> <span class="Identifier">frame</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PSprite</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
 <dd>
 
 </dd>
-<dt id="113"><pre><span class="Keyword">method</span> <span class="Identifier">frame=</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PSprite</span><span class="Other">;</span> <span class="Identifier">value</span><span class="Other">:</span> <span class="Identifier">varargs</span><span class="Other">[</span><span class="Identifier">int</span><span class="Other">]</span><span class="Other">)</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
+<dt id="113"><pre><span class="Keyword">method</span> <span class="Identifier">frame=</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PSprite</span><span class="Other">;</span> <span class="Identifier">value</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
 <dd>
 
 </dd>
-<dt id="114"><pre><span class="Keyword">method</span> <span class="Identifier">w</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PSprite</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
+<dt id="114"><pre><span class="Keyword">method</span> <span class="Identifier">frame=</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PSprite</span><span class="Other">;</span> <span class="Identifier">value</span><span class="Other">:</span> <span class="Identifier">varargs</span><span class="Other">[</span><span class="Identifier">int</span><span class="Other">]</span><span class="Other">)</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
 <dd>
 
 </dd>
-<dt id="115"><pre><span class="Keyword">method</span> <span class="Identifier">h</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PSprite</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
+<dt id="115"><pre><span class="Keyword">method</span> <span class="Identifier">w</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PSprite</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
 <dd>
 
 </dd>
-<dt id="116"><pre><span class="Keyword">method</span> <span class="Identifier">cols</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PSprite</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
+<dt id="116"><pre><span class="Keyword">method</span> <span class="Identifier">h</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PSprite</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
 <dd>
 
 </dd>
-<dt id="117"><pre><span class="Keyword">method</span> <span class="Identifier">rows</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PSprite</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
+<dt id="117"><pre><span class="Keyword">method</span> <span class="Identifier">cols</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PSprite</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
 <dd>
 
 </dd>
-<dt id="118"><pre><span class="Keyword">method</span> <span class="Identifier">count</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PSprite</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
+<dt id="118"><pre><span class="Keyword">method</span> <span class="Identifier">rows</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PSprite</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
 <dd>
 
 </dd>
-<dt id="119"><pre><span class="Keyword">method</span> <span class="Identifier">setAnimation</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PSprite</span><span class="Other">;</span> <span class="Identifier">frames</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">int</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">rate</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">1</span><span class="Other">;</span> 
+<dt id="119"><pre><span class="Keyword">method</span> <span class="Identifier">count</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PSprite</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
+<dd>
+
+</dd>
+<dt id="120"><pre><span class="Keyword">method</span> <span class="Identifier">setAnimation</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PSprite</span><span class="Other">;</span> <span class="Identifier">frames</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">int</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">rate</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">1</span><span class="Other">;</span> 
                     <span class="Identifier">loop</span><span class="Other">:</span> <span class="Identifier">bool</span> <span class="Other">=</span> <span class="Identifier">false</span><span class="Other">;</span> <span class="Identifier">play</span><span class="Other">:</span> <span class="Identifier">bool</span> <span class="Other">=</span> <span class="Identifier">true</span><span class="Other">;</span> 
                     <span class="Identifier">action</span><span class="Other">:</span> <span class="Identifier">TAnimationAction</span> <span class="Other">=</span> <span class="Identifier">doNothing</span><span class="Other">)</span></pre></dt>
 <dd>
 
 </dd>
-<dt id="120"><pre><span class="Keyword">method</span> <span class="Identifier">setAnimation</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PSprite</span><span class="Other">;</span> <span class="Identifier">first</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">;</span> <span class="Identifier">last</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="Operator">-</span> <span class="DecNumber">1</span><span class="Other">;</span> 
+<dt id="121"><pre><span class="Keyword">method</span> <span class="Identifier">setAnimation</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PSprite</span><span class="Other">;</span> <span class="Identifier">first</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">;</span> <span class="Identifier">last</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="Operator">-</span> <span class="DecNumber">1</span><span class="Other">;</span> 
                     <span class="Identifier">rate</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">1</span><span class="Other">;</span> <span class="Identifier">loop</span><span class="Other">:</span> <span class="Identifier">bool</span> <span class="Other">=</span> <span class="Identifier">false</span><span class="Other">;</span> <span class="Identifier">play</span><span class="Other">:</span> <span class="Identifier">bool</span> <span class="Other">=</span> <span class="Identifier">true</span><span class="Other">;</span> 
                     <span class="Identifier">action</span><span class="Other">:</span> <span class="Identifier">TAnimationAction</span> <span class="Other">=</span> <span class="Identifier">doNothing</span><span class="Other">)</span></pre></dt>
 <dd>
 
 </dd>
-<dt id="122"><pre><span class="Keyword">method</span> <span class="Identifier">update</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PSprite</span><span class="Other">)</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
+<dt id="123"><pre><span class="Keyword">method</span> <span class="Identifier">update</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PSprite</span><span class="Other">)</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
 <dd>
 
 </dd>
@@ -437,7 +443,7 @@ a.reference:hover {color: #E00000;background-color: #ffff00;display: margin;
 
 </div>
 
-<small>Generated: 2012-10-07 09:01:27 UTC</small>
+<small>Generated: 2012-11-10 16:16:03 UTC</small>
 </div>
 </body>
 </html>

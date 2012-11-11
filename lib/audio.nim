@@ -447,6 +447,8 @@ method indexNext(obj: PPlaylist): int =
 
 
 method play*(obj: PPlaylist, index: int = -1) =
+  if obj.tracks.len < 1:
+    return
   var idx: int
   if index < 0:
     idx = obj.indexNext()

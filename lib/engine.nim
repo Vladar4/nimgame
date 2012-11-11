@@ -11,7 +11,7 @@ type
     fUpdateInterval: int
     fInfoText: PText
     state*: PState
-    info*: bool
+    info*, infobg*: bool
     bgColor*: int32
 
 var FPSCounter, lastFPS: int
@@ -35,6 +35,7 @@ proc newEngine*(width: int = 640,   # screen width
                 title: cstring = "",  # window caption
                 updateInterval: int = 20, # interval of update event in ms
                 info: bool = false, # show info
+                infobg: bool = true, # info on black background
                 bgColor: TColor = color(0, 0, 0), # background color
                 audio: bool = true, # use audio system
                 audioFrequency: cint = DEFAULT_FREQUENCY,
@@ -69,6 +70,7 @@ proc newEngine*(width: int = 640,   # screen width
   result.fUpdateInterval = updateInterval
   # Info
   result.info = info
+  result.infobg = infobg
   result.fInfoText = newText(newBitmapFont("fnt/default8x16.png", 8, 16),
                                            x=4, y=2, " ")
   # randomize
@@ -191,18 +193,17 @@ proc start*(obj: PEngine) =
     check(screen().fillRect(nil, obj.bgColor))
     obj.state.render()
     if infoUpd:
-      
       infoUpd = false
       let entities = repr(obj.state.count)
       let l1 = "FPS: " & repr(lastFPS) & "    Entities: " & entities
       let l2 = "Mem.: " & repr(getTotalMem()) & " total (" & repr(getOccupiedMem()) & " occupied, " & repr(getFreeMem()) & " free)"
       obj.fInfoText.setText(l1, l2)
-      #"FPS: " & repr(lastFPS) & "    Entities: " & repr(obj.state.count),
-      #"Mem.: " & repr(getTotalMem()) & " total (" & repr(getOccupiedMem()) & " occupied, " & repr(getFreeMem()) & " free)")
-      #obj.fInfoText.add("FPS: " & repr(lastFPS) & "    Entities: " & repr(obj.state.count))
-      #obj.fInfoText.add("Mem.: " & repr(getTotalMem()) & " total (" & repr(getOccupiedMem()) & " occupied, " & repr(getFreeMem()) & " free)")
     # blit info
-    if obj.info: obj.fInfoText.blit()
+    if obj.info:
+      if obj.infobg:
+        var rect = obj.fInfoText.getRect()
+        check(fillRect(screen(), addr(rect), 0))
+      obj.fInfoText.blit()
     FPSCounter = FPSCounter + 1
     # flip screen
     if obj.fScreen.scale > 1: obj.scale()

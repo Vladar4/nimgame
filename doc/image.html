@@ -270,13 +270,15 @@ a.reference:hover {color: #E00000;background-color: #ffff00;display: margin;
   <ul class="simple">
       <li><a class="reference" href="#105"><wbr />free</a></li>
   <li><a class="reference" href="#108"><wbr />blit</a></li>
-  <li><a class="reference" href="#109"><wbr />update</a></li>
-  <li><a class="reference" href="#110"><wbr />get<wbr />Rect</a></li>
-  <li><a class="reference" href="#111"><wbr />center<wbr />Offset</a></li>
-  <li><a class="reference" href="#112"><wbr />center<wbr />Offset<wbr />X</a></li>
-  <li><a class="reference" href="#113"><wbr />center<wbr />Offset<wbr />Y</a></li>
-  <li><a class="reference" href="#114"><wbr />show</a></li>
-  <li><a class="reference" href="#115"><wbr />hide</a></li>
+  <li><a class="reference" href="#109"><wbr />blit</a></li>
+  <li><a class="reference" href="#110"><wbr />blit</a></li>
+  <li><a class="reference" href="#111"><wbr />update</a></li>
+  <li><a class="reference" href="#112"><wbr />get<wbr />Rect</a></li>
+  <li><a class="reference" href="#113"><wbr />center<wbr />Offset</a></li>
+  <li><a class="reference" href="#114"><wbr />center<wbr />Offset<wbr />X</a></li>
+  <li><a class="reference" href="#115"><wbr />center<wbr />Offset<wbr />Y</a></li>
+  <li><a class="reference" href="#116"><wbr />show</a></li>
+  <li><a class="reference" href="#117"><wbr />hide</a></li>
 
   </ul>
 </li>
@@ -338,35 +340,44 @@ a.reference:hover {color: #E00000;background-color: #ffff00;display: margin;
 <dd>
 
 </dd>
-<dt id="108"><pre><span class="Keyword">method</span> <span class="Identifier">blit</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PImage</span><span class="Other">;</span> <span class="Identifier">x</span> <span class="Other">=</span> <span class="DecNumber">0'i16</span><span class="Other">;</span> <span class="Identifier">y</span> <span class="Other">=</span> <span class="DecNumber">0'i16</span><span class="Other">)</span></pre></dt>
+<dt id="108"><pre><span class="Keyword">method</span> <span class="Identifier">blit</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PImage</span><span class="Other">;</span> <span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">int16</span> <span class="Other">=</span> <span class="DecNumber">0'i16</span><span class="Other">;</span> <span class="Identifier">y</span><span class="Other">:</span> <span class="Identifier">int16</span> <span class="Other">=</span> <span class="DecNumber">0'i16</span><span class="Other">)</span></pre></dt>
 <dd>
 
 </dd>
-<dt id="109"><pre><span class="Keyword">method</span> <span class="Identifier">update</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PImage</span><span class="Other">)</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
+<dt id="109"><pre><span class="Keyword">method</span> <span class="Identifier">blit</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PImage</span><span class="Other">;</span> <span class="Identifier">dstSurface</span><span class="Other">:</span> <span class="Identifier">PSurface</span><span class="Other">;</span> <span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">int16</span> <span class="Other">=</span> <span class="DecNumber">0'i16</span><span class="Other">;</span> 
+            <span class="Identifier">y</span><span class="Other">:</span> <span class="Identifier">int16</span> <span class="Other">=</span> <span class="DecNumber">0'i16</span><span class="Other">)</span></pre></dt>
 <dd>
 
 </dd>
-<dt id="110"><pre><span class="Keyword">method</span> <span class="Identifier">getRect</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PImage</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">TRect</span></pre></dt>
+<dt id="110"><pre><span class="Keyword">method</span> <span class="Identifier">blit</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PImage</span><span class="Other">;</span> <span class="Identifier">dstSurface</span><span class="Other">:</span> <span class="Identifier">PSurface</span><span class="Other">;</span> <span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">;</span> <span class="Identifier">y</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">)</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
 <dd>
 
 </dd>
-<dt id="111"><pre><span class="Keyword">method</span> <span class="Identifier">centerOffset</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PImage</span><span class="Other">)</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
+<dt id="111"><pre><span class="Keyword">method</span> <span class="Identifier">update</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PImage</span><span class="Other">)</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
 <dd>
 
 </dd>
-<dt id="112"><pre><span class="Keyword">method</span> <span class="Identifier">centerOffsetX</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PImage</span><span class="Other">)</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
+<dt id="112"><pre><span class="Keyword">method</span> <span class="Identifier">getRect</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PImage</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">TRect</span></pre></dt>
 <dd>
 
 </dd>
-<dt id="113"><pre><span class="Keyword">method</span> <span class="Identifier">centerOffsetY</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PImage</span><span class="Other">)</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
+<dt id="113"><pre><span class="Keyword">method</span> <span class="Identifier">centerOffset</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PImage</span><span class="Other">)</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
 <dd>
 
 </dd>
-<dt id="114"><pre><span class="Keyword">method</span> <span class="Identifier">show</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PImage</span><span class="Other">)</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
+<dt id="114"><pre><span class="Keyword">method</span> <span class="Identifier">centerOffsetX</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PImage</span><span class="Other">)</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
 <dd>
 
 </dd>
-<dt id="115"><pre><span class="Keyword">method</span> <span class="Identifier">hide</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PImage</span><span class="Other">)</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
+<dt id="115"><pre><span class="Keyword">method</span> <span class="Identifier">centerOffsetY</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PImage</span><span class="Other">)</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
+<dd>
+
+</dd>
+<dt id="116"><pre><span class="Keyword">method</span> <span class="Identifier">show</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PImage</span><span class="Other">)</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
+<dd>
+
+</dd>
+<dt id="117"><pre><span class="Keyword">method</span> <span class="Identifier">hide</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PImage</span><span class="Other">)</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
 <dd>
 
 </dd>
@@ -375,7 +386,7 @@ a.reference:hover {color: #E00000;background-color: #ffff00;display: margin;
 
 </div>
 
-<small>Generated: 2012-10-07 09:01:27 UTC</small>
+<small>Generated: 2012-11-10 16:16:03 UTC</small>
 </div>
 </body>
 </html>
