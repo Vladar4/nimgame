@@ -9,12 +9,14 @@ type
     fScreen: TScreen
     fUpdateTimer, fInfoTimer: PTimer
     fUpdateInterval: int
+    fFPSLimit: cint
     fInfoText: PText
     state*: PState
     info*, infobg*: bool
     bgColor*: int32
 
 var FPSCounter, lastFPS: int
+var FPSManager: TFPSManager
 
 var game*: PEngine
 
@@ -28,12 +30,26 @@ method free*(obj: PEngine) =
   sdl.quit()
 
 
+# FPS
+
+proc fpsLimit*(obj: PEngine): int {.inline.} =
+  ## Get FPS limit.
+  return int(obj.fFPSLimit)
+
+proc `fpsLimit=`*(obj: PEngine, value: int = 60) =
+  ## Set FPS limit. For unlimited FPS set to < 1.
+  obj.fFPSLimit = cint(value)
+  if obj.fFPSLimit > 0:
+    check(setFramerate(addr(FPSManager), obj.fFPSLimit))
+
+
 proc newEngine*(width: int = 640,   # screen width
                 height: int = 480,  # screen height
                 flags: int = 0,     # init flags
                 scale: int = 1,     # screen scale rate
                 title: cstring = "",  # window caption
                 updateInterval: int = 20, # interval of update event in ms
+                fpsLimit: int = 60, # frames per second limit (<1 - unlimited)
                 info: bool = false, # show info
                 infobg: bool = true, # info on black background
                 bgColor: TColor = color(0, 0, 0), # screen background color
@@ -54,6 +70,8 @@ proc newEngine*(width: int = 640,   # screen width
   ## ``title``: window caption.
   ##
   ## ``updateInterval``: interval of update event in ms.
+  ##
+  ## ``fpsLimit``: frames per second limit. For unlimited FPS set to < 1.
   ##
   ## ``info``: **true** to show info panel.
   ##
@@ -100,6 +118,9 @@ proc newEngine*(width: int = 640,   # screen width
   result.infobg = infobg
   result.fInfoText = newText(newBitmapFont("fnt/default8x16.png", 8, 16),
                                            x=4, y=2, " ")
+  # FPSManager
+  initFramerate(addr(FPSManager))
+  result.fpsLimit = fpsLimit
   # randomize
   randomize()
 
@@ -108,6 +129,7 @@ proc newEngine*(width: int = 640,   # screen width
 method run*(obj: PEngine): bool {.inline.} = return obj.fRun
 method `run=`*(obj: PEngine, value: bool) {.inline.} = obj.fRun = value
 method stop*(obj: PEngine) {.inline.} = obj.fRun = false
+
 
 # switch info view
 proc switchInfo*(obj: PEngine) {.inline.} =
@@ -184,6 +206,10 @@ proc start*(obj: PEngine) =
     obj.fUpdateTimer.update()
     if obj.info: obj.fInfoTimer.update()
     
+    # FPS Delay
+    if obj.fFPSLimit > 0:
+      framerateDelay(addr(FPSManager))
+
     while pollEvent(addr(event)) == 1:
       let eventp = addr(event)
       case event.kind:

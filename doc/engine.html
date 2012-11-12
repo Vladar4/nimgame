@@ -265,10 +265,12 @@ a.reference:hover {color: #E00000;background-color: #ffff00;display: margin;
 <li>
   <a class="reference" href="#12" id="62">Procs</a>
   <ul class="simple">
-      <li><a class="reference" href="#105"><wbr />new<wbr />Engine</a></li>
-  <li><a class="reference" href="#109"><wbr />switch<wbr />Info</a></li>
-  <li><a class="reference" href="#110"><wbr />flip</a></li>
-  <li><a class="reference" href="#111"><wbr />start</a></li>
+      <li><a class="reference" href="#105"><wbr />fps<wbr />Limit</a></li>
+  <li><a class="reference" href="#106">`<wbr />fps<wbr />Limit<wbr />=`</a></li>
+  <li><a class="reference" href="#107"><wbr />new<wbr />Engine</a></li>
+  <li><a class="reference" href="#111"><wbr />switch<wbr />Info</a></li>
+  <li><a class="reference" href="#112"><wbr />flip</a></li>
+  <li><a class="reference" href="#113"><wbr />start</a></li>
 
   </ul>
 </li>
@@ -276,9 +278,9 @@ a.reference:hover {color: #E00000;background-color: #ffff00;display: margin;
   <a class="reference" href="#13" id="63">Methods</a>
   <ul class="simple">
       <li><a class="reference" href="#104"><wbr />free</a></li>
-  <li><a class="reference" href="#106"><wbr />run</a></li>
-  <li><a class="reference" href="#107"><wbr />run=</a></li>
-  <li><a class="reference" href="#108"><wbr />stop</a></li>
+  <li><a class="reference" href="#108"><wbr />run</a></li>
+  <li><a class="reference" href="#109">`<wbr />run<wbr />=`</a></li>
+  <li><a class="reference" href="#110"><wbr />stop</a></li>
 
   </ul>
 </li>
@@ -295,15 +297,16 @@ a.reference:hover {color: #E00000;background-color: #ffff00;display: margin;
 <div class="section" id="7">
 <h1><a class="toc-backref" href="#57">Types</a></h1>
 <dl class="item">
-<dt id="101"><pre><span class="Identifier">PEngine</span> <span class="Other">=</span> <span class="Keyword">ref</span> <span class="Identifier">TEngine</span></pre></dt>
+<dt id="101"><pre><span class="Identifier">PEngine</span><span class="Operator">*</span> <span class="Other">=</span> <span class="Keyword">ref</span> <span class="Identifier">TEngine</span></pre></dt>
 <dd>
 
 </dd>
-<dt id="102"><pre><span class="Identifier">TEngine</span> <span class="Other">=</span> <span class="Keyword">object</span> <span class="Keyword">of</span> <span class="Identifier">TObject</span>
+<dt id="102"><pre><span class="Identifier">TEngine</span><span class="Operator">*</span> <span class="Other">=</span> <span class="Keyword">object</span> <span class="Keyword">of</span> <span class="Identifier">TObject</span>
   <span class="Identifier">fRun</span><span class="Other">:</span> <span class="Identifier">bool</span>
   <span class="Identifier">fScreen</span><span class="Other">:</span> <span class="Identifier">TScreen</span>
   <span class="Identifier">fUpdateTimer</span><span class="Other">,</span> <span class="Identifier">fInfoTimer</span><span class="Other">:</span> <span class="Identifier">PTimer</span>
   <span class="Identifier">fUpdateInterval</span><span class="Other">:</span> <span class="Identifier">int</span>
+  <span class="Identifier">fFPSLimit</span><span class="Other">:</span> <span class="Identifier">cint</span>
   <span class="Identifier">fInfoText</span><span class="Other">:</span> <span class="Identifier">PText</span>
   <span class="Identifier">state</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">PState</span>
   <span class="Identifier">info</span><span class="Operator">*</span><span class="Other">,</span> <span class="Identifier">infobg</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">bool</span>
@@ -317,7 +320,7 @@ a.reference:hover {color: #E00000;background-color: #ffff00;display: margin;
 <div class="section" id="8">
 <h1><a class="toc-backref" href="#58">Vars</a></h1>
 <dl class="item">
-<dt id="103"><pre><span class="Identifier">game</span><span class="Other">:</span> <span class="Identifier">PEngine</span></pre></dt>
+<dt id="103"><pre><span class="Identifier">game</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">PEngine</span></pre></dt>
 <dd>
 
 </dd>
@@ -326,20 +329,29 @@ a.reference:hover {color: #E00000;background-color: #ffff00;display: margin;
 <div class="section" id="12">
 <h1><a class="toc-backref" href="#62">Procs</a></h1>
 <dl class="item">
-<dt id="105"><pre><span class="Keyword">proc</span> <span class="Identifier">newEngine</span><span class="Other">(</span><span class="Identifier">width</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">640</span><span class="Other">;</span> 
-               <span class="Identifier">height</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">480</span><span class="Other">;</span> 
-               <span class="Identifier">flags</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">;</span> 
-               <span class="Identifier">scale</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">1</span><span class="Other">;</span> 
-               <span class="Identifier">title</span><span class="Other">:</span> <span class="Identifier">cstring</span> <span class="Other">=</span> <span class="StringLit">&quot;&quot;</span><span class="Other">;</span> 
-               <span class="Identifier">updateInterval</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">20</span><span class="Other">;</span> 
-               <span class="Identifier">info</span><span class="Other">:</span> <span class="Identifier">bool</span> <span class="Other">=</span> <span class="Identifier">false</span><span class="Other">;</span> 
-               <span class="Identifier">infobg</span><span class="Other">:</span> <span class="Identifier">bool</span> <span class="Other">=</span> <span class="Identifier">true</span><span class="Other">;</span> 
-               <span class="Identifier">bgColor</span><span class="Other">:</span> <span class="Identifier">TColor</span> <span class="Other">=</span> <span class="Identifier">color</span><span class="Other">(</span><span class="DecNumber">0</span><span class="Other">,</span> <span class="DecNumber">0</span><span class="Other">,</span> <span class="DecNumber">0</span><span class="Other">)</span><span class="Other">;</span> 
-               <span class="Identifier">audio</span><span class="Other">:</span> <span class="Identifier">bool</span> <span class="Other">=</span> <span class="Identifier">true</span><span class="Other">;</span> 
-               <span class="Identifier">audioFrequency</span><span class="Other">:</span> <span class="Identifier">cint</span> <span class="Other">=</span> <span class="Identifier">DEFAULT_FREQUENCY</span><span class="Other">;</span> 
-               <span class="Identifier">audioFormat</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="Identifier">DEFAULT_FORMAT</span><span class="Other">;</span> 
-               <span class="Identifier">audioChannels</span><span class="Other">:</span> <span class="Identifier">cint</span> <span class="Other">=</span> <span class="Identifier">DEFAULT_CHANNELS</span><span class="Other">;</span> 
-               <span class="Identifier">audioChunkSize</span><span class="Other">:</span> <span class="Identifier">cint</span> <span class="Other">=</span> <span class="DecNumber">1024</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">PEngine</span></pre></dt>
+<dt id="105"><pre><span class="Keyword">proc</span> <span class="Identifier">fpsLimit</span><span class="Operator">*</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PEngine</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
+<dd>
+Get FPS limit.
+</dd>
+<dt id="106"><pre><span class="Keyword">proc</span> <span class="Other">`</span><span class="Identifier">fpsLimit</span> <span class="Operator">=</span><span class="Other">`</span><span class="Operator">*</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PEngine</span><span class="Other">;</span> <span class="Identifier">value</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">60</span><span class="Other">)</span></pre></dt>
+<dd>
+Set FPS limit. For unlimited FPS set to &lt; 1.
+</dd>
+<dt id="107"><pre><span class="Keyword">proc</span> <span class="Identifier">newEngine</span><span class="Operator">*</span><span class="Other">(</span><span class="Identifier">width</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">640</span><span class="Other">;</span> 
+                <span class="Identifier">height</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">480</span><span class="Other">;</span> 
+                <span class="Identifier">flags</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">;</span> 
+                <span class="Identifier">scale</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">1</span><span class="Other">;</span> 
+                <span class="Identifier">title</span><span class="Other">:</span> <span class="Identifier">cstring</span> <span class="Other">=</span> <span class="StringLit">&quot;&quot;</span><span class="Other">;</span> 
+                <span class="Identifier">updateInterval</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">20</span><span class="Other">;</span> 
+                <span class="Identifier">fpsLimit</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">60</span><span class="Other">;</span> 
+                <span class="Identifier">info</span><span class="Other">:</span> <span class="Identifier">bool</span> <span class="Other">=</span> <span class="Identifier">false</span><span class="Other">;</span> 
+                <span class="Identifier">infobg</span><span class="Other">:</span> <span class="Identifier">bool</span> <span class="Other">=</span> <span class="Identifier">true</span><span class="Other">;</span> 
+                <span class="Identifier">bgColor</span><span class="Other">:</span> <span class="Identifier">TColor</span> <span class="Other">=</span> <span class="Identifier">color</span><span class="Other">(</span><span class="DecNumber">0</span><span class="Other">,</span> <span class="DecNumber">0</span><span class="Other">,</span> <span class="DecNumber">0</span><span class="Other">)</span><span class="Other">;</span> 
+                <span class="Identifier">audio</span><span class="Other">:</span> <span class="Identifier">bool</span> <span class="Other">=</span> <span class="Identifier">true</span><span class="Other">;</span> 
+                <span class="Identifier">audioFrequency</span><span class="Other">:</span> <span class="Identifier">cint</span> <span class="Other">=</span> <span class="Identifier">DEFAULT_FREQUENCY</span><span class="Other">;</span> 
+                <span class="Identifier">audioFormat</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="Identifier">DEFAULT_FORMAT</span><span class="Other">;</span> 
+                <span class="Identifier">audioChannels</span><span class="Other">:</span> <span class="Identifier">cint</span> <span class="Other">=</span> <span class="Identifier">DEFAULT_CHANNELS</span><span class="Other">;</span> 
+                <span class="Identifier">audioChunkSize</span><span class="Other">:</span> <span class="Identifier">cint</span> <span class="Other">=</span> <span class="DecNumber">1024</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">PEngine</span></pre></dt>
 <dd>
 <p><tt class="docutils literal"><span class="pre">width</span></tt>: screen width.</p>
 <p><tt class="docutils literal"><span class="pre">height</span></tt>: screen height.</p>
@@ -347,6 +359,7 @@ a.reference:hover {color: #E00000;background-color: #ffff00;display: margin;
 <p><tt class="docutils literal"><span class="pre">scale</span></tt>: screen scale rate (1 for no-scaling).</p>
 <p><tt class="docutils literal"><span class="pre">title</span></tt>: window caption.</p>
 <p><tt class="docutils literal"><span class="pre">updateInterval</span></tt>: interval of update event in ms.</p>
+<p><tt class="docutils literal"><span class="pre">fpsLimit</span></tt>: frames per second limit. For unlimited FPS set to &lt; 1.</p>
 <p><tt class="docutils literal"><span class="pre">info</span></tt>: <strong>true</strong> to show info panel.</p>
 <p><tt class="docutils literal"><span class="pre">infobg</span></tt>: <strong>true</strong> to show info on black background.</p>
 <p><tt class="docutils literal"><span class="pre">bgColor</span></tt>: screen background color.</p>
@@ -357,15 +370,15 @@ a.reference:hover {color: #E00000;background-color: #ffff00;display: margin;
 <p><tt class="docutils literal"><span class="pre">audioChunkSize</span></tt>: bytes used per sample.</p>
 
 </dd>
-<dt id="109"><pre><span class="Keyword">proc</span> <span class="Identifier">switchInfo</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PEngine</span><span class="Other">)</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
+<dt id="111"><pre><span class="Keyword">proc</span> <span class="Identifier">switchInfo</span><span class="Operator">*</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PEngine</span><span class="Other">)</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
 <dd>
 Turn on/off info panel.
 </dd>
-<dt id="110"><pre><span class="Keyword">proc</span> <span class="Identifier">flip</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PEngine</span><span class="Other">)</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
+<dt id="112"><pre><span class="Keyword">proc</span> <span class="Identifier">flip</span><span class="Operator">*</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PEngine</span><span class="Other">)</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
 <dd>
 
 </dd>
-<dt id="111"><pre><span class="Keyword">proc</span> <span class="Identifier">start</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PEngine</span><span class="Other">)</span></pre></dt>
+<dt id="113"><pre><span class="Keyword">proc</span> <span class="Identifier">start</span><span class="Operator">*</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PEngine</span><span class="Other">)</span></pre></dt>
 <dd>
 Start main cycle.
 </dd>
@@ -374,19 +387,19 @@ Start main cycle.
 <div class="section" id="13">
 <h1><a class="toc-backref" href="#63">Methods</a></h1>
 <dl class="item">
-<dt id="104"><pre><span class="Keyword">method</span> <span class="Identifier">free</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PEngine</span><span class="Other">)</span></pre></dt>
+<dt id="104"><pre><span class="Keyword">method</span> <span class="Identifier">free</span><span class="Operator">*</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PEngine</span><span class="Other">)</span></pre></dt>
 <dd>
 
 </dd>
-<dt id="106"><pre><span class="Keyword">method</span> <span class="Identifier">run</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PEngine</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
+<dt id="108"><pre><span class="Keyword">method</span> <span class="Identifier">run</span><span class="Operator">*</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PEngine</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
 <dd>
 
 </dd>
-<dt id="107"><pre><span class="Keyword">method</span> <span class="Identifier">run=</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PEngine</span><span class="Other">;</span> <span class="Identifier">value</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">)</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
+<dt id="109"><pre><span class="Keyword">method</span> <span class="Other">`</span><span class="Identifier">run</span> <span class="Operator">=</span><span class="Other">`</span><span class="Operator">*</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PEngine</span><span class="Other">;</span> <span class="Identifier">value</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">)</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
 <dd>
 
 </dd>
-<dt id="108"><pre><span class="Keyword">method</span> <span class="Identifier">stop</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PEngine</span><span class="Other">)</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
+<dt id="110"><pre><span class="Keyword">method</span> <span class="Identifier">stop</span><span class="Operator">*</span><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">PEngine</span><span class="Other">)</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
 <dd>
 
 </dd>
@@ -395,7 +408,7 @@ Start main cycle.
 
 </div>
 
-<small>Generated: 2012-11-11 20:09:27 UTC</small>
+<small>Generated: 2012-11-12 11:09:53 UTC</small>
 </div>
 </body>
 </html>
