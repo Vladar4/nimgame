@@ -110,12 +110,13 @@ proc updateGUIButton*(obj: PGUIButton) =
     if isButtonDown(1):
       obj.fWasPressed = true # button pressed
     elif isButtonUp(1):
-      obj.fWasPressed = false # button released
-      if obj.lockable:
-        obj.locked = not obj.locked
-      if obj.cmd != nil:
-        obj.cmd(obj.cmdObj, obj)
-    obj.fWasHovered = true
+      if obj.fWasPressed:
+        obj.fWasPressed = false # button released
+        if obj.lockable:
+          obj.locked = not obj.locked
+        if obj.cmd != nil:
+          obj.cmd(obj.cmdObj, obj)
+      obj.fWasHovered = true
   else: # mouse not over button
     if obj.fWasPressed and isButtonUp(1): # button released
       obj.fWasPressed = false
