@@ -1,4 +1,4 @@
-v0.4 (in progress)
+v0.3.1 (in progress)
 ==================
 * Graphics:
     + fpsLimit parameter
