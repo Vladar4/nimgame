@@ -1,5 +1,10 @@
+v0.4 (in progress)
+==================
+* Graphics:
+    + fpsLimit parameter
+
 v0.3
-=================
+====
 * Nimrod v0.9.0 support
 * Documentation
 * Graphics:
