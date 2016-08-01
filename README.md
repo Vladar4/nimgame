@@ -1,7 +1,6 @@
 nimgame
 =======
 
-Simple 2D game engine for Nimrod language.
+Simple 2D game engine for Nim language.
 
-*Tested with official 0.9.0 Nimrod release.*
-
+**Deprecaded** since sdl2 came out. Still works and could be used for reference, though.

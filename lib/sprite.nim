@@ -120,7 +120,7 @@ proc newSprite*(filename: cstring,
                 rows: int = 0,  # frame grid rows
                 cols: int = 0,  # frame grid cols
                 offsetX: int = 0, # x frame grid offset
-                OffsetY: int = 0, # y frame grid offset
+                offsetY: int = 0, # y frame grid offset
                 smooth: cint = 1, # smooth
                ): PSprite =
   ## ``filename``: image file to load from.
@@ -150,7 +150,7 @@ proc newSprite*(surface: PSurface,
                 rows: int = 0,  # frame grid rows
                 cols: int = 0,  # frame grid cols
                 offsetX: int = 0, # x frame grid offset
-                OffsetY: int = 0, # y frame grid offset
+                offsetY: int = 0, # y frame grid offset
                 smooth: cint = 1, # smooth
                ): PSprite =
   new(result, free)

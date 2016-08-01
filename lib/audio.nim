@@ -1,5 +1,5 @@
 import
-  os, math,
+  os, math, random,
   sdl, sdl_mixer,
   common
 
@@ -270,11 +270,11 @@ proc haltGroup*(tag: int) {.inline.} =
 
 # Effects
 
-proc registerEffect(channel: int, func: TEffectFunc,
-                    done: TEffectDone, arg: Pointer): bool =
-  ## ``channel``: channel number to register ``func`` and ``done`` on.
+proc registerEffect(channel: int, funct: TEffectFunc,
+                    done: TEffectDone, arg: pointer): bool =
+  ## ``channel``: channel number to register ``funct`` and ``done`` on.
   ##
-  ## ``func``: function pointer for the effects processor.
+  ## ``funct``: function pointer for the effects processor.
   ##
   ## ``done``: function pointer for any cleanup routine to be called
   ## when the channel is done playing a sample.
@@ -282,29 +282,29 @@ proc registerEffect(channel: int, func: TEffectFunc,
   ## any memory or other dynamic data.
   ##
   ## ``arg``: pointer to data to pass into
-  ## the ``func``'s and ``done``'s ``udata`` parameter.
+  ## the ``funct``'s and ``done``'s ``udata`` parameter.
   ## This may be **nil**, depending on the processor.
   ##
   ## **Return** **false** on errors, such as a nonexisting channel.
   ##
   ## See SDL_mixer documentation for details.
-  if sdl_mixer.registerEffect(cint(channel), func, done, arg) == 0:
+  if sdl_mixer.registerEffect(cint(channel), funct, done, arg) == 0:
     echo(sdl.getError())
     return false
   return true
 
 
-proc unregisterEffect(channel: int, func: TEffectFunc): bool =
-  ## ``channel``: channel number to remove ``func`` from as a post processor.
+proc unregisterEffect(channel: int, funct: TEffectFunc): bool =
+  ## ``channel``: channel number to remove ``funct`` from as a post processor.
   ## Use ``CHANNEL_POST`` for the postmix stream.
   ##
-  ## ``func``: function to remove from ``channel``.
+  ## ``funct``: function to remove from ``channel``.
   ##
   ## **Return** **false** on errors, such as invalid channel,
   ## or effect function not registered on ``channel``.
   ##
   ## See SDL_mixer documentation for details.
-  if sdl_mixer.unregisterEffect(cint(channel), func) == 0:
+  if sdl_mixer.unregisterEffect(cint(channel), funct) == 0:
     echo(sdl.getError())
     return false
   return true
@@ -323,15 +323,15 @@ proc unregisterAllEffects(channel: int): bool =
   return true
 
 
-proc setPostMix(func: TMixFunction, arg: Pointer) {.inline.} =
-  ## ``func``: function pointer for the postmix processor.
+proc setPostMix(funct: TMixFunction, arg: pointer) {.inline.} =
+  ## ``funct``: function pointer for the postmix processor.
   ## **Nil** unregisters the current postmixer.
   ##
-  ## ``arg``: pointer to data to pass into the ``func``'s ``udata`` parameter.
+  ## ``arg``: pointer to data to pass into the ``funct``'s ``udata`` parameter.
   ## This may be **nil**, depending on the processor.
   ##
   ## See SDL_mixer documentation for details.
-  sdl_mixer.setPostMix(func, arg)
+  sdl_mixer.setPostMix(funct, arg)
 
 
 proc setPanning(channel: int, left, right: byte): bool =
@@ -458,23 +458,23 @@ proc setMusicCMD(cmd: string): bool {.inline.} =
   return true
 
 
-proc hookMusic*(func: TMixFunction, arg: Pointer) {.inline.} =
+proc hookMusic*(funct: TMixFunction, arg: pointer) {.inline.} =
   ## Setup a custom music player function.
   ##
-  ## ``func``: function pointer to a music player mixer function.
+  ## ``funct``: function pointer to a music player mixer function.
   ##
   ## ``arg``: pointer passed as ``func``'s ``udata`` parameter.
   ##
   ## See SDL_mixer documentation for details.
-  sdl_mixer.hookMusic(func, arg)
+  sdl_mixer.hookMusic(funct, arg)
 
 
-proc getMusicHookData(): Pointer {.inline.} =
+proc getMusicHookData(): pointer {.inline.} =
   ## Get ``arg`` pointer passed into ``hookMusic``.
   return sdl_mixer.getMusicHookData()
 
 
-proc hookMusicFinished(callback: Pointer) {.inline.} =
+proc hookMusicFinished(callback: pointer) {.inline.} =
   ## Setup a function to be called when music playback is halted.
   ## Call with **nil** to remove the callback.
   ##

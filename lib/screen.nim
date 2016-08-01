@@ -33,7 +33,7 @@ proc newSurface*(width, height: int, alpha: bool = false): PSurface =
   let surface = check(
     createRGBSurface(
       screen().flags, width, height, int(fmt.bitsPerPixel),
-      fmt.Rmask, fmt.Gmask, fmt.Bmask, fmt.Amask))
+      fmt.rmask, fmt.gmask, fmt.bmask, fmt.amask))
   if alpha:
     result = displayFormatAlpha(surface)
     check(result.fillRect(nil, mapRGBA(result.format, 0, 0, 0, 0)))

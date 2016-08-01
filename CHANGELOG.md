@@ -1,5 +1,9 @@
-v0.3.1 (in progress)
-==================
+v0.3.2
+======
+* Nim v0.14.2 support
+
+v0.3.1
+======
 * Graphics:
     + fpsLimit parameter
 

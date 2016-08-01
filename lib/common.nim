@@ -38,7 +38,7 @@ proc direction*(a: TPoint, b: TPoint): float =
   ## **Return** angle direction from one to other point.
   let dx = float(a.x - b.x)
   let dy = float(a.y - b.y)
-  return -(arctan2(dy, dx) / pi) * 180.0 + 90.0
+  return -(arctan2(dy, dx) / Pi) * 180.0 + 90.0
 
 template direction*(ax, ay: int, b: TPoint): float =
   direction((ax, ay), b)
@@ -55,7 +55,7 @@ template direction*(a: TPoint, bx, by: int): float =
 
 template toRad*(a: float): expr =
   ## Convert degrees to radians.
-  (a * pi / 180.0)
+  (a * Pi / 180.0)
 
 template toDeg*(a: float): expr =
   ## Convert radians to degrees.
@@ -90,9 +90,9 @@ proc absVector*(x, y: float): float {.inline.} =
 
 proc color*(r: int, g: int, b: int): TColor {.inline.} =
   ## **Return** ``TColor`` created from given `r`, `g`, `b` components.
-  result.r = Byte(r)
-  result.g = Byte(g)
-  result.b = Byte(b)
+  result.r = byte(r)
+  result.g = byte(g)
+  result.b = byte(b)
 
 
 # SDL errors handling

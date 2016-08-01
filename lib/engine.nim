@@ -1,5 +1,5 @@
 import
-  sdl, sdl_ttf, sdl_gfx, sdl_mixer, math,
+  sdl, sdl_ttf, sdl_gfx, sdl_mixer, math, random,
   common, screen, audio, state, timer, input, image, text, font
 
 type
@@ -106,11 +106,11 @@ proc newEngine*(width: int = 640,   # screen width
   # screen
   result.fScreen.surface = check(setVideoMode(result.fScreen.width,
                                               result.fScreen.height,
-                                              32, int32(flags)))
+                                              32, uint32(flags)))
   initScreenBuffer(width, height, scale)
   result.bgColor = mapRGB(result.fScreen.surface.format,
                           bgColor.r, bgColor.g, bgColor.b)
-  if title != "": WM_SetCaption(title, nil)
+  if title != "": wm_SetCaption(title, nil)
   # Update
   result.fUpdateInterval = updateInterval
   # Info
@@ -167,9 +167,9 @@ proc onUpdateTimer() =
   var event: TEvent
   var eventp: PEvent = addr(event)
   event.kind = TEventKind.USEREVENT
-  EvUser(eventp).code = UE_UPDATE_TIMER
-  EvUser(eventp).data1 = nil
-  EvUser(eventp).data2 = nil
+  evUser(eventp).code = UE_UPDATE_TIMER
+  evUser(eventp).data1 = nil
+  evUser(eventp).data2 = nil
   check(pushEvent(addr(event)))
 
 
@@ -179,9 +179,9 @@ proc onInfoTimer() =
   var event: TEvent
   var eventp: PEvent = addr(event)
   event.kind = TEventKind.USEREVENT
-  EvUser(eventp).code = UE_UPDATE_INFO
-  EvUser(eventp).data1 = nil
-  EvUser(eventp).data2 = nil
+  evUser(eventp).code = UE_UPDATE_INFO
+  evUser(eventp).data1 = nil
+  evUser(eventp).data2 = nil
   check(pushEvent(addr(event)))
 
 
@@ -219,19 +219,19 @@ proc start*(obj: PEngine) =
         break
       
       of KEYDOWN:
-        addKeyEvent(EvKeyboard(eventp).keysym.sym, down)
+        addKeyEvent(evKeyboard(eventp).keysym.sym, down)
       
       of KEYUP:
-        addKeyEvent(EvKeyboard(eventp).keysym.sym, up)
+        addKeyEvent(evKeyboard(eventp).keysym.sym, up)
       
       of MOUSEBUTTONDOWN:
-        addButtonEvent(EvMouseButton(eventp).button.int, down)
+        addButtonEvent(evMouseButton(eventp).button.int, down)
       
       of MOUSEBUTTONUP:
-        addButtonEvent(EvMouseButton(eventp).button.int, up)
+        addButtonEvent(evMouseButton(eventp).button.int, up)
 
       of USEREVENT:
-        case EvUser(eventp).code:
+        case evUser(eventp).code:
         of UE_UPDATE_TIMER: update = true
         of UE_UPDATE_INFO: infoUpd = true
         else: nil

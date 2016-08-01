@@ -102,7 +102,7 @@ method yi*(obj: PEntity): int {.inline.} =
 method `y=`*(obj: PEntity, value: int) {.inline.} =
   obj.fY = float(value)
   obj.fYi = int16(value)
-  obj.collider.y = obj.fY.round + obj.graphic.y
+  obj.collider.y = obj.fY.round.int + obj.graphic.y
 
 method `y=`*(obj: PEntity, value: float) {.inline.} =
   obj.fY = value

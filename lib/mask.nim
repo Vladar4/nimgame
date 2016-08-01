@@ -14,9 +14,9 @@ type
 proc setMask*(obj: PMask,
               surface: PSurface) =
   check(lockSurface(surface))
-  let amask = uint32(surface.format.Amask)
-  let ashift = uint32(surface.format.Ashift)
-  let aloss = uint32(surface.format.Aloss)
+  let amask = uint32(surface.format.amask)
+  let ashift = uint32(surface.format.ashift)
+  let aloss = uint32(surface.format.aloss)
   let pixels: PPixelArray = cast[PPixelArray](surface.pixels)
   var offset: int
   var pixel, temp: uint32
